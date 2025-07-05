@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <!--begin::Head-->
 
 <head>
@@ -148,18 +148,6 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-      // IT'S ALL JUST JUNK FOR DEMO
-      // ++++++++++++++++++++++++++++++++++++++++++
-
-      /* apexcharts
-       * -------
-       * Here we will create a few charts using apexcharts
-       */
-
-      //-----------------------
-      // - MONTHLY SALES CHART -
-      //-----------------------
 
       const sales_chart_options = {
         series: [
@@ -297,6 +285,7 @@
       //-----------------
     </script>
     <!--end::Script-->
+    @yield('script')
   </body>
   <!--end::Body-->
 </html>

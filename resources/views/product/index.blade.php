@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('subtitle')
-    Categorias
+    Lista de Productos
 @endsection
 @section('content')
     <div class="row">
@@ -11,8 +11,8 @@
                 <div class="card-header">
 
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a href="{{ route('category.create') }}" type="button"
-                                class="btn btn-block btn-primary">Nueva Categoria</a></li>
+                        <li class="nav-item"><a href="{{ route('product.create') }}" type="button"
+                                class="btn btn-block btn-primary">Nuevo</a></li>
                     </ul>
                 </div>
                 <!-- /.card-header -->
@@ -22,7 +22,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Codigo</th>
                                 <th>Nombre</th>
+                                <th>Costo</th>
+                                <th>Precio</th>
+                                <th>Categoria</th>
+                                <th>Cantidad</th>
                                 <th>Estado</th>
                                 <th>Accion</th>
                             </tr>
@@ -31,12 +36,17 @@
                             @php
                                 $i = 1;
                             @endphp
-                            @foreach ($categories as $category)
+                            @foreach ($products as $product)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $category->name }}</td>
+                                    <td>{{ $product->code }}</td>
+                                    <td>{{ $product->name }}</td>
+                                    <td>{{ $product->costo }}</td>
+                                    <td>{{ $product->price }}</td>
+                                    <td>{{ $product->category->name }}</td>
+                                    <td>{{ $product->amount }}</td>
                                     <td>
-                                        @if ($category->state == 1)
+                                        @if ($product->state == 'active')
                                             <button type="button" class="btn btn-sm btn-success btn-sm">Activada</button>
                                         @else
                                             <button type="button" class="btn btn-warning btn-sm">Desactivada</button>
@@ -46,18 +56,17 @@
                                     <td>
                                         <div class="btn-group">
 
-                                            <a href="{{ route('category.show', $category) }}" class="btn btn-primary ">
+                                            <a href="{{ route('product.show', $product) }}" class="btn btn-primary ">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="{{ route('category.edit', $category) }}" class="btn btn-warning ">
+                                            <a href="{{ route('product.edit', $product) }}" class="btn btn-warning ">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form action="{{ route('category.destroy', $category) }}" method="post"
+                                            <form action="{{ route('product.destroy', $product) }}" method="post"
                                                 style="display: inline">
                                                 @method('delete')
                                                 @csrf
-                                                <button type="submit" class="btn btn-danger "> <i
-                                                        class="bi bi-trash3"></i></button>
+                                                <button type="submit" class="btn btn-danger "> <i class="bi bi-trash3"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -68,9 +77,7 @@
 
                         </tbody>
                     </table>
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $categories->links() }}
-                    </div>
+                    {{ $products->links() }}
                 </div>
                 <!-- /.card-body -->
             </div>

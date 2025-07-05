@@ -2,92 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryStoreRequest;
-use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Exception;
+use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+
     public function index()
     {
-        $categories = Category::paginate(10);
-        return view('category.index', ['categories' => $categories]);
+        $compania = Company::findOrFail(Auth::user()->company_id);
+        $categories = $compania->categories()
+            ->orderBy('name', 'asc')
+            ->paginate(10);
+        $title = 'Categorias';
+        return view(
+            'category.index',
+            compact(
+                'categories',
+                'title'
+            )
+        );
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('category.create');
+        $title = 'Nueva Categoria';
+        return view('category.create', compact('title'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CategoryStoreRequest $request)
+    public function store(Request $request)
     {
-        try {
 
-            Category::create($request->validated());
-
-            toastr()->success('Registro Guardado');
-
-            return back();
-        } catch (Exception $e) {
-            toastr()->error('Registro no Guardado');
+        if (!Auth::user()->company_id) {
+            toastr()->error('Registro no guardado');
+            toastr()->warning('Debe registrar una empresa');
             return back();
         }
+
+        $request->validate([
+            'name' => 'required'
+        ]);
+
+        $name = $request->input('name');
+        $state = $request->input('state');
+
+        if ($state == 'on') {
+            $state = true;
+        } else {
+            $state = false;
+        }
+        //asignacion masiva Category::create($request->all());
+        $category = new Category();
+        $category->name = $name;
+        $category->state = $state;
+        $category->company_id = Auth::user()->company_id;
+        $category->save();
+        toastr()->success('Registro guardado');
+        return back();
+        // return redirect()->route('categoria.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Category $category)
     {
-        return view('category.show', ['category' => $category]);
+        return view('category.edit', compact('category'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Category $category)
     {
-        return view('category.edit', ['category' => $category]);
+        $title = 'Editar Categorias';
+        return view('category.edit', compact('category', 'title'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(Request $request, Category $category)
     {
-        try {
-            $category->update($request->validated());
-            toastr()->success('Registro Guardado');
-            return back();
-        } catch (Exception $e) {
-            toastr()->error('Registro no Guardado');
-            return back();
+        $request->validate([
+            'name' => 'required'
+        ]);
+
+        $category->name = $request->name;
+
+        $state = $request->input('state');
+
+        if ($state == 'on') {
+            $state = true;
+        } else {
+            $state = false;
         }
+
+        $category->state = $state;
+        //$categoru->update($request->all())
+        $category->save();
+
+        toastr()->success('Registro guardado');
+
+        return back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category)
     {
-        try {
-            $category->delete();
-            toastr()->success('Registro Eliminado');
-            return redirect()->route('category.index');
-        } catch (Exception $e) {
-            toastr()->error('Registro no Guardado');
-            return redirect()->route('category.index');
-        }
+        $category->delete();
+        toastr()->success('Registro Eliminado');
+        return redirect()->route('category.index');
     }
 }

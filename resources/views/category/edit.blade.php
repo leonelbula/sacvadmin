@@ -33,8 +33,8 @@
                                 <label>Activar</label>
                                 <select class="form-control" name="state" required>
                                     <option value="">Seleciones una opcion</option>
-                                    <option value="active" {{$category->state == 'active' ? 'selected' : '' }} >Si</option>
-                                    <option value="disable" {{$category->state == 'disable' ? 'selected' : '' }}>No</option>
+                                    <option value="1" {{$category->state == '1' ? 'selected' : '' }} >Si</option>
+                                    <option value="1" {{$category->state == '0' ? 'selected' : '' }}>No</option>
                                 </select>
                             </div>
                         </div>

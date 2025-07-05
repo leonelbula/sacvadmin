@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('subtitle')
-    Categorias Crear
+    Categoria Editar
 @endsection
 @section('content')
     <div class="row">
@@ -16,7 +16,8 @@
                     </ul>
                 </div>
                 <!-- /.card-header -->
-                <form action="{{route('category.store')}}" method="POST">
+                <form action="{{route('category.update', $category)}}" method="POST">
+                   @method('put')
                     @csrf
                     <div class="card-body">
                         <div class="col-7">
@@ -24,16 +25,16 @@
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Nombre de la categoria</label>
-                                <input type="text" class="form-control" id="name" name="name"
+                                <input type="text" class="form-control" id="name" name="name" value="{{$category->name}}"
                                     placeholder="Nombre">
                             </div>
 
                             <div class="form-group">
                                 <label>Activar</label>
-                                <select class="form-control" name="state">
-                                    <option value="1">Si</option>
-                                    <option value="0">No</option>
-
+                                <select class="form-control" name="state" required>
+                                    <option value="">Seleciones una opcion</option>
+                                    <option value="active" {{$category->state == 'active' ? 'selected' : '' }} >Si</option>
+                                    <option value="disable" {{$category->state == 'disable' ? 'selected' : '' }}>No</option>
                                 </select>
                             </div>
                         </div>
