@@ -31,14 +31,8 @@
 
                   </p>
                 </a>
+              </li>
 
-              </li>
-              <li class="nav-item">
-                <a href="./generate/theme.html" class="nav-link">
-                  <i class="nav-icon bi bi-palette"></i>
-                  <p>Theme Generate</p>
-                </a>
-              </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -66,6 +60,7 @@
                       <p>REPORTES</p>
                     </a>
                   </li>
+
                 </ul>
               </li>
               <li class="nav-item">
@@ -73,7 +68,7 @@
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>
                     CLIENTES
-                    <span class="nav-badge badge text-bg-secondary me-3">6</span>
+
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -81,52 +76,28 @@
                   <li class="nav-item">
                     <a href="./layout/unfixed-sidebar.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Default Sidebar</p>
+                      <p>LISTA DE CLIENTES</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./layout/fixed-sidebar.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Fixed Sidebar</p>
+                      <p>ESTADO DE CUENTAS</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./layout/layout-custom-area.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout <small>+ Custom Area </small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/sidebar-mini.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/collapsed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Collapsed</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/logo-switch.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Sidebar Mini <small>+ Logo Switch</small></p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-rtl.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Layout RTL</p>
+                      <p>REPORTES</p>
                     </a>
                   </li>
                 </ul>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-tree-fill"></i>
+                   <i class="nav-icon bi bi-ui-checks-grid"></i>
                   <p>
-                    UI Elements
+                    PROVEEDORES
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -134,19 +105,19 @@
                   <li class="nav-item">
                     <a href="./UI/general.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>General</p>
+                      <p>LISTA DE PROVEEDORES</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./UI/icons.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Icons</p>
+                      <p>ESTADO DE CUENTAS</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="./UI/timeline.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Timeline</p>
+                      <p>REPORTES</p>
                     </a>
                   </li>
                 </ul>
@@ -155,7 +126,7 @@
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-pencil-square"></i>
                   <p>
-                    Forms
+                    VENTAS
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -163,7 +134,36 @@
                   <li class="nav-item">
                     <a href="./forms/general.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>General Elements</p>
+                      <p>LISTA DE VENTAS</p>
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                    <a href="./forms/general.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>REPORTES</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+               <li class="nav-item">
+                <a href="#" class="nav-link">
+                 <i class="nav-icon bi bi-download"></i>
+                  <p>
+                    DEVOLUCIONES
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="./forms/general.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>LISTA DE VOLUCIONES</p>
+                    </a>
+                  </li>
+                    <li class="nav-item">
+                    <a href="./forms/general.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>REPORTES</p>
                     </a>
                   </li>
                 </ul>
@@ -172,7 +172,7 @@
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-table"></i>
                   <p>
-                    Tables
+                    COMPRAS
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -185,12 +185,12 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-header">EXAMPLES</li>
+              <li class="nav-header">CONFIGURACIONES</li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-box-arrow-in-right"></i>
                   <p>
-                    Auth
+                    Paramentros
                     <i class="nav-arrow bi bi-chevron-right"></i>
                   </p>
                 </a>
@@ -199,7 +199,7 @@
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-box-arrow-in-right"></i>
                       <p>
-                        Version 1
+                        Datos Empresa
                         <i class="nav-arrow bi bi-chevron-right"></i>
                       </p>
                     </a>
@@ -207,13 +207,25 @@
                       <li class="nav-item">
                         <a href="./examples/login.html" class="nav-link">
                           <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
+                          <p>Datos empresa</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="./examples/login.html" class="nav-link">
+                          <i class="nav-icon bi bi-circle"></i>
+                          <p>Config. automaticas</p>
                         </a>
                       </li>
                       <li class="nav-item">
                         <a href="./examples/register.html" class="nav-link">
                           <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
+                          <p>Cargar Inventario</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="./examples/register.html" class="nav-link">
+                          <i class="nav-icon bi bi-circle"></i>
+                          <p>Iniciar - Cerrar Inventario</p>
                         </a>
                       </li>
                     </ul>
@@ -222,7 +234,7 @@
                     <a href="#" class="nav-link">
                       <i class="nav-icon bi bi-box-arrow-in-right"></i>
                       <p>
-                        Version 2
+                        Resoluciones
                         <i class="nav-arrow bi bi-chevron-right"></i>
                       </p>
                     </a>
@@ -230,13 +242,13 @@
                       <li class="nav-item">
                         <a href="./examples/login-v2.html" class="nav-link">
                           <i class="nav-icon bi bi-circle"></i>
-                          <p>Login</p>
+                          <p>Nueva resolucion</p>
                         </a>
                       </li>
                       <li class="nav-item">
                         <a href="./examples/register-v2.html" class="nav-link">
                           <i class="nav-icon bi bi-circle"></i>
-                          <p>Register</p>
+                          <p>Lista de resoluciones</p>
                         </a>
                       </li>
                     </ul>
@@ -244,7 +256,7 @@
                   <li class="nav-item">
                     <a href="./examples/lockscreen.html" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Lockscreen</p>
+                      <p>Comprar paquetes</p>
                     </a>
                   </li>
                 </ul>

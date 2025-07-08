@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('subtitle')
-    Categorias Crear
+    Nuevo Producto
 @endsection
 @section('content')
     <div class="row">

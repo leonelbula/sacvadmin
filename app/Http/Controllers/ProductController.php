@@ -93,9 +93,9 @@ class ProductController extends Controller
         }
 
         if ($request->state == 'on') {
-            $data['state'] = true;
+            $data['state'] = 1;
         } else {
-            $data['state'] = false;
+            $data['state'] = 0;
         }
 
         $product->update($data);
@@ -110,6 +110,6 @@ class ProductController extends Controller
         }
         $product->delete();
         toastr()->success('Registro Eliminado');
-        return redirect(route('producto.index'));
+        return redirect(route('product.index'));
     }
 }

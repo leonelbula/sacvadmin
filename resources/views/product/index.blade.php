@@ -46,7 +46,7 @@
                                     <td>{{ $product->category->name }}</td>
                                     <td>{{ $product->amount }}</td>
                                     <td>
-                                        @if ($product->state == 'active')
+                                        @if ($product->state == 1)
                                             <button type="button" class="btn btn-sm btn-success btn-sm">Activada</button>
                                         @else
                                             <button type="button" class="btn btn-warning btn-sm">Desactivada</button>
@@ -66,7 +66,8 @@
                                                 style="display: inline">
                                                 @method('delete')
                                                 @csrf
-                                                <button type="submit" class="btn btn-danger "> <i class="bi bi-trash3"></i></button>
+                                                <button type="submit" class="btn btn-danger "> <i
+                                                        class="bi bi-trash3"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -77,7 +78,9 @@
 
                         </tbody>
                     </table>
-                    {{ $products->links() }}
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $products->links() }}
+                    </div>
                 </div>
                 <!-- /.card-body -->
             </div>
