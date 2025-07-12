@@ -30,7 +30,7 @@ class SupplierRequest extends FormRequest
             'phone' => 'required',
             'email' => 'required|email',
             'description'=>'string',
-            'credit_amount' => 'required',
+            'credit_amount' => 'string',
         ];
     }
 }

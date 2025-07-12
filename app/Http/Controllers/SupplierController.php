@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SupplierRequest;
+use App\Models\Company;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SupplierController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
     public function index()
     {
         $title = "Proveedores";
-        $suppliers = Supplier::orderBy('full_name','asc')->paginate(10);
+        $company = Company::findOrFail(Auth::user()->company_id);
+
+        $suppliers = $company->suppliers()
+            ->orderBy('full_name', 'asc')
+            ->paginate(10);
         return view('supplier.index', compact('title', 'suppliers'));
     }
     public function create()
@@ -24,9 +27,18 @@ class SupplierController extends Controller
         return view('supplier.create', compact('title'));
     }
 
-    public function store(SupplierRequest $request)
+    public function store(Request $request)
     {
-        Supplier::create($request->validated());
+        $data= $request->all();
+         if ($data['description'] == '') {
+            $data['description']  = 'N/N';
+        }
+
+        if ($data['credit_amount'] == '') {
+            $data['credit_amount'] = 0;
+        }
+        $data['company_id'] = Auth::user()->company_id;
+        Supplier::create($data);
         toastr()->success('Registro guardado');
         return back();
     }
@@ -52,9 +64,19 @@ class SupplierController extends Controller
             'city' => 'required|string',
             'phone' => 'required',
             'email' => 'required|email',
-            'credit_amount' => 'required',
-
         ]);
+
+        if ($request->description == '') {
+            $description = 'N/N';
+        }else{
+            $description = $request->description;
+        }
+
+        if ($request->credit_amount == '') {
+            $credit_amount = 0;
+        }else{
+            $credit_amount = $request->credit_amount;
+        }
 
         $supplier->full_name = $request->full_name;
         $supplier->identification_card = $request->identification_card;
@@ -63,17 +85,19 @@ class SupplierController extends Controller
         $supplier->city = $request->city;
         $supplier->phone = $request->phone;
         $supplier->email = $request->email;
-        $supplier->credit_amount = $request->credit_amount;
-        $supplier->description = $request->description;
+        $supplier->credit_amount = $credit_amount;
+        $supplier->description = $description;
+
 
         $supplier->save();
-
-        return redirect()->route('proveedor.index');
+         toastr()->success('Registro Guardado');
+        return back();
     }
 
     public function destroy(Supplier $supplier)
     {
         $supplier->delete();
-        return redirect()->route('proveedor.index');
+           toastr()->success('Registro Eliminado');
+        return redirect()->route('supplier.index');
     }
 }

@@ -34,6 +34,7 @@
         integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+          <link rel="stylesheet" href="{{asset('plugins/toastr.min.css')}}">
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -286,6 +287,14 @@
     </script>
     <!--end::Script-->
     @yield('script')
+     <script src="{{asset('plugins/toastr.min.js')}}"></script>
+    <script>
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error("{{$error}}");
+            @endforeach
+        @endif
+    </script>
   </body>
   <!--end::Body-->
 </html>
