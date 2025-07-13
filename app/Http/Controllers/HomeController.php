@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Parameter;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +30,20 @@ class HomeController extends Controller
             $data['logo'] = 'n/n';
             $data['user_id'] = Auth::user()->id;
             Company::create($data);
+
+
+
             $company = Company::select('id')->where('user_id', Auth::user()->id)->first();
+
+             $parameter = [
+                'sale_code' => 0,
+                'prefix_sale' => '',
+                'product_code'=>1001,
+                'automatic_product'=>0,
+                'company_id'=> $company->id,
+            ];
+
+            Parameter::create($parameter);
 
             $user = User::find(Auth::user()->id);
             $user->company_id = $company->id;

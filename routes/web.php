@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +29,9 @@ Route::middleware('auth','company')->group(function(){
  Route::resource('category',CategoryController::class);
  Route::resource('product',ProductController::class);
  Route::resource('companydata', CompanyController::class);
+ Route::resource('customer', CustomerController::class);
  Route::resource('supplier', SupplierController::class);
+ Route::resource('shopping', ShoppingController::class);
 
 
 });

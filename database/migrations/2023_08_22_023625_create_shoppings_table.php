@@ -13,14 +13,17 @@ return new class extends Migration
     {
         Schema::create('shoppings', function (Blueprint $table) {
             $table->id();
-            $table->integer('shoppin_number');
-            $table->text('content');          
-            $table->float('total');
+            $table->string('invoice_number');
+            $table->date('shopping_date')->default(now());
+            $table->enum('purchase_type', ['credit', 'counted']);
+            $table->decimal('subtotal', 10, 1);
+            $table->decimal('iva', 10, 1);
+            $table->decimal('total', 10, 1);
             $table->float('balance');
-            $table->time('hour', $precision = 0);
-            $table->date('expiration_date');
-            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');        
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');      
+            $table->date('due_date')->nullable();
+            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

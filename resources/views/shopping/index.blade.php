@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('subtitle')
-    Lista de Productos
+    Lista de Compras
 @endsection
 @section('content')
     <div class="row">
@@ -11,8 +11,8 @@
                 <div class="card-header">
 
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a href="{{ route('product.create') }}" type="button"
-                                class="btn btn-block btn-primary">Nuevo</a></li>
+                        <li class="nav-item"><a href="{{ route('shopping.create') }}" type="button"
+                                class="btn btn-block btn-primary">Nueva compra</a></li>
                     </ul>
                 </div>
                 <!-- /.card-header -->
@@ -23,12 +23,11 @@
                             <tr>
                                 <th>#</th>
                                 <th>Codigo</th>
-                                <th>Nombre</th>
-                                <th>Costo</th>
-                                <th>Precio</th>
-                                <th>Categoria</th>
-                                <th>Cantidad</th>
-                                <th>Estado</th>
+                                <th>Proveedor</th>
+                                <th>fecha</th>
+                                <th>valor</th>
+                                <th>tipo</th>
+                                <th>saldo</th>
                                 <th>Accion</th>
                             </tr>
                         </thead>
@@ -36,33 +35,33 @@
                             @php
                                 $i = 1;
                             @endphp
-                            @foreach ($products as $product)
+                            @foreach ($shopping as $shopp)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $product->code }}</td>
-                                    <td>{{ $product->name }}</td>
-                                    <td>{{ $product->cost }}</td>
-                                    <td>{{ $product->price }}</td>
-                                    <td>{{ $product->category->name }}</td>
-                                    <td>{{ $product->amount }}</td>
+                                    <td>{{ $shopp->invoice_number }}</td>
+                                    <td>{{ $shopp->supplier->full_name }}</td>
+                                    <td>{{ $shopp->created_at }}</td>
+                                    <td>{{ $shopp->total }}</td>
                                     <td>
-                                        @if ($product->state == 1)
-                                            <button type="button" class="btn btn-sm btn-success btn-sm">Activada</button>
+                                        @if ($shopp->purchase_type == 'counted')
+                                            <button type="button" class="btn btn-sm btn-success btn-sm">Contado</button>
                                         @else
-                                            <button type="button" class="btn btn-warning btn-sm">Desactivada</button>
+                                            <button type="button" class="btn btn-warning btn-sm">Credito</button>
                                         @endif
 
                                     </td>
+                                    <td>{{ $shopp->balance }}</td>
+
                                     <td>
                                         <div class="btn-group">
 
-                                            <a href="{{ route('product.show', $product) }}" class="btn btn-primary ">
+                                            <a href="{{ route('shopping.show', $shopp) }}" class="btn btn-primary ">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="{{ route('product.edit', $product) }}" class="btn btn-warning ">
+                                            <a href="{{ route('shopping.edit', $shopp) }}" class="btn btn-warning ">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form action="{{ route('product.destroy', $product) }}" method="post"
+                                            <form action="{{ route('shopping.destroy', $shopp) }}" method="post"
                                                 style="display: inline">
                                                 @method('delete')
                                                 @csrf
@@ -79,7 +78,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-center mt-4">
-                        {{ $products->links() }}
+                        {{ $shopping->links() }}
                     </div>
                 </div>
                 <!-- /.card-body -->

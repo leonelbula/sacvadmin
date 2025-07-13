@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('full_name', 150);
             $table->string('identification_card', 20);
-            $table->string('phone', 15);
+            $table->string('phone', 50);
             $table->string('email', 50);
             $table->string('address', 50);
             $table->string('city', 50);

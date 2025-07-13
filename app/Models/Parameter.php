@@ -10,7 +10,15 @@ class Parameter extends Model
 {
     use HasFactory;
 
-     public function company(): BelongsTo
+    protected $fillable = [
+        'sale_code',
+        'prefix_sale',
+        'product_code',
+        'automatic_product',
+        'company_id'
+    ];
+
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }

@@ -6,16 +6,13 @@ use App\Models\Customer;
 use App\Models\Parameter;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleDetail;
 use App\Models\SaleProduct;
 use App\Models\Term;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class SaleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index()
     {
@@ -34,7 +31,7 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
-        $listProduct = json_decode($request->listaProductos, true);
+        /*$listProduct = json_decode($request->listaProductos, true);
 
         $product = new Product();
         $cost = 0;
@@ -100,7 +97,84 @@ class SaleController extends Controller
             $saleProducto->sale_id = $sale_id;
             $saleProducto->save();
         }
-        return redirect()->route('venta.index');
+        return redirect()->route('venta.index');*/
+        $request->validate([
+        'client_id' => 'required|exists:clients,id',
+        'sale_type' => 'required|in:contado,credito',
+        'due_date' => 'nullable|date',
+        'products' => 'required|array|min:1',
+        'products.*.product_id' => 'required|exists:products,id',
+        'products.*.price' => 'required|numeric|min:0',
+        'products.*.quantity' => 'required|integer|min:1',
+        'products.*.discount' => 'nullable|numeric|min:0',
+        'products.*.iva' => 'nullable|in:on',
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $subtotal = 0;
+        $totalIVA = 0;
+        $total = 0;
+
+        // Crear la venta principal
+        $sale = Sale::create([
+            'client_id'   => $request->client_id,
+            'sale_type'   => $request->sale_type,
+            'due_date'    => $request->sale_type === 'credito' ? $request->due_date : null,
+            'subtotal'    => 0, // temporal
+            'total_iva'   => 0, // temporal
+            'total'       => 0, // temporal
+            'sale_date'   => now(),
+        ]);
+
+        foreach ($request->products as $item) {
+            $product = Product::findOrFail($item['product_id']);
+            $price = $item['price'];
+            $quantity = $item['quantity'];
+            $discount = $item['discount'] ?? 0;
+            $hasIVA = isset($item['iva']) && $item['iva'] === 'on';
+
+            $lineTotal = ($price * $quantity) - $discount;
+            $iva = $hasIVA ? $lineTotal * 0.19 : 0;
+            $lineTotalWithIVA = $lineTotal + $iva;
+
+            // Crear detalle
+            SaleDetail::create([
+                'sale_id'    => $sale->id,
+                'product_id' => $product->id,
+                'price'      => $price,
+                'quantity'   => $quantity,
+                'discount'   => $discount,
+                'iva'        => $iva,
+                'subtotal'   => $lineTotalWithIVA,
+            ]);
+
+            // Actualizar stock del producto
+            $product->stock -= $quantity;
+            $product->save();
+
+            $subtotal += $lineTotal;
+            $totalIVA += $iva;
+        }
+
+        $total = $subtotal + $totalIVA;
+
+        // Actualizar totales en la venta
+        $sale->update([
+            'subtotal' => $subtotal,
+            'total_iva' => $totalIVA,
+            'total' => $total,
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('sales.index')->with('success', 'Venta registrada correctamente.');
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        return back()->with('error', 'Error al registrar la venta: ' . $e->getMessage());
+    }
     }
     public function edit(Sale $sale)
     {

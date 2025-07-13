@@ -37,4 +37,8 @@ class Company extends Model
     {
         return $this->hasMany(Parameter::class);
     }
+    public function shopping():HasMany
+    {
+        return $this->hasMany(Shopping::class);
+    }
 }

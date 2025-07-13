@@ -31,7 +31,12 @@ class ProductController extends Controller
             ->orderBy('name', 'asc')
             ->paginate(10);
         $parameter = $compania->parameters()->first();
-        $automatic_product = $parameter->automatic_product;
+        if ($parameter) {
+            $automatic_product = $parameter->automatic_product;
+        } else {
+            $automatic_product = 0;
+        }
+
 
         return view('product.create', compact('title', 'categories', 'automatic_product'));
     }
@@ -41,17 +46,21 @@ class ProductController extends Controller
         $compania = Company::findOrFail(Auth::user()->company_id);
         $parameter = $compania->parameters()->first();
 
-        if ($parameter->automatic_product) {
-            $product = $compania->products()
-                ->orderBy('created_at', 'desc')
-                ->first();
-            if ($product) {
-                $code = (int)$product->code + 1;
-            } else {
-                $code = $parameter->product_code;
-            }
+        if ($parameter) {
+            if ($parameter->automatic_product) {
+                $product = $compania->products()
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                if ($product) {
+                    $code = (int)$product->code + 1;
+                } else {
+                    $code = $parameter->product_code;
+                }
 
-            $data['code'] = $code;
+                $data['code'] = $code;
+            }
+        }else{
+            $data['code'] = $request->code;
         }
 
         $data['company_id'] = Auth::user()->company_id;

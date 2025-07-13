@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('subtitle')
-    Lista de Productos
+    Nuevo Proveedor
 @endsection
 @section('content')
     <div class="row">

@@ -24,8 +24,6 @@
                             <th>Razon Social o Nombre</th>
                             <th>Nit</th>
                             <th>Telefono</th>
-                            <th>Correo</th>
-                            <th>Direccion</th>
                             <th>Ciudad</th>
                             <th>Departamento</th>
                             <th>Acciones</th>
@@ -37,8 +35,6 @@
                                     <td>{{ $supplier->full_name }}</td>
                                     <td>{{ $supplier->identification_card }}</td>
                                     <td>{{ $supplier->phone }}</td>
-                                    <td>{{ $supplier->email }}</td>
-                                    <td>{{ $supplier->address }}</td>
                                     <td>{{ $supplier->city }}</td>
                                     <td>{{ $supplier->department }}</td>
                                     <td>

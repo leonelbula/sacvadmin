@@ -47,11 +47,6 @@ class CategoryController extends Controller
         $name = $request->input('name');
         $state = $request->input('state');
 
-        if ($state == 'on') {
-            $state = true;
-        } else {
-            $state = false;
-        }
         //asignacion masiva Category::create($request->all());
         $category = new Category();
         $category->name = $name;
@@ -83,12 +78,6 @@ class CategoryController extends Controller
         $category->name = $request->name;
 
         $state = $request->input('state');
-
-        if ($state == 'on') {
-            $state = true;
-        } else {
-            $state = false;
-        }
 
         $category->state = $state;
         //$categoru->update($request->all())

@@ -14,17 +14,18 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->integer('sale_number');
-            $table->text('content');
             $table->float('cost');
             $table->float('utility');
-            $table->float('total');
+            $table->decimal('subtotal', 10, 2);
+            $table->decimal('total_iva', 10, 2);
+            $table->decimal('total', 10, 2);
             $table->float('balance');
             $table->time('hour', $precision = 0);
             $table->date('date_sale');
             $table->date('expiration_date');
             $table->integer('type_sale');
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('restrict');
-           $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }
