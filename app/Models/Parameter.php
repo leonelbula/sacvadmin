@@ -20,6 +20,6 @@ class Parameter extends Model
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Company::class);
     }
 }

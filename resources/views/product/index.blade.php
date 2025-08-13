@@ -17,6 +17,24 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-9">
+                            <form method="GET" action="{{ route('product.index') }}" class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control"
+                                        placeholder="Buscar por nombre o código..." value="{{ $search }}">
+                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-3">
+                            <a href="{{ route('product.index') }}" type="button"
+                                class="btn btn-block btn-primary">Mostrar todos</a>
+
+                        </div>
+                    </div>
+
+
 
                     <table id="tablecategories" class="table table-bordered table-hover">
                         <thead>

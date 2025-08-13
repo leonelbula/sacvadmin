@@ -19,92 +19,131 @@
                 <!-- /.card-header -->
                 <div class="card-body">
 
-                    <form action="{{ route('product.update' ,$product) }}" method="POST">
+                    <form action="{{ route('product.update', $product) }}" method="POST">
                         @method('put')
                         @csrf
-                        <div class="row">
-                            <div class="col-6">
+
+                        <div class="row mb-3">
+                            <div class="col-4">
                                 <div class="form-group">
-                                    <label for="codigo">Codigo:</label>
                                     <input type="text" class="form-control" name="code" id="codigo"
-                                        value="{{ $product->code }}"
-
-
-                                        >
+                                        value="{{ $product->code }}" @if ($automatic_product) disabled @endif
+                                        placeholder="Codigo">
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="form-group">
-                                    <label for="costo">Costo:</label>
+                                    <input type="text" class="form-control" name="name" id="nameProduct"
+                                        value="{{ $product->name }}" required placeholder="Nombre del Producto">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-2">
+                                <div class="form-group">
                                     <input type="number" class="form-control costo" name="cost" id="cost"
-                                        value="{{ $product->cost }}">
+                                        value="{{ $product->cost }}" placeholder="Costo">
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" class="form-control" name="name" id="nameProduct"
-                                value="{{ $product->name }}" required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
+                            <div class="col-2">
                                 <div class="form-group">
-                                    <label for="price">Precio venta:</label>
-                                    <input type="number" class="form-control Precioventa" name="price"
-                                        value="{{$product->price }}" id="price">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="utility">% de Utilidad:</label>
                                     <input type="number" class="form-control Utilidad" name="utility"
-                                        value="{{ $product->utility }}" id="utility" required>
+                                        value="{{ $product->utility }}" id="utility" required placeholder="Utilidad %">
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
+                            <div class="col-2">
                                 <div class="form-group">
-                                    <label for="Categoria">Categoria :</label>
-
-                                    <select class="form-control seleccionarCategoria" name="category_id" required>
-                                        <option value="">Selecione una Categoria</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category->id}} "{{ $category->id == $product->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    <input type="hidden" value="{{ $product->tax_value }}" name="tax_value" id="value_tax">
+                                    <input type="text" class="form-control Utilidad" value="{{ $product->tax_value }}"
+                                        id="tax_value" required placeholder="Iva %" readonly>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="number" class="form-control Precioventa" name="price"
+                                        value="{{ $product->price }}" id="price" placeholder="Precio Venta">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select class="form-control seleccionarCategoria" name="taxes_id" id="taxes_id"
+                                        required>
+                                        <option value="">Selecione un Impuesto</option>
+                                        @foreach ($taxes as $tax)
+                                            <option value="{{ $tax->id }}"
+                                                {{ $tax->id == $product->taxes_id ? 'selected' : '' }}
+                                                data-tax_value="{{ $tax->value }}">
+                                                {{ $tax->description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+
+                        </div>
+                        <hr>
+                        <div class="row mb-2">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="minimum_amount">Stop Minimo:</label>
-                                    <input type="number" class="form-control" name="minimum_amount" value="{{$product->minimum_amount}}"
-                                        id="minimum_amount" required>
+                                    <label for="Categoria">Categoria :</label>
+
+                                    <select class="form-control seleccionarCategoria" name="category_id" required>
+                                        <option >Selecione una Categoria</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }} "
+                                                {{$product->category_id ==  $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="amount">Cantidad:</label>
-                                    <input type="number" class="form-control" name="amount" id="amount" value="{{$product->amount}}">
+                                    <input type="number" class="form-control" name="amount" id="amount"
+                                        value="{{ $product->amount }}">
                                 </div>
                             </div>
-                            <div class="col-6">
-
-                            </div>
-                            <div class="col-6">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="state" id="state"  {{ $product->state ? 'checked' : '' }}> Activar
-                                    </label>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="minimum_amount">Stop Minimo:</label>
+                                    <input type="number" class="form-control" name="minimum_amount"
+                                        value="{{ $product->minimum_amount }}" id="minimum_amount" required>
                                 </div>
                             </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="Categoria">Tipor de producto :</label>
 
+                                    <select class="form-control" name="product_type_id" required>
+                                        <option>Tipo de Producto</option>
+                                        @foreach ($productTypes as $productType)
+                                            <option value="{{ $productType->id }}"
+                                                {{ $product->product_type_id == $productType->id ? 'selected' : '' }}>
+                                                {{ $productType->name }}</option>
+                                        @endforeach
+
+
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="Categoria">Activar :</label>
+
+                                    <select class="form-control" name="state" required>
+                                        <option value="1" {{$product->state == true ? 'selected':''}}>Activo</option>
+                                        <option value="0" {{$product->state == false ? 'selected':''}}>Desactivado</option>
+
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+
+
                         <button type="submit" class="btn btn-primary">Guardar</button>
+
+
 
                     </form>
                     <!-- /.card-body -->

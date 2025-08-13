@@ -93,8 +93,8 @@
                                     placeholder="Ej: Calle 123 #45-67" required>
                             </div>
                              <div class="mb-3">
-                                <label for="department" class="form-label">Departamento</label>
-                                <input type="text" name="department" id="department" value="{{old('department')}}" class="form-control"
+                                <label for="Departament" class="form-label">Departamento</label>
+                                <input type="text" name="Departament" id="Departament" value="{{old('Departament')}}" class="form-control"
                                     placeholder="Ej: Cordoba" required>
                             </div>
                             <div class="mb-3">

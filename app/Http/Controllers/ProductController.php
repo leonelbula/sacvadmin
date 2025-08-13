@@ -7,29 +7,61 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\ProductType;
+use App\Models\Tax;
+use Flasher\Prime\Translation\Messages;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $products = $compania->products()
-            ->orderBy('name', 'asc')
-            ->paginate(10);
+        $search = $request->input('search');
+        if ($search) {
+            $products = Product::where('company_id', Auth::user()->company_id)
+                ->where(function ($queryBuilder) use ($search) {
+                    $queryBuilder->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('code', 'LIKE', "%{$search}%");
+                })
+                ->orderBy('id', 'desc')
+                ->paginate(10)
+                ->withQueryString();
+        } else {
+            $compania = Company::findOrFail(Auth::user()->company_id);
+            $products = $compania->products()
+                ->orderBy('name', 'asc')
+                ->paginate(10);
+        }
+
         $title = 'Lista de Productos';
-        return view('product.index', compact('products', 'title'));
+        return view('product.index', compact('products', 'title', 'search'));
+    }
+    public function search(Request $request)
+    {
+        $query = $request->get('q');
+
+        $productos = Product::where('company_id', Auth::user()->company_id)
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('code', 'LIKE', "%{$query}%");
+            })
+            ->limit(5)
+            ->get(['id', 'name', 'code', 'price', 'amount', 'cost', 'tax']);
+
+
+        return response()->json($productos);
     }
     public function create()
     {
         $title = 'Nuevo Producto';
-
+        $taxes = Tax::all();
+        $productTypes = ProductType::all();
         $compania = Company::findOrFail(Auth::user()->company_id);
         $categories = $compania->categories()
-            ->orderBy('name', 'asc')
-            ->paginate(10);
+            ->orderBy('name', 'asc')->get();
         $parameter = $compania->parameters()->first();
         if ($parameter) {
             $automatic_product = $parameter->automatic_product;
@@ -38,7 +70,13 @@ class ProductController extends Controller
         }
 
 
-        return view('product.create', compact('title', 'categories', 'automatic_product'));
+        return view('product.create', compact(
+            'title',
+            'categories',
+            'automatic_product',
+            'taxes',
+            'productTypes',
+        ));
     }
     public function store(ProductRequest $request)
     {
@@ -46,40 +84,49 @@ class ProductController extends Controller
         $compania = Company::findOrFail(Auth::user()->company_id);
         $parameter = $compania->parameters()->first();
 
-        if ($parameter) {
-            if ($parameter->automatic_product) {
-                $product = $compania->products()
-                    ->orderBy('created_at', 'desc')
-                    ->first();
-                if ($product) {
-                    $code = (int)$product->code + 1;
-                } else {
-                    $code = $parameter->product_code;
+
+        DB::beginTransaction();
+        try {
+
+            if (!$request->code) {
+                if ($parameter->automatic_product) {
+                    $product = $compania->products()
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+                    if ($product) {
+                        $code = (int)$product->code + 1;
+                    } else {
+                        $code = $parameter->product_code;
+                    }
+
+                    $data['code'] = $code;
                 }
-
-                $data['code'] = $code;
+            } else {
+                $data['code'] = $request->code;
             }
-        }else{
-            $data['code'] = $request->code;
+
+            if ($request->state == '1') {
+                $data['state'] = true;
+            } else {
+                $data['state'] = false;
+            }
+
+            if (intval($request->tax_value) != 0) {
+                $data['tax'] = true;
+            } else {
+                $data['tax'] = false;
+            }
+            $data['company_id'] = Auth::user()->company_id;
+
+            Product::create($data);
+            DB::commit();
+            toastr()->success('Nuevo producto Registro');
+            return back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toastr()->error('Error al guardar la informacion');
+            return back();
         }
-
-        $data['company_id'] = Auth::user()->company_id;
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('public/products');
-        } else {
-            $data['image'] = '';
-        }
-
-        if ($request->state == 'on') {
-            $data['state'] = 1;
-        } else {
-            $data['state'] = 0;
-        }
-
-        Product::create($data);
-
-        toastr()->success('Nuevo producto Registro');
-        return back();
     }
     public function show(Product $product)
     {
@@ -88,35 +135,80 @@ class ProductController extends Controller
     }
     public function edit(Product $product)
     {
-        $categories = Category::all();
+
         $title = 'Editar Producto';
-        return view('product.edit', compact('product', 'categories', 'title'));
+        $taxes = Tax::all();
+        $productTypes = ProductType::all();
+        $compania = Company::findOrFail(Auth::user()->company_id);
+        $categories = $compania->categories()
+            ->orderBy('name', 'asc')->get();
+        $parameter = $compania->parameters()->first();
+        if ($parameter) {
+            $automatic_product = $parameter->automatic_product;
+        } else {
+            $automatic_product = 0;
+        }
+        return view('product.edit', compact(
+            'product',
+            'title',
+            'categories',
+            'automatic_product',
+            'taxes',
+            'productTypes'
+        ));
     }
     public function update(ProductRequest $request, Product $product)
     {
         $data = $request->validated();
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('public/products');
-        } else {
-            $data['image'] = '';
+
+        $compania = Company::findOrFail(Auth::user()->company_id);
+        $parameter = $compania->parameters()->first();
+
+        DB::beginTransaction();
+        try {
+
+            if (!$request->code) {
+                if ($parameter->automatic_product) {
+                    $product = $compania->products()
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+                    if ($product) {
+                        $code = (int)$product->code + 1;
+                    } else {
+                        $code = $parameter->product_code;
+                    }
+
+                    $data['code'] = $code;
+                }
+            } else {
+                $data['code'] = $request->code;
+            }
+
+            if ($request->state == '1') {
+                $data['state'] = true;
+            } else {
+                $data['state'] = false;
+            }
+
+            if (intval($request->tax_value) != 0) {
+                $data['tax'] = true;
+            } else {
+                $data['tax'] = false;
+            }
+
+            $product->update($data);
+
+            DB::commit();
+            toastr()->success('Producto Actulizado');
+            return back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toastr()->error('Error al guardar la informacion');
+            return back();
         }
-
-        if ($request->state == 'on') {
-            $data['state'] = 1;
-        } else {
-            $data['state'] = 0;
-        }
-
-        $product->update($data);
-
-        toastr()->success('Registro guardado');
-        return back();
     }
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::delete($product->image);
-        }
         $product->delete();
         toastr()->success('Registro Eliminado');
         return redirect(route('product.index'));

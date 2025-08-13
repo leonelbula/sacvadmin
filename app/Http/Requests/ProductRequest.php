@@ -29,7 +29,10 @@ class ProductRequest extends FormRequest
             'minimum_amount' => 'required',
             'amount' => 'required',
             'category_id' => 'required',
-            'imagen' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'tax_value' =>'required',
+            'state'=> 'required',
+            'taxes_id' =>'required',
+            'product_type_id'=>'required'
         ];
     }
 }

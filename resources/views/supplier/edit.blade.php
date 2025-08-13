@@ -64,8 +64,8 @@
                                         <label>Departamento:</label>
 
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="department"
-                                                value="{{ $supplier->department }}">
+                                            <input type="text" class="form-control" name="Departament"
+                                                value="{{ $supplier->Departament }}">
                                         </div>
                                         <!-- /.input group -->
                                     </div>

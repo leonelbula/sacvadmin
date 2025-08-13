@@ -22,14 +22,18 @@ class CustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'full_name' => 'required|string',
+            'full_name' => 'required|string',
             'identification_card' => 'required',
-            'address' => 'required|string',
-            'department' => 'required|string',
-            'city' => 'required|string',
             'phone' => 'required',
             'email' => 'required|email',
-            'credit_amount' => 'required|integer',
+            'address' => 'required|string',
+            'credit_amount' => 'integer',
+            'departament_id' => 'required|',
+            'city_id' => 'required|',
+            'tax_id' => 'required',
+            'type_organice_id' => 'required',
+            'identity_document_id'=>'required',
+            'customer_tribute_id'=> 'required',
         ];
     }
 }

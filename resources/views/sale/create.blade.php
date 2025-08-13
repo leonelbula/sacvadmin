@@ -1,257 +1,377 @@
-@extends('layouts.app')
-@section('title'){{ $title }} @endsection
-@section('subtitle')Nueva Venta @endsection
+@extends('layouts.master')
+
 @section('content')
-<?php date_default_timezone_set('America/Bogota'); ?>
+    <div class="container mt-2">
 
-<div class="card-body">
-   <!-- title row -->
-   <div class="row">
-      <div class="col-xs-12">
-         <div class="box-body">
-            <div class="box-header with-border cabeceraVenta">
-               <a href="{{route('venta.index')}}">
-                  <button type="button" class="btn btn-primary">Volver</button>
-               </a>
+        <h4>Factura Venta</h4>
 
-               <button class="btn btn-primary" data-toggle="modal" data-target="#customerModal">Agregar Cliente</button>
-               <button class="btn btn-danger" id="btnBlack">
-                  <i class="fa fa-close"></i>
-                  Borrar
-               </button>
+        <form method="POST" action="{{ route('sale.store') }}">
+            @csrf
 
+            {{-- ================= CLIENTE ================= --}}
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between">
+                    <span>Datos del Cliente</span>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalClientes">Buscar Cliente</button>
+                    <a href="{{ route('sale.index') }}" class="btn btn-sm btn-primary">
+                        Volver
+                    </a>
+
+                </div>
+                <div class="card-body ">
+                    <div class="row">
+                        <input type="hidden" name="customer_id" id="customer_id">
+                        <div class="col-md-3">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" id="customer_name" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Identificación:</label>
+                            <input type="text" class="form-control" id="customer_document" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Ciudad:</label>
+                            <input type="text" class="form-control" id="customer_city" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Fecha:</label>
+                            <input type="date" class="form-control" id="date_sale" name="date_sale"
+                                value="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Direccion:</label>
+                            <input type="text" class="form-control" id="customer_address" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Forma de Pago</label>
+                            <select name="payment_form" class="form-control" onchange="toggleOpcionPay(this.value)"
+                                required>
+                                <option>Opciones de Pago</option>
+                                <option value="counted">Contado</option>
+                                <option value="credit">Crédito</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3" id="payment_method_div" style="display: none;">
+                            <label>Medio de Pago</label>
+                            <select name="payment_method" class="form-control">
+                                <option value="">selecione una opcion</option>
+                                @foreach ($payments as $pay)
+                                    <option value="{{ $pay->id }}">{{ $pay->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3" id="due_plazo_div" style="display: none;">
+                            <label>Plazo en diaz</label>
+                            <input type="number" name="plazo" class="form-control">
+                        </div>
+                    </div>
+                </div>
 
             </div>
-         </div>
-      </div>
-      <!-- /.col -->
-   </div>
 
-
-   <br>
-
-   <!-- info row -->
-   <form role="form" method="post" action="{{ route('venta.store') }}" class="formularioVenta">
-      @csrf
-      <div class="row ">
-         <div class="col-md-6 col-sm-12 col-xs-12">
-            <div class="form-group">
-               <input type="hidden" name="customer_id" id="customer_id" value="">
-               <input type="text" class="form-control" name="full_name" id="full_name" value="" disabled placeholder="Nombre cliente">
+            {{-- ================= PRODUCTOS ================= --}}
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between">
+                    <span>Productos</span>
+                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                        data-bs-target="#modalProductos">Agregar Producto</button>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered" id="product-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>IVA (%)</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
-         </div>
-         <div class="col-md-3 col-sm-3 col-xs-12">
-            <div class="form-group">
-               <input type="text" class="form-control"  id="identification_card" value="" disabled placeholder="Nit - CC">
+
+            {{-- ================= TOTALES ================= --}}
+            <div class="card mb-4">
+                <div class="card-body row">
+                    <div class="col-md-4 offset-md-8">
+                        <label>Subtotal:</label>
+                        <input type="text" class="form-control" id="subtotal" name="subtotal" readonly>
+                        <label>IVA:</label>
+                        <input type="text" class="form-control" id="iva" name="iva" readonly>
+                        <label>Total:</label>
+                        <input type="hidden" name="costs" id="costs">
+                        <input type="text" class="form-control" id="total" name="total" readonly>
+                    </div>
+                </div>
             </div>
-         </div>
-         <div class="col-md-3 col-sm-3 col-xs-12">
-            <div class="form-group">
-               <input type="date" class="form-control" name="fecha" id="fecha" value="<?= date('Y-m-d') ?>">
+
+            <button type="submit" class="btn btn-primary">Guardar Factura</button>
+        </form>
+    </div>
+
+    @include('sale.modals.customers')
+    @include('sale.modals.products')
+
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+        <div id="precioToast" class="toast align-items-center text-white bg-warning border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastBody">
+                    <!-- contenido dinámico -->
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Cerrar"></button>
             </div>
-         </div>
-
-      </div>
-      <div class="row">
-         <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <input type="text" class="form-control" id="address" value="" disabled placeholder="Direccion">
-         </div>
-         <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <input type="text" class="form-control" id="city" value="" disabled placeholder="Ciudad">
-         </div>         
-         <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <select class="chosen-select form-control seleccionarTipoventa" name="type_sale" id="" required="">
-               <option value="">Tipo Venta</option>
-               <option value="0">Contado</option>
-               <option value="1">Credito</option>
-               <option value="2">Nequi/otros</option>
-               <option value="3">Plan separe</option>
-
-            </select>
-         </div>
-         <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <select class="chosen-select form-control plazoVenta" name="plazos" id="plazo-sale">
-               <option value="">Plazo de venta</option>
-               @foreach ($terms as $term)
-               <option value="{{$term->value}}">{{$term->description}}</option>
-               @endforeach
-            </select>
-         </div>
-
-      </div>
-
-      <div class="col-sm-12 ">
-
-         <div class="form-group col-lg-2 col-md-2 col-sm-6 col-xs-12">
-         <button class="btn btn-primary" data-toggle="modal" data-target="#productsModal">Agregar productos</button>
-
-         </div>
-
-      </div>
-
-
-      <!-- Table row -->
-      <div class="row">
-         <div class="col-xs-12 ">
-            <table class="table table-striped table-responsive">
-               <thead>
-                  <tr>
-                     <th>codigo</th>
-                     <th>Producto detalle</th>
-                     <th>cantidad</th>							
-                     <th>precio</th>							
-                     <th>% Descuento</th>                        
-                     <th>Subtotal</th>
-                     <th>Accion</th>
-                  </tr>
-               </thead>
-
-               <tbody class="nuevoProducto">
-                       <!--<tr>
-                               <td>1</td>
-                               <td>Call of Duty</td>
-                               <td><input type="number" name="cantidad" value="1" /></td>
-                               <td><input type="number" name="precio" value=""/></td>
-                               <td><input type="number" name="descuento" value="0"/></td>
-                               <td>$64.50</td>
-                               <td><a href="eliminar&id="><button class="btn btn-danger btnEliminarProducto"><i class="fa fa-times"></i></button></a></td>
-                       </tr>-->
-
-               </tbody>
-            </table>
-            <input type="hidden" id="listaProductos" name="listaProductos">
-            <input type="hidden" id="clienteVentaN" name="clienteVentaN" value="">
-         </div>
-         <!-- /.col -->
-      </div>
-      <!-- /.row -->
-
-      <div class="row">
-        
-         <div class="col-md-8">          
-        
-         </div>
-         <!-- /.col -->
-         <div class="col-md-4">
-
-
-            <div class="table-responsive">
-               <table class="table">
-
-                  <tr class="l-total">
-                     <th class="total-t">TOTAL:</th>
-                     <td class="total-v">
-                        <input type="hidden" name="totalVenta" id="totalVenta">
-                        <input type="text" class="form-control input-lg nuevoTotalVenta" id="nuevoTotalVenta" name="nuevoTotalVenta" value="0" readonly/>
-                     </td>
-                  </tr>
-               </table>
-            </div>
-         </div>
-         <!-- /.col -->
-      </div>
-      <!-- /.row -->
-
-      <!-- this row will not appear when printing -->
-      <div class="row no-print">
-         <div class="col-md-12">
-            </button>
-            <button type="submit" class="btn btn-primary pull-right" style="margin-right: 5px;">
-               <i class="fa fa-download"></i> Guardar venta
-            </button>
-         </div>
-      </div>
-   </form>
-
-</div>
-<div class="clearfix"></div>
-
-
-<input type="hidden" id="productall" value="{{ route('ajaxproducto.all') }}">
-<input type="hidden" id="productget" value="{{ route('ajaxproducto.get') }}">
-<input type="hidden" id="customerall" value="{{ route('ajaxcustomer.all') }}">
-<input type="hidden" id="customerget" value="{{ route('ajaxcustomer.get') }}">
-
-@endsection
-
-<div class="modal fade" tabindex="-1" role="dialog" id="customerModal">
-   <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title">Lista de Clientes</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         <div class="modal-body">
-            <table class="table table-bordered table-striped dt-responsive" id="tableCustomer">
-               <thead>
-                  <tr>
-                     <th>#</th>                     
-                     <th>Nombre</th>
-                     <th>Nit</th>
-                     <th>Accion</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  @foreach ($customers as $customer)
-                  <tr>
-                     <th>{{ $customer->id }}</th>                     
-                     <th>{{ $customer->full_name }}</th>
-                     <th>{{ $customer->identification_card }}</th>
-                     <th> <button class="btn btn-primary " id="customer_id" data-customerId='{{$customer->id}}' >Selecionar</button></th>
-                  </tr>
-                  @endforeach
-                 
-               </tbody>
-            </table>
-         </div>
-         <div class="modal-footer bg-whitesmoke br">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-         </div>
-      </div>
-   </div>
-</div>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="productsModal">
-   <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title">Lista de Productos</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         <div class="modal-body">
-            <table class="table table-bordered table-striped dt-responsive" id="tb_product_sale">
-               <thead>
-                  <tr>                     
-                     <th>codigo</th>
-                     <th>Descripcion</th>
-                     <th>precio</th>
-                     <th>stop</th>
-                     <th>accion</th>
-                  </tr>
-               </thead>
-               <tbody>
-                 
-               </tbody>
-            </table>
-         </div>
-         <div class="modal-footer bg-whitesmoke br">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-         </div>
-      </div>
-   </div>
-</div>
+        </div>
+    </div>
 
 
 
+    <script>
+        // ======================= BUSCAR CLIENTE =======================
+        document.getElementById('buscarCliente').addEventListener('input', function() {
+            const q = this.value;
+
+            fetch(`/customers/search/${q}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#tablaClientes tbody');
+                    tbody.innerHTML = '';
+
+                    data.forEach(cliente => {
+                        tbody.innerHTML += `
+                    <tr>
+                        <td>${cliente.full_name}</td>
+                        <td>${cliente.identification_card}</td>
+                        <td>${cliente.city['name']}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="seleccionarCliente(${cliente.id}, '${cliente.full_name}','${cliente.identification_card}','${cliente.address}','${cliente.city['name']}')">Seleccionar</button>
+                        </td>
+                    </tr>`;
+                    });
+                });
+        });
+
+        function seleccionarCliente(id, full_name, identification_card, address, city) {
+            document.getElementById('customer_id').value = id;
+            document.getElementById('customer_name').value = full_name;
+            document.getElementById('customer_document').value = identification_card;
+            document.getElementById('customer_address').value = address;
+            document.getElementById('customer_city').value = city;
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalClientes'));
+            modal.hide();
+        }
+
+        function toggleOpcionPay(value) {
+            if (value === 'credit') {
+                document.getElementById('due_plazo_div').style.display = value === 'credit' ? 'block' : 'none';
+                document.getElementById('payment_method_div').style.display = 'none';
+            } else {
+                document.getElementById('payment_method_div').style.display = value === 'counted' ? 'block' : 'none';
+                document.getElementById('due_plazo_div').style.display = 'none';
+            }
+        }
+
+
+        // ======================= BUSCAR PRODUCTO =======================
+        document.getElementById('modalProductos').addEventListener('show.bs.modal', function() {
+            document.getElementById('buscarProducto').value = '';
+            document.querySelector('#tablaProductos tbody').innerHTML = '';
+        });
+
+        document.getElementById('buscarProducto').addEventListener('input', function() {
+            const q = this.value;
+            if (q.length < 2) {
+                document.querySelector('#tablaProductos tbody').innerHTML = '';
+                return;
+            }
+
+            fetch(`/products/search/${q}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#tablaProductos tbody');
+                    tbody.innerHTML = '';
+
+                    data.forEach(producto => {
+                        tbody.innerHTML += `
+                    <tr>
+                        <td>${producto.id}</td>
+                        <td>${producto.code}</td>
+                        <td>${producto.name}</td>
+                        <td>${producto.price}</td>
+                        <td>${producto.tax}%</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick='seleccionarProducto(${JSON.stringify(producto)})'>Agregar</button>
+                        </td>
+                    </tr>`;
+                    });
+                });
+        });
+
+        function seleccionarProducto(producto) {
+            agregarProducto(producto);
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalProductos'));
+            modal.hide();
+            document.getElementById('buscarProducto').value = '';
+            document.querySelector('#tablaProductos tbody').innerHTML = '';
+        }
+
+        // ======================= PRODUCTOS =======================
+        let productos = [];
+
+        function agregarProducto(producto) {
+            const existe = productos.find(p => p.id === producto.id);
+            if (existe) return alert('Este producto ya fue agregado');
+
+            productos.push({
+                ...producto,
+                quantity: 1,
+                price: parseInt(producto.price),
+                original_price: parseInt(producto.price),
+                cost: parseInt(producto.cost),
+                iva: parseInt(producto.tax),
+                stock: parseInt(producto.amount) || 0
+            });
+
+            renderProductos();
+        }
+
+        function eliminarProducto(id) {
+            productos = productos.filter(p => p.id !== id);
+            renderProductos();
+        }
+
+        function renderProductos() {
+            const tbody = document.querySelector('#product-table tbody');
+            tbody.innerHTML = '';
+
+            productos.forEach((p, index) => {
+                tbody.innerHTML += `
+                <tr>
+                    <td>
+                        ${p.name}
+                        <input type="hidden" name="products[]" value="${p.id}">
+                        <input type="hidden" name="tax[]" value="${p.tax}">
+                        <input type="hidden" name="cost_product[]" value="${p.cost}">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control cantidad-input" data-index="${index}" name="quantities[]" value="${p.quantity}" min="1">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control precio-input" data-index="${index}" name="prices[]" value="${p.price}">
+                    </td>
+                    <td>${p.tax}%</td>
+                    <td>${(p.price * p.quantity).toFixed(0)}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(${p.id})">X</button>
+                    </td>
+                </tr>`;
+            });
+
+            calcularTotales();
+        }
+
+        function calcularTotales() {
+            let subtotal = 0;
+            let ivaTotal = 0;
+            let costs = 0;
+
+            productos.forEach(p => {
+                const sub = p.price * p.quantity;
+                const iva = sub * (p.iva / 100);
+                const cost_t = p.cost * p.quantity;
+                subtotal += sub;
+                ivaTotal += iva;
+                costs += cost_t;
+            });
 
 
 
-@section('script')
-<script src="{{ asset('js/newsale.js')}}"></script>
-<script src="{{ asset('js/customer.js')}}"></script>
-<script src="{{ asset('js/productssale.js')}}"></script>
+            document.getElementById('subtotal').value = subtotal.toFixed(0);
+            document.getElementById('iva').value = ivaTotal.toFixed(0);
+            document.getElementById('total').value = (subtotal + ivaTotal).toFixed(0);
+            document.getElementById('costs').value = (costs).toFixed(0);
+        }
+
+        // ======================= TOAST =======================
+        function mostrarToast(mensaje) {
+            const toastBody = document.getElementById('toastBody');
+            toastBody.textContent = mensaje;
+
+            const toastElement = document.getElementById('precioToast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+        // ======================= INPUT EN CANTIDAD Y PRECIO =======================
+        document.addEventListener('input', function(e) {
+            const index = parseInt(e.target.dataset.index);
+            const isCantidad = e.target.classList.contains('cantidad-input');
+            const isPrecio = e.target.classList.contains('precio-input');
+
+            if (isCantidad || isPrecio) {
+                let cantidadInput = document.querySelector(`.cantidad-input[data-index="${index}"]`);
+                let precioInput = document.querySelector(`.precio-input[data-index="${index}"]`);
+
+                let cantidad = parseInt(cantidadInput.value) || 1;
+                let precio = parseInt(precioInput.value) || 0;
+
+                const stock = productos[index].stock;
+                if (cantidad > stock) {
+                    cantidad = stock;
+                    cantidadInput.value = stock;
+                    mostrarToast(
+                        `La cantidad solicitada supera el stock disponible (${stock}). Se ha ajustado automáticamente.`
+                    );
+                }
+
+                productos[index].quantity = cantidad;
+                productos[index].price = precio;
+
+                const fila = e.target.closest('tr');
+                const subtotalCell = fila.querySelector('td:nth-child(5)');
+                subtotalCell.textContent = (precio * cantidad).toFixed(0);
+
+                calcularTotales();
+            }
+        });
+
+        // ======================= VALIDACIÓN DE PRECIO AL SALIR =======================
+        document.addEventListener('blur', function(e) {
+            if (e.target.classList.contains('precio-input')) {
+                const index = parseInt(e.target.dataset.index);
+                const precioInput = e.target;
+                let precioIngresado = parseInt(precioInput.value) || 0;
+
+                const costo = productos[index].cost;
+                const sugerido = productos[index].original_price;
+                const cantidad = productos[index].quantity;
+
+                if (precioIngresado < costo) {
+                    mostrarToast(
+                        `El precio ingresado es menor al costo ($${costo}). Se ha restablecido el precio sugerido.`
+                    );
+                    precioIngresado = sugerido;
+                    precioInput.value = sugerido;
+                }
+
+                productos[index].price = precioIngresado;
+
+                const fila = e.target.closest('tr');
+                const subtotalCell = fila.querySelector('td:nth-child(5)');
+                subtotalCell.textContent = (precioIngresado * cantidad).toFixed(0);
+
+                calcularTotales();
+            }
+        }, true); // importante: captura true para que funcione blur correctamente
+    </script>
 @endsection

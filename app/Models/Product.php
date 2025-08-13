@@ -10,14 +10,29 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'code',
+        'name',
+        'cost',
+        'price',
+        'utility',
+        'minimum_amount',
+        'amount',
+        'tax',
+        'tax_value',
+        'state',
+        'product_type_id',
+        'taxes_id',
+        'category_id',
+        'company_id'
+    ];
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-     public function company(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Company::class);
     }
 }

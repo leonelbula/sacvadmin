@@ -27,7 +27,7 @@ class CompanyDataRequest extends FormRequest
             'phone' => 'required',
             'email' => 'required',
             'address' => 'required|string',
-            'department' => 'required|string',
+            'Departament' => 'required|string',
             'city' => 'required|string',
         ];
     }

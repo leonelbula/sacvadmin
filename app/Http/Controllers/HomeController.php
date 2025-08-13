@@ -7,6 +7,7 @@ use App\Models\Parameter;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -24,6 +25,8 @@ class HomeController extends Controller
     }
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         try {
 
             $data = $request->all();
@@ -35,12 +38,12 @@ class HomeController extends Controller
 
             $company = Company::select('id')->where('user_id', Auth::user()->id)->first();
 
-             $parameter = [
+            $parameter = [
                 'sale_code' => 0,
                 'prefix_sale' => '',
-                'product_code'=>1001,
-                'automatic_product'=>0,
-                'company_id'=> $company->id,
+                'product_code' => 1001,
+                'automatic_product' => 0,
+                'company_id' => $company->id,
             ];
 
             Parameter::create($parameter);
@@ -49,11 +52,13 @@ class HomeController extends Controller
             $user->company_id = $company->id;
             $user->save();
             Auth::setUser($user->fresh());
+            DB::commit();
+
             toastr()->success('Registro guardado');
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
-
-            toastr()->error('Informcion de guardada');
+            DB::rollBack();
+            toastr()->error('Informcion no guardada');
             return back();
         }
     }

@@ -74,7 +74,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./layout/unfixed-sidebar.html" class="nav-link">
+                    <a href="{{ route('customer.index')}}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>LISTA DE CLIENTES</p>
                     </a>
@@ -132,7 +132,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
+                    <a href="{{route('sale.index')}}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>LISTA DE VENTAS</p>
                     </a>

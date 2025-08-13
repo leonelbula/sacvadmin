@@ -5,6 +5,8 @@ namespace Database\Factories;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Product;
+use App\Models\ProductType;
+use App\Models\Tax;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,22 +24,28 @@ class ProductFactory extends Factory
 
     public function definition(): array
     {
-        $cost = $this->faker->randomFloat(2, 10, 100);
-        $utility = $this->faker->randomFloat(2, 10, 50); // utilidad en valor
-        $price = $cost + $utility;
+       $cost = $this->faker->randomFloat(2, 1000, 100000);
+        $utility = $this->faker->randomFloat(2, 5, 50); // Porcentaje
+        $price = $cost + ($cost * ($utility / 100));
+        $taxIncluded = $this->faker->boolean();
 
         return [
-            'code' => $this->faker->unique()->ean13,
-            'name' => $this->faker->words(3, true), // Ej: "Cámara de seguridad HD"
+            'code' => strtoupper($this->faker->bothify('PRD-###??')),
+            'name' => $this->faker->words(3, true),
             'cost' => $cost,
             'price' => $price,
             'utility' => $utility,
-            'minimum_amount' => $this->faker->randomFloat(2, 1, 5),
-            'amount' => $this->faker->randomFloat(2, 10, 100),
-            'image' => $this->faker->imageUrl(640, 480, 'products', true),
+            'minimum_amount' => $this->faker->numberBetween(1, 10),
+            'amount' => $this->faker->numberBetween(10, 500),
+            'tax' => $taxIncluded,
+            'tax_value' => $taxIncluded ? $this->faker->randomElement([0, 5, 19]) : 0,
             'state' => $this->faker->boolean(90),
-            'category_id' => Category::inRandomOrder()->first()->id ?? Category::factory(),
-            'company_id' => Company::inRandomOrder()->first()->id ?? Company::factory(),
+
+            // Relaciones
+            'product_type_id' => ProductType::inRandomOrder()->first()->id ?? 1,
+            'taxes_id' => Tax::inRandomOrder()->first()->id ?? 1,
+            'category_id' => Category::inRandomOrder()->first()->id ?? 1,
+            'company_id' => Company::inRandomOrder()->first()->id ?? 1,
         ];
     }
 }

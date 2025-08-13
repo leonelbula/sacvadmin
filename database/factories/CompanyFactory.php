@@ -17,7 +17,7 @@ class CompanyFactory extends Factory
      * @return array<string, mixed>
      */
     protected $model = Company::class;
-    
+
     public function definition(): array
     {
         return [
@@ -26,7 +26,7 @@ class CompanyFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->companyEmail,
             'address' => $this->faker->streetAddress,
-            'department' => $this->faker->state,
+            'Departament' => $this->faker->state,
             'city' => $this->faker->city,
             'logo' => null, // Puedes generar imagen si quieres usando $this->faker->imageUrl()
             'user_id' => User::factory(), // Crea un usuario asociado automáticamente

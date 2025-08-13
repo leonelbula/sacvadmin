@@ -60,7 +60,7 @@ class SupplierController extends Controller
             'full_name' => 'required|string',
             'identification_card' => 'required',
             'address' => 'required|string',
-            'department' => 'required|string',
+            'Departament' => 'required|string',
             'city' => 'required|string',
             'phone' => 'required',
             'email' => 'required|email',
@@ -81,7 +81,7 @@ class SupplierController extends Controller
         $supplier->full_name = $request->full_name;
         $supplier->identification_card = $request->identification_card;
         $supplier->address = $request->address;
-        $supplier->department = $request->department;
+        $supplier->Departament = $request->Departament;
         $supplier->city = $request->city;
         $supplier->phone = $request->phone;
         $supplier->email = $request->email;

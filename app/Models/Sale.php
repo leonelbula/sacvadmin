@@ -10,7 +10,35 @@ class Sale extends Model
 {
     use HasFactory;
 
-    public function customer():BelongsTo{
+    protected $fillable = [
+        'sale_number',
+        'cost',
+        'utility',
+        'subtotal',
+        'total_iva',
+        'total',
+        'balance',
+        'hour',
+        'date_sale',
+        'term',
+        'expiration_date',
+        'type_sale',
+        'payment_form',
+        'payment_method',
+        'customer_id',
+        'company_id',
+    ];
+
+    public function customer(): BelongsTo
+    {
         return $this->belongsTo(Customer::class);
+    }
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+    public function saleDetail(): BelongsTo
+    {
+        return $this->belongsTo(SaleDetail::class);
     }
 }

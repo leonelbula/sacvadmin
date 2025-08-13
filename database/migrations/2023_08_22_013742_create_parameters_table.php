@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
             $table->integer('sale_code');
-            $table->string('prefix_sale',10);
+            $table->boolean('tax_include');
             $table->integer('product_code');
             $table->boolean('automatic_product');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');

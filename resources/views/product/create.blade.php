@@ -21,51 +21,61 @@
 
                     <form action="{{ route('product.store') }}" method="POST">
                         @csrf
-                        <div class="row">
-                            <div class="col-6">
+                        <div class="row mb-3">
+                            <div class="col-4">
                                 <div class="form-group">
-                                    <label for="codigo">Codigo:</label>
                                     <input type="text" class="form-control" name="code" id="codigo"
-                                        value="{{ old('code') }}"
-
-                                        @if ($automatic_product)
-                                            disabled
-                                        @endif
-                                        >
+                                        value="{{ old('code') }}" @if ($automatic_product) disabled @endif placeholder="Codigo">
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="form-group">
-                                    <label for="costo">Costo:</label>
+                                    <input type="text" class="form-control" name="name" id="nameProduct"
+                                        value="{{ old('name') }}" required  placeholder="Nombre del Producto">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-2">
+                                <div class="form-group">
                                     <input type="number" class="form-control costo" name="cost" id="cost"
-                                        value="{{ old('cost') }}">
+                                        value="{{ old('cost') }}" placeholder="Costo">
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" class="form-control" name="name" id="nameProduct"
-                                value="{{ old('name') }}" required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
+                            <div class="col-2">
                                 <div class="form-group">
-                                    <label for="price">Precio venta:</label>
-                                    <input type="number" class="form-control Precioventa" name="price"
-                                        value="{{ old('price') }}" id="price">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="utility">% de Utilidad:</label>
                                     <input type="number" class="form-control Utilidad" name="utility"
-                                        value="{{ old('utility') }}" id="utility" required>
+                                        value="{{ old('utility') }}" id="utility" required placeholder="Utilidad %">
                                 </div>
                             </div>
+                              <div class="col-2">
+                                <div class="form-group">
+                                    <input type="hidden" name="tax_value" id="value_tax">
+                                    <input type="text" class="form-control Utilidad"
+                                        value="{{ old('tax_value') }}" id="tax_value" required placeholder="Iva %" readonly>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="number" class="form-control Precioventa" name="price"
+                                        value="{{ old('price') }}" id="price" placeholder="Precio Venta">
+                                </div>
+                            </div>
+                             <div class="col-3">
+                                <div class="form-group">
+                                    <select class="form-control seleccionarCategoria" name="taxes_id" id="taxes_id" required>
+                                        <option value="">Selecione un Impuesto</option>
+                                        @foreach ($taxes as $tax)
+                                            <option value="{{ $tax->id }}" data-tax_value="{{$tax->value}}">{{ $tax->description }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="row">
-                            <div class="col-6">
+                        <hr>
+                        <div class="row mb-2">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="Categoria">Categoria :</label>
 
@@ -77,34 +87,48 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                             <div class="col-2">
+                                <div class="form-group">
+                                    <label for="amount">Cantidad:</label>
+                                    <input type="number" class="form-control" name="amount" id="amount" value="0">
+                                </div>
+                            </div>
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="minimum_amount">Stop Minimo:</label>
                                     <input type="number" class="form-control" name="minimum_amount" value="0"
                                         id="minimum_amount" required>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-3">
+                                 <div class="form-group">
+                                    <label for="Categoria">Tipor de producto :</label>
 
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="amount">Cantidad:</label>
-                                    <input type="number" class="form-control" name="amount" id="amount" value="0">
+                                    <select class="form-control" name="product_type_id" required>
+                                         <option >Tipo de Producto</option>
+                                        @foreach ($productTypes as $productType)
+                                        <option value="{{$productType->id}}">{{$productType->name}}</option>
+                                        @endforeach
+
+
+
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-2">
+                                 <div class="form-group">
+                                    <label for="Categoria">Activar :</label>
 
-                            </div>
-                            <div class="col-6">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="state" id="state"> Activar
-                                    </label>
+                                    <select class="form-control" name="state" required>
+                                        <option value="1">Activo</option>
+                                        <option value="0">Desactivado</option>
+
+                                    </select>
                                 </div>
                             </div>
-
                         </div>
+
+
                         <button type="submit" class="btn btn-primary">Guardar</button>
 
                     </form>

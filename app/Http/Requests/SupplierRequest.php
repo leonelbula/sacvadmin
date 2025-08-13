@@ -25,7 +25,7 @@ class SupplierRequest extends FormRequest
             'full_name' => 'required|string',
             'identification_card' => 'required',
             'address' => 'required|string',
-            'department' => 'required|string',
+            'Departament' => 'required|string',
             'city' => 'required|string',
             'phone' => 'required',
             'email' => 'required|email',

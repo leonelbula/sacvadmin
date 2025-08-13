@@ -29,7 +29,7 @@ class SupplierFactory extends Factory
             'email' => $this->faker->unique()->companyEmail(),
             'address' => $this->faker->streetAddress(),
             'city' => $this->faker->city(),
-            'department' => $this->faker->state(),
+            'Departament' => $this->faker->state(),
             'credit_amount' => $this->faker->randomFloat(2, 0, 200000), // crédito asignado
             'description' => $this->faker->catchPhrase(), // algo como "Proveedor confiable de repuestos"
             'company_id' => Company::inRandomOrder()->first()->id ?? Company::factory(),

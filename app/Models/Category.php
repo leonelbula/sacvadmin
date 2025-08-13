@@ -30,7 +30,7 @@ class Category extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function companydata(): BelongsTo
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }

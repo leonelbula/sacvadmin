@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email', 50);
             $table->string('address', 50);
             $table->string('city', 50);
-            $table->string('department', 50);
+            $table->string('Departament', 50);
             $table->float('credit_amount');
             $table->string('description', 150);
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');

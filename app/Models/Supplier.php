@@ -15,7 +15,7 @@ class Supplier extends Model
         'full_name',
         'identification_card',
         'address',
-        'department',
+        'Departament',
         'city',
         'phone',
         'email',

@@ -13,14 +13,18 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name', 150);
-            $table->string('identification_card', 20);
-            $table->string('phone', 50);
-            $table->string('email', 50);
-            $table->string('address', 50);
-            $table->string('city', 50);
-            $table->string('department', 50);
+            $table->string('full_name');
+            $table->string('identification_card');
+            $table->string('phone');
+            $table->string('email');
+            $table->string('address');
             $table->float('credit_amount');
+            $table->foreignId('departament_id')->constrained('departaments')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('city_id')->constrained('cities')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('tax_id')->constrained('taxes')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('type_organice_id')->constrained('organization_types')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('identity_document_id')->constrained('identity_documents')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('customer_tribute_id')->constrained('customer_tributes')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

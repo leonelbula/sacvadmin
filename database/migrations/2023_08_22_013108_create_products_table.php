@@ -20,8 +20,11 @@ return new class extends Migration
             $table->float('utility');
             $table->float('minimum_amount');
             $table->float('amount');
-            $table->string('image', 255);
+            $table->boolean('tax');
+            $table->integer('tax_value');
             $table->boolean('state');
+            $table->foreignId('product_type_id')->constrained('product_types')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('taxes_id')->constrained('taxes')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('category_id')->constrained('categories')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();

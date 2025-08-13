@@ -16,7 +16,7 @@ class Company extends Model
         'phone',
         'email',
         'address',
-        'department',
+        'Departament',
         'city',
         'logo',
         'user_id',
@@ -29,6 +29,10 @@ class Company extends Model
     {
         return $this->hasMany(Product::class);
     }
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
     public function suppliers(): HasMany
     {
         return $this->hasMany(Supplier::class);
@@ -37,8 +41,12 @@ class Company extends Model
     {
         return $this->hasMany(Parameter::class);
     }
-    public function shopping():HasMany
+    public function shopping(): HasMany
     {
         return $this->hasMany(Shopping::class);
+    }
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
     }
 }

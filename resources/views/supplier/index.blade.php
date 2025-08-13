@@ -36,7 +36,7 @@
                                     <td>{{ $supplier->identification_card }}</td>
                                     <td>{{ $supplier->phone }}</td>
                                     <td>{{ $supplier->city }}</td>
-                                    <td>{{ $supplier->department }}</td>
+                                    <td>{{ $supplier->Departament }}</td>
                                     <td>
                                         <div class="btn-group">
                                              <a href="{{ route('supplier.show', $supplier) }}" class="btn btn-primary ">
