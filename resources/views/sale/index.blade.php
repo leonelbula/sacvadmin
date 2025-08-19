@@ -53,19 +53,28 @@
                                     </td>
                                     <td>
                                         <div class="btn-group">
-
-                                            <button class="btn btn-info btnImprimirFactura" codesale="">
-                                                <i class="bi bi-printer"></i>
-                                            </button>
-                                            <button class="btn btn-primary btnverfacturaVenta" idsale="">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
+                                            <a href="{{ route('sale.invocesPdf', $sale) }}" target="_blank">
+                                                <button class="btn btn-info" codesale="">
+                                                    <i class="bi bi-printer"></i>
+                                                </button>
+                                            </a>
+                                            <a href="{{ route('sale.show', $sale) }}">
+                                                <button class="btn btn-primary btnverfacturaVenta" idsale="">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                            </a>
                                             <a href="{{ route('sale.edit', $sale) }}">
                                                 <button type="button" class="btn btn-warning"><i
                                                         class="bi bi-pencil"></i></button>
                                             </a>
-                                            <button class="btn btn-danger btnEliminarVenta" idVenta=""> <i
-                                                    class="bi bi-trash"></i></button>
+                                            <form action="{{ route('sale.destroy', $sale) }}" method="post"
+                                                style="display: inline">
+                                                @method('delete')
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger "> <i
+                                                        class="bi bi-trash3"></i></button>
+                                            </form>
+
                                         </div>
 
                                     </td>

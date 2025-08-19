@@ -36,6 +36,11 @@ Route::middleware('auth', 'company')->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('shopping', ShoppingController::class);
     Route::resource('sale', SaleController::class);
+
+});
+
+Route::middleware('auth', 'company')->group(function () {
+    Route::get('sale/pdf/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
 });
 
 Route::get('/customers/search/{q}', [CustomerController::class, 'search']);
