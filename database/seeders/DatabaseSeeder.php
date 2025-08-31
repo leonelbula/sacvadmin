@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-      /*  $this->call([
-            DepartamentsTableSeeder::class,
+        $this->call([
+             DepartamentsTableSeeder::class,
             CitiesTableSeeder::class,
             TaxesTableSeeder::class,
             OrganizationTypesTableSeeder::class,
@@ -28,11 +28,11 @@ class DatabaseSeeder extends Seeder
             IdentityDocumentsTableSeeder::class,
             CustomerTributesTableSeeder::class,
             ProductTypeSeeder::class,
-        ]);*/
-        //User::factory()->count(5)->create();
-        //Company::factory()->count(5)->create();
-       // Category::factory()->count(100)->create();
-        Product::factory()->count(1000)->create();
+        ]);
+        User::factory()->count(5)->create();
+        Company::factory()->count(5)->create();
+        Category::factory()->count(100)->create();
+        Product::factory()->count(100)->create();
         Customer::factory()->count(100)->create();
     }
 }

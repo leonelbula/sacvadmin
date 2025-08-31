@@ -109,13 +109,13 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./UI/icons.html" class="nav-link">
+                    <a href="" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>ESTADO DE CUENTAS</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="./UI/timeline.html" class="nav-link">
+                    <a href="" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>REPORTES</p>
                     </a>
@@ -138,7 +138,7 @@
                     </a>
                   </li>
                     <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
+                    <a href="" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>REPORTES</p>
                     </a>
@@ -155,7 +155,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
+                    <a href="{{ route('returnsale.index')}}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>LISTA DE VOLUCIONES</p>
                     </a>
@@ -181,6 +181,29 @@
                     <a href="{{route('shopping.index')}}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Lista Compras</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('shopping.index')}}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Reportes</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+               <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="bi bi-clipboard-check"></i>
+                  <p>
+                    GASTOS
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{route('shopping.index')}}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Lista Gastos</p>
                     </a>
                   </li>
                   <li class="nav-item">

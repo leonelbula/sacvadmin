@@ -34,7 +34,7 @@ class CustomerFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'address' => $this->faker->address(),
-            'credit_amount' => $this->faker->random_int(100000,1000000),
+            'credit_amount' => $this->faker->randomFloat(100000,1000000),
 
             // Relaciones (asegúrate de tener datos en estas tablas)
             'Departament_id' => Departament::inRandomOrder()->first()->id ?? 1,

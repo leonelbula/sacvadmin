@@ -3,9 +3,9 @@
 @section('content')
     <div class="container mt-2">
 
-        <h4>Factura Venta</h4>
+        <h4>{{ $title }}</h4>
 
-        <form method="POST" action="{{ route('sale.store') }}">
+        <form method="POST" action="{{ route('returnsale.store') }}">
             @csrf
 
             {{-- ================= CLIENTE ================= --}}
@@ -14,7 +14,7 @@
                     <span>Datos del Cliente</span>
                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                         data-bs-target="#modalClientes">Buscar Cliente</button>
-                    <a href="{{ route('sale.index') }}" class="btn btn-sm btn-primary">
+                    <a href="{{ route('returnsale.index') }}" class="btn btn-sm btn-primary">
                         Volver
                     </a>
 
@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>Ciudad:</label>
-                            <input type="text" class="form-control" id="customer_city" readonly >
+                            <input type="text" class="form-control" id="customer_city" readonly>
                         </div>
                         <div class="col-md-3">
                             <label>Fecha:</label>
@@ -46,27 +46,10 @@
                             <label>Direccion:</label>
                             <input type="text" class="form-control" id="customer_address" readonly>
                         </div>
-                        <div class="col-md-3">
-                            <label>Forma de Pago</label>
-                            <select name="payment_form" class="form-control" onchange="toggleOpcionPay(this.value)"
-                                required>
-                                <option value="">Opciones de Pago</option>
-                                <option value="counted">Contado</option>
-                                <option value="credit">Crédito</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3" id="payment_method_div" style="display: none;">
-                            <label>Medio de Pago</label>
-                            <select name="payment_method" class="form-control">
-                                <option value="">selecione una opcion</option>
-                                @foreach ($payments as $pay)
-                                    <option value="{{ $pay->id }}">{{ $pay->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3" id="due_plazo_div" style="display: none;">
-                            <label>Plazo en diaz</label>
-                            <input type="number" name="plazo" class="form-control">
+
+                        <div class="col-md-9">
+                            <label>Motivo</label>
+                            <input type="tex" name="reason" class="form-control" required>
                         </div>
                     </div>
                 </div>
@@ -112,12 +95,12 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Guardar Factura</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
         </form>
     </div>
 
-    @include('sale.modals.customers')
-    @include('sale.modals.products')
+    @include('returnsale.modals.customers')
+    @include('returnsale.modals.products')
 
 
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
@@ -166,19 +149,9 @@
             document.getElementById('customer_document').value = identification_card;
             document.getElementById('customer_address').value = address;
             document.getElementById('customer_city').value = city;
-
+            console.log(id);
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalClientes'));
             modal.hide();
-        }
-
-        function toggleOpcionPay(value) {
-            if (value === 'credit') {
-                document.getElementById('due_plazo_div').style.display = value === 'credit' ? 'block' : 'none';
-                document.getElementById('payment_method_div').style.display = 'none';
-            } else {
-                document.getElementById('payment_method_div').style.display = value === 'counted' ? 'block' : 'none';
-                document.getElementById('due_plazo_div').style.display = 'none';
-            }
         }
 
         // ======================= BUSCAR PRODUCTO =======================
@@ -442,16 +415,16 @@
 
                             data.forEach(producto => {
                                 tbody.innerHTML += `
-                <tr>
-                    <td>${producto.id}</td>
-                    <td>${producto.code}</td>
-                    <td>${producto.name}</td>
-                    <td>${producto.price}</td>
-                    <td>${producto.tax}%</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick='seleccionarProducto(${JSON.stringify(producto)})'>Agregar</button>
-                    </td>
-                </tr>`;
+            <tr>
+                <td>${producto.id}</td>
+                <td>${producto.code}</td>
+                <td>${producto.name}</td>
+                <td>${producto.price}</td>
+                <td>${producto.tax}%</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick='seleccionarProducto(${JSON.stringify(producto)})'>Agregar</button>
+                </td>
+            </tr>`;
                             });
                         });
                 });
@@ -497,25 +470,25 @@
 
                    productos.forEach((p, index) => {
                        tbody.innerHTML += `
-           <tr>
-               <td>
-                   ${p.name}
-                   <input type="hidden" name="products[]" value="${p.id}">
-                   <input type="hidden" name="tax[]" value="${p.tax}">
-                   <input type="hidden" name="cost_product[]" value="${p.cost}">
-               </td>
-               <td>
-                   <input type="number" class="form-control cantidad-input" data-index="${index}" name="quantities[]" value="${p.quantity}" min="1">
-               </td>
-               <td>
-                   <input type="number" class="form-control precio-input" data-index="${index}" name="prices[]" value="${p.price}">
-               </td>
-               <td>${p.tax}%</td>
-               <td>${(p.price * p.quantity).toFixed(0)}</td>
-               <td>
-                   <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(${p.id})">X</button>
-               </td>
-           </tr>`;
+       <tr>
+           <td>
+               ${p.name}
+               <input type="hidden" name="products[]" value="${p.id}">
+               <input type="hidden" name="tax[]" value="${p.tax}">
+               <input type="hidden" name="cost_product[]" value="${p.cost}">
+           </td>
+           <td>
+               <input type="number" class="form-control cantidad-input" data-index="${index}" name="quantities[]" value="${p.quantity}" min="1">
+           </td>
+           <td>
+               <input type="number" class="form-control precio-input" data-index="${index}" name="prices[]" value="${p.price}">
+           </td>
+           <td>${p.tax}%</td>
+           <td>${(p.price * p.quantity).toFixed(0)}</td>
+           <td>
+               <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(${p.id})">X</button>
+           </td>
+       </tr>`;
                    });
 
                    calcularTotales();

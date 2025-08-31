@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\Customer;
-use App\Models\Parameter;
 use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetail;
-use App\Models\SaleProduct;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Spatie\LaravelPdf\Facades\Pdf;
+use Spatie\Browsershot\Browsershot;
 
 class SaleController extends Controller
 {
@@ -67,11 +65,16 @@ class SaleController extends Controller
                 ->orderBy('id', 'desc')
                 ->first();
             $parameter = $compania->parameters()->first();
-
+            var_dump($parameter);
             if ($last_sale) {
                 $saleNumber = $last_sale->sale_number + 1;
             } else {
-                $saleNumber = $parameter->sale_code + 1;
+                if ($parameter == null) {
+                    $saleNumber =  1;
+                } else {
+
+                    $saleNumber = $parameter->sale_code + 1;
+                }
             }
 
             $cost = $request->costs;
@@ -85,7 +88,9 @@ class SaleController extends Controller
             if ($request->payment_form == 'counted') {
                 $expiration_date = $request->date_sale;
                 $type_sale = 1;
+                $payment_form = 1;
             } else {
+                $payment_form = 0;
                 $type_sale = 0;
                 $fecha = $request->date_sale;
                 $day = $request->plazo;
@@ -109,8 +114,8 @@ class SaleController extends Controller
                 'term'         => $request->payment_form === 'credit' ? $request->plazo : 'null',
                 'expiration_date' => $expiration_date,
                 'type_sale'    => $type_sale,
-                'payment_form' => $request->payment_form,
-                'payment_method' => $request->payment_form === 'counted' ? $request->payment_method : 'null',
+                'payment_form' => $request->payment_form === 'counted' ? $request->payment_form : 'credit',
+                'payment_method' => $request->payment_form === 'counted' ? $request->payment_method : null,
                 'customer_id'  => $request->customer_id,
                 'company_id'   => $company_id,
             ]);
@@ -152,7 +157,8 @@ class SaleController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             toastr()->error('Error al guardar la informacion');
-            return back();
+            dd($e->getMessage());
+            //return back();
         }
     }
 
@@ -254,8 +260,8 @@ class SaleController extends Controller
                 'term'         => $request->payment_form === 'credit' ? $request->plazo : 'null',
                 'expiration_date' => $expiration_date,
                 'type_sale'    => $type_sale,
-                'payment_form' => $request->payment_form,
-                'payment_method' => $request->payment_form === 'counted' ? $request->payment_method : 'null',
+                'payment_form' =>  $request->payment_form === 'counted' ? $request->payment_form : 'credit',
+                'payment_method' => $request->payment_form === 'counted' ? $request->payment_method : null,
                 'customer_id'  => $request->customer_id,
             ]);
 
@@ -357,13 +363,34 @@ class SaleController extends Controller
         ])->findOrFail($sale->id);
         $company = Company::findOrFail(Auth::user()->company_id);
         $payments = PaymentMethod::all();
-        $pdf = Pdf::view('pdf.factura', [
+        $pdf = Pdf::view('pdf.invoice', [
             'company' => $company,
             'payments' => $payments,
             'sale' => $sale,
         ])->format('Letter') // 👈 Aquí defines tamaño Carta
             ->margins(5, 5, 5, 5); // (arriba, derecha, abajo, izquierda) opcional;
         return $pdf->inline("Factura_{$sale->sale_number}.pdf");
+    }
+    public function ticket(Sale $sale)
+    {
+
+        $sale = Sale::with([
+            'customer.city',
+            'details.product'
+        ])->findOrFail($sale->id);
+        $company = Company::findOrFail(Auth::user()->company_id);
+        $payments = PaymentMethod::all();
+        $pdf = Pdf::view('pdf.ticket', [
+            'company' => $company,
+            'payments' => $payments,
+            'sale' => $sale,
+        ])->withBrowsershot(function (Browsershot $browsershot) {
+            $browsershot
+                ->margins(2, 2, 2, 2) // mm
+                ->setOption('width', '80mm')   // 👈 ancho fijo de ticket
+                ->setOption('height', '200mm'); // puedes poner 'auto', pero a veces necesita un valor
+        });
+        return $pdf->inline("ticket_{$sale->sale_number}.pdf");
     }
     public function downloadInvoice($sale)
     {

@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('term',50);
             $table->date('expiration_date');
             $table->integer('type_sale');
-            $table->integer('payment_form');
-            $table->integer('payment_method');
+            $table->string('payment_form');
+            $table->integer('payment_method')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();

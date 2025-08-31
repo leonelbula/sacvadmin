@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('title')
-    {{ $title }}
+
 @endsection
 @section('subtitle')
-    Lista Venta
+    {{ $title }}
 @endsection
 @section('content')
     <div class="row">
@@ -14,8 +14,8 @@
                     <a href="{{ route('dashboard') }}">
                         <button type="button" class="btn btn-primary">Volver</button>
                     </a>
-                    <a href="{{ route('sale.create') }}">
-                        <button type="button" class="btn btn-primary">Nueva Venta</button>
+                    <a href="{{ route('returnsale.create') }}">
+                        <button type="button" class="btn btn-primary">Nueva Devolucion</button>
                     </a>
                 </div>
                 <div class="card-body">
@@ -25,9 +25,8 @@
                                 <th>#</th>
                                 <th>Codigo</th>
                                 <th>Cliente</th>
-                                <th>fecha factura</th>
+                                <th>fecha </th>
                                 <th>valor</th>
-                                <th>Tipo</th>
                                 <th>acciones</th>
                             </tr>
                         </thead>
@@ -35,44 +34,30 @@
                             @php
                                 $i = 1;
                             @endphp
-                            @foreach ($sales as $sale)
+                            @foreach ($returnsales as $returnsale)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $sale->sale_number }}</td>
-                                    <td>{{ $sale->customer->full_name }}</td>
-                                    <td>{{ $sale->date_sale }}</td>
-                                    <td>{{ number_format($sale->total, 0, ',', '.') }}</td>
-                                    <td>
-                                        @if ($sale->type_sale == '0')
-                                            <button class="btn btn-info btn-sm">
-                                                Credito
-                                            </button>
-                                        @else
-                                            <button class="btn btn-success btn-sm">Contado</button>
-                                        @endif
-                                    </td>
+                                    <td>{{ $returnsale->returnsale_number }}</td>
+                                    <td>{{ $returnsale->customer->full_name }}</td>
+                                    <td>{{ $returnsale->date_sale }}</td>
+                                    <td>{{ number_format($returnsale->total, 0, ',', '.') }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{ route('sale.invocesPdf', $sale) }}" target="_blank">
+                                            <a href="{{ route('returnsale.ticket', $returnsale) }}" target="_blank">
                                                 <button class="btn btn-info" codesale="">
                                                     <i class="bi bi-printer"></i>
                                                 </button>
                                             </a>
-                                             <a href="{{ route('sale.ticket', $sale) }}" target="_blank">
-                                                <button class="btn btn-success" codesale="">
-                                                   <i class="bi bi-file-earmark-check"></i>
-                                                </button>
-                                            </a>
-                                            <a href="{{ route('sale.show', $sale) }}">
+                                            <a href="{{ route('returnsale.show', $returnsale) }}">
                                                 <button class="btn btn-primary " idsale="">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                             </a>
-                                            <a href="{{ route('sale.edit', $sale) }}">
+                                            <a href="{{ route('returnsale.edit', $returnsale) }}">
                                                 <button type="button" class="btn btn-warning"><i
                                                         class="bi bi-pencil"></i></button>
                                             </a>
-                                            <form action="{{ route('sale.destroy', $sale) }}" method="post"
+                                            <form action="{{ route('returnsale.destroy', $returnsale) }}" method="post"
                                                 style="display: inline">
                                                 @method('delete')
                                                 @csrf

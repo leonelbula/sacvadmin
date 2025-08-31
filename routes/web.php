@@ -6,12 +6,12 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReturnSaleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\SupplierController;
-use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+
 
 
 Route::get('/', function () {
@@ -36,12 +36,16 @@ Route::middleware('auth', 'company')->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('shopping', ShoppingController::class);
     Route::resource('sale', SaleController::class);
+    Route::resource('returnsale',ReturnSaleController::class);
 
 });
 
 Route::middleware('auth', 'company')->group(function () {
-    Route::get('sale/pdf/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
+    Route::get('sale/factura/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
+    Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
+     Route::get('returnsale/ticket/{returnsale}', [ReturnSaleController::class, 'ticket'])->name('returnsale.ticket');
 });
+
 
 Route::get('/customers/search/{q}', [CustomerController::class, 'search']);
 Route::get('/products/search/{q}', [ProductController::class, 'search']);

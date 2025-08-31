@@ -12,7 +12,7 @@ class Parameter extends Model
 
     protected $fillable = [
         'sale_code',
-        'prefix_sale',
+        'tax_include',
         'product_code',
         'automatic_product',
         'company_id'

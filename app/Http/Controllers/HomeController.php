@@ -40,7 +40,7 @@ class HomeController extends Controller
 
             $parameter = [
                 'sale_code' => 0,
-                'prefix_sale' => '',
+                'tax_include' => 1,
                 'product_code' => 1001,
                 'automatic_product' => 0,
                 'company_id' => $company->id,
@@ -58,6 +58,7 @@ class HomeController extends Controller
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
             DB::rollBack();
+
             toastr()->error('Informcion no guardada');
             return back();
         }

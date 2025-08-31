@@ -5,7 +5,7 @@
 
         <h4>Ver Factura Venta</h4>
 
-        <form method="POST" action="{{ route('sale.update', $sale->id) }}">
+        <form method="POST" action="">
             @csrf
             @method('PUT')
 
@@ -14,32 +14,32 @@
                 <div class="card-header d-flex justify-content-between">
                     <span>Datos del Cliente</span>
 
-                    <a href="{{ route('sale.index') }}" class="btn btn-sm btn-primary">
+                    <a href="{{ route('returnsale.index') }}" class="btn btn-sm btn-primary">
                         Volver
                     </a>
                 </div>
                 <div class="card-body ">
                     <div class="row">
-                        <input type="hidden" name="customer_id" id="customer_id" value="{{ $sale->customer->id }}">
+                        <input type="hidden" name="customer_id" id="customer_id" value="{{ $returnsale->customer->id }}">
                         <div class="col-md-3">
                             <label>Nombre:</label>
                             <input type="text" class="form-control" id="customer_name"
-                                value="{{ $sale->customer->full_name }}" readonly>
+                                value="{{ $returnsale->customer->full_name }}" readonly>
                         </div>
                         <div class="col-md-3">
                             <label>Identificación:</label>
                             <input type="text" class="form-control" id="customer_document"
-                                value="{{ $sale->customer->identification_card }}" readonly>
+                                value="{{ $returnsale->customer->identification_card }}" readonly>
                         </div>
                         <div class="col-md-3">
                             <label>Ciudad:</label>
                             <input type="text" class="form-control" id="customer_city"
-                                value="{{ $sale->customer->city->name }}" readonly>
+                                value="{{ $returnsale->customer->city->name }}" readonly>
                         </div>
                         <div class="col-md-3">
                             <label>Fecha:</label>
                             <input type="date" class="form-control" id="date_sale" name="date_sale"
-                                value="{{ $sale->date_sale }}">
+                                value="{{ $returnsale->date_sale }}">
                         </div>
                     </div>
 
@@ -47,35 +47,14 @@
                         <div class="col-md-3">
                             <label>Direccion:</label>
                             <input type="text" class="form-control" id="customer_address"
-                                value="{{ $sale->customer->address }}" readonly>
+                                value="{{ $returnsale->customer->address }}" readonly>
                         </div>
-                        <div class="col-md-3">
-                            <label>Forma de Pago</label>
-                            <select name="payment_form" class="form-control" onchange="toggleOpcionPay(this.value)"
-                                disabled>
-                                <option value="counted" {{ $sale->payment_form == 'counted' ? 'selected' : '' }}>Contado
-                                </option>
-                                <option value="credit" {{ $sale->payment_form == 'credit' ? 'selected' : '' }}>Crédito
-                                </option>
-                            </select>
+                        <div class="col-md-9">
+                            <label>Motivo</label>
+                            <input type="tex" name="reason" class="form-control"
+                             value="{{$returnsale->reason}}" readonly>
                         </div>
-                        <div class="col-md-3" id="payment_method_div"
-                            style="display: {{ $sale->payment_form == 'counted' ? 'block' : 'none' }};">
-                            <label>Medio de Pago</label>
-                            <select name="payment_method" class="form-control" disabled>
-                                <option value="">Seleccione una opción</option>
-                                @foreach ($payments as $pay)
-                                    <option value="{{ $pay->id }}"
-                                        {{ $sale->payment_method == $pay->id ? 'selected' : '' }}>{{ $pay->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3" id="due_plazo_div"
-                            style="display: {{ $sale->payment_form == 'credit' ? 'block' : 'none' }};">
-                            <label>Plazo en días</label>
-                            <input type="number" name="plazo" class="form-control" value="{{ $sale->plazo }}" readonly>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -94,7 +73,6 @@
                                 <th>Precio</th>
                                 <th>IVA (%)</th>
                                 <th>Subtotal</th>
-
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -108,14 +86,13 @@
                     <div class="col-md-4 offset-md-8">
                         <label>Subtotal:</label>
                         <input type="text" class="form-control" id="subtotal" name="subtotal"
-                            value="{{ $sale->subtotal }}" readonly>
+                            value="{{ $returnsale->subtotal }}" readonly>
                         <label>IVA:</label>
                         <input type="text" class="form-control" id="iva" name="iva"
-                            value="{{ $sale->total_iva }}" readonly>
+                            value="{{ $returnsale->total_iva }}" readonly>
                         <label>Total:</label>
-                        <input type="hidden" name="costs" id="costs" value="{{ $sale->costs }}">
                         <input type="text" class="form-control" id="total" name="total"
-                            value="{{ $sale->total }}" readonly>
+                            value="{{ $returnsale->total }}" readonly>
                     </div>
                 </div>
             </div>
