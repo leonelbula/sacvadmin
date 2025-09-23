@@ -1,465 +1,495 @@
  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-        <!--begin::Sidebar Brand-->
-        <div class="sidebar-brand">
-          <!--begin::Brand Link-->
-          <a href="./index.html" class="brand-link">
-            <!--begin::Brand Image-->
+     <!--begin::Sidebar Brand-->
+     <div class="sidebar-brand">
+         <!--begin::Brand Link-->
+         <a href="./index.html" class="brand-link">
+             <!--begin::Brand Image-->
 
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
-            <span class="brand-text fw-light">SACVADMIN</span>
-            <!--end::Brand Text-->
-          </a>
-          <!--end::Brand Link-->
-        </div>
-        <!--end::Sidebar Brand-->
-        <!--begin::Sidebar Wrapper-->
-        <div class="sidebar-wrapper">
-          <nav class="mt-2">
-            <!--begin::Sidebar Menu-->
-            <ul
-              class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              role="menu"
-              data-accordion="false"
-            >
-              <li class="nav-item menu-open">
-                <a href="{{route('dashboard')}}" class="nav-link ">
-                  <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    INICIO
+             <!--end::Brand Image-->
+             <!--begin::Brand Text-->
+             <span class="brand-text fw-light">SACVADMIN</span>
+             <!--end::Brand Text-->
+         </a>
+         <!--end::Brand Link-->
+     </div>
+     <!--end::Sidebar Brand-->
+     <!--begin::Sidebar Wrapper-->
+     <div class="sidebar-wrapper">
+         <nav class="mt-2">
+             <!--begin::Sidebar Menu-->
+             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+                 <li class="nav-item menu-open">
+                     <a href="{{ route('dashboard') }}" class="nav-link ">
+                         <i class="nav-icon bi bi-speedometer"></i>
+                         <p>
+                             INICIO
 
-                  </p>
-                </a>
-              </li>
+                         </p>
+                     </a>
+                 </li>
 
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-seam-fill"></i>
-                  <p>
-                    INVENTARIO
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{route('category.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>CATEGORIAS</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{route('product.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>PRODUCTOS</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./widgets/cards.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>REPORTES</p>
-                    </a>
-                  </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-box-seam-fill"></i>
+                         <p>
+                             INVENTARIO
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('category.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>CATEGORIAS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="{{ route('product.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>PRODUCTOS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="./widgets/cards.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>REPORTES</p>
+                             </a>
+                         </li>
 
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-clipboard-fill"></i>
-                  <p>
-                    CLIENTES
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-clipboard-fill"></i>
+                         <p>
+                             CLIENTES
 
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ route('customer.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>LISTA DE CLIENTES</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/fixed-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>ESTADO DE CUENTAS</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./layout/layout-custom-area.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>REPORTES</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                   <i class="nav-icon bi bi-ui-checks-grid"></i>
-                  <p>
-                    PROVEEDORES
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{route('supplier.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>LISTA DE PROVEEDORES</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>ESTADO DE CUENTAS</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>REPORTES</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-pencil-square"></i>
-                  <p>
-                    VENTAS
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{route('sale.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>LISTA DE VENTAS</p>
-                    </a>
-                  </li>
-                    <li class="nav-item">
-                    <a href="" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>REPORTES</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-               <li class="nav-item">
-                <a href="#" class="nav-link">
-                 <i class="nav-icon bi bi-download"></i>
-                  <p>
-                    DEVOLUCIONES
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ route('returnsale.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>LISTA DE VOLUCIONES</p>
-                    </a>
-                  </li>
-                    <li class="nav-item">
-                    <a href="./forms/general.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>REPORTES</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-table"></i>
-                  <p>
-                    COMPRAS
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{route('shopping.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Lista Compras</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{route('shopping.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Reportes</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="bi bi-clipboard-check"></i>
-                  <p>
-                    GASTOS
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{route('shopping.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Lista Gastos</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{route('shopping.index')}}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Reportes</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">CONFIGURACIONES</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                  <p>
-                    Paramentros
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Datos Empresa
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Datos empresa</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/login.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Config. automaticas</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Cargar Inventario</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Iniciar - Cerrar Inventario</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-box-arrow-in-right"></i>
-                      <p>
-                        Resoluciones
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="./examples/login-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Nueva resolucion</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="./examples/register-v2.html" class="nav-link">
-                          <i class="nav-icon bi bi-circle"></i>
-                          <p>Lista de resoluciones</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./examples/lockscreen.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Comprar paquetes</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-header">DOCUMENTATIONS</li>
-              <li class="nav-item">
-                <a href="./docs/introduction.html" class="nav-link">
-                  <i class="nav-icon bi bi-download"></i>
-                  <p>Installation</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/layout.html" class="nav-link">
-                  <i class="nav-icon bi bi-grip-horizontal"></i>
-                  <p>Layout</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/color-mode.html" class="nav-link">
-                  <i class="nav-icon bi bi-star-half"></i>
-                  <p>Color Mode</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-ui-checks-grid"></i>
-                  <p>
-                    Components
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/components/main-header.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Header</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./docs/components/main-sidebar.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Main Sidebar</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-filetype-js"></i>
-                  <p>
-                    Javascript
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./docs/javascript/treeview.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Treeview</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/browser-support.html" class="nav-link">
-                  <i class="nav-icon bi bi-browser-edge"></i>
-                  <p>Browser Support</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/how-to-contribute.html" class="nav-link">
-                  <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
-                  <p>How To Contribute</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/faq.html" class="nav-link">
-                  <i class="nav-icon bi bi-question-circle-fill"></i>
-                  <p>FAQ</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./docs/license.html" class="nav-link">
-                  <i class="nav-icon bi bi-patch-check-fill"></i>
-                  <p>License</p>
-                </a>
-              </li>
-              <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>
-                    Level 1
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>
-                        Level 2
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          <i class="nav-icon bi bi-record-circle-fill"></i>
-                          <p>Level 3</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Level 2</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle-fill"></i>
-                  <p>Level 1</p>
-                </a>
-              </li>
-              <li class="nav-header">LABELS</li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-danger"></i>
-                  <p class="text">Important</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-warning"></i>
-                  <p>Warning</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-circle text-info"></i>
-                  <p>Informational</p>
-                </a>
-              </li>
-            </ul>
-            <!--end::Sidebar Menu-->
-          </nav>
-        </div>
-        <!--end::Sidebar Wrapper-->
-      </aside>
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('customer.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>LISTA DE CLIENTES</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="./layout/fixed-sidebar.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>ESTADO DE CUENTAS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="./layout/layout-custom-area.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>REPORTES</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-ui-checks-grid"></i>
+                         <p>
+                             PROVEEDORES
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('supplier.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>LISTA DE PROVEEDORES</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>ESTADO DE CUENTAS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>REPORTES</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-pencil-square"></i>
+                         <p>
+                             VENTAS
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('sale.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>POS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="{{ route('sale.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>LISTA DE VENTAS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>REPORTES</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-pencil-square"></i>
+                         <p>
+                             POS
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('pos.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>INICIAR POS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="{{ route('sale.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>LISTA DE VENTAS</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>REPORTES</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-download"></i>
+                         <p>
+                             DEVOLUCIONES
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('returnsale.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>LISTA DE VOLUCIONES</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="./forms/general.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>REPORTES</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-table"></i>
+                         <p>
+                             COMPRAS
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('shopping.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Lista Compras</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="{{ route('shopping.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Reportes</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="bi bi-clipboard-check"></i>
+                         <p>
+                             GASTOS
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="{{ route('shopping.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Lista Gastos</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="{{ route('shopping.index') }}" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Reportes</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-header">CONFIGURACIONES</li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                         <p>
+                             Paramentros
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                                 <p>
+                                     Datos Empresa
+                                     <i class="nav-arrow bi bi-chevron-right"></i>
+                                 </p>
+                             </a>
+                             <ul class="nav nav-treeview">
+                                 <li class="nav-item">
+                                     <a href="./examples/login.html" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>Datos empresa</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="./examples/login.html" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>Config. automaticas</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="./examples/register.html" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>Cargar Inventario</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="./examples/register.html" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>Iniciar - Cerrar Inventario</p>
+                                     </a>
+                                 </li>
+                             </ul>
+                         </li>
+                         <li class="nav-item">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                                 <p>
+                                     Resoluciones
+                                     <i class="nav-arrow bi bi-chevron-right"></i>
+                                 </p>
+                             </a>
+                             <ul class="nav nav-treeview">
+                                 <li class="nav-item">
+                                     <a href="./examples/login-v2.html" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>Nueva resolucion</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="./examples/register-v2.html" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>Lista de resoluciones</p>
+                                     </a>
+                                 </li>
+                             </ul>
+                         </li>
+                         <li class="nav-item">
+                             <a href="./examples/lockscreen.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Comprar paquetes</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-header">DOCUMENTATIONS</li>
+                 <li class="nav-item">
+                     <a href="./docs/introduction.html" class="nav-link">
+                         <i class="nav-icon bi bi-download"></i>
+                         <p>Installation</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="./docs/layout.html" class="nav-link">
+                         <i class="nav-icon bi bi-grip-horizontal"></i>
+                         <p>Layout</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="./docs/color-mode.html" class="nav-link">
+                         <i class="nav-icon bi bi-star-half"></i>
+                         <p>Color Mode</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-ui-checks-grid"></i>
+                         <p>
+                             Components
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="./docs/components/main-header.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Main Header</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="./docs/components/main-sidebar.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Main Sidebar</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-filetype-js"></i>
+                         <p>
+                             Javascript
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="./docs/javascript/treeview.html" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Treeview</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="./docs/browser-support.html" class="nav-link">
+                         <i class="nav-icon bi bi-browser-edge"></i>
+                         <p>Browser Support</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="./docs/how-to-contribute.html" class="nav-link">
+                         <i class="nav-icon bi bi-hand-thumbs-up-fill"></i>
+                         <p>How To Contribute</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="./docs/faq.html" class="nav-link">
+                         <i class="nav-icon bi bi-question-circle-fill"></i>
+                         <p>FAQ</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="./docs/license.html" class="nav-link">
+                         <i class="nav-icon bi bi-patch-check-fill"></i>
+                         <p>License</p>
+                     </a>
+                 </li>
+                 <li class="nav-header">MULTI LEVEL EXAMPLE</li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-circle-fill"></i>
+                         <p>Level 1</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-circle-fill"></i>
+                         <p>
+                             Level 1
+                             <i class="nav-arrow bi bi-chevron-right"></i>
+                         </p>
+                     </a>
+                     <ul class="nav nav-treeview">
+                         <li class="nav-item">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Level 2</p>
+                             </a>
+                         </li>
+                         <li class="nav-item">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>
+                                     Level 2
+                                     <i class="nav-arrow bi bi-chevron-right"></i>
+                                 </p>
+                             </a>
+                             <ul class="nav nav-treeview">
+                                 <li class="nav-item">
+                                     <a href="#" class="nav-link">
+                                         <i class="nav-icon bi bi-record-circle-fill"></i>
+                                         <p>Level 3</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="#" class="nav-link">
+                                         <i class="nav-icon bi bi-record-circle-fill"></i>
+                                         <p>Level 3</p>
+                                     </a>
+                                 </li>
+                                 <li class="nav-item">
+                                     <a href="#" class="nav-link">
+                                         <i class="nav-icon bi bi-record-circle-fill"></i>
+                                         <p>Level 3</p>
+                                     </a>
+                                 </li>
+                             </ul>
+                         </li>
+                         <li class="nav-item">
+                             <a href="#" class="nav-link">
+                                 <i class="nav-icon bi bi-circle"></i>
+                                 <p>Level 2</p>
+                             </a>
+                         </li>
+                     </ul>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-circle-fill"></i>
+                         <p>Level 1</p>
+                     </a>
+                 </li>
+                 <li class="nav-header">LABELS</li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-circle text-danger"></i>
+                         <p class="text">Important</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-circle text-warning"></i>
+                         <p>Warning</p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="#" class="nav-link">
+                         <i class="nav-icon bi bi-circle text-info"></i>
+                         <p>Informational</p>
+                     </a>
+                 </li>
+             </ul>
+             <!--end::Sidebar Menu-->
+         </nav>
+     </div>
+     <!--end::Sidebar Wrapper-->
+ </aside>

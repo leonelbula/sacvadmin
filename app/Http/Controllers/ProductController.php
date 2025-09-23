@@ -5,14 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
-use App\Models\Category;
 use App\Models\Company;
 use App\Models\ProductType;
 use App\Models\Tax;
-use Flasher\Prime\Translation\Messages;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {

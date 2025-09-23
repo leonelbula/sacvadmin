@@ -368,7 +368,7 @@
             let precioInput = document.querySelector(`.precio-input[data-index="${index}"]`);
 
             let cantidad = parseInt(cantidadInput.value) || 1;
-            let precio = parseFloat(precioInput.value) || 0;
+            let precio = parseInt(precioInput.value) || 0;
 
             const stock = productos[index].stock;
             if (cantidad > stock) {

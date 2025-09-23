@@ -16,9 +16,9 @@ return new class extends Migration
             $table->integer('sale_number');
             $table->float('cost');
             $table->float('utility');
-            $table->decimal('subtotal', 10, 2);
-            $table->decimal('total_iva', 10, 2);
-            $table->decimal('total', 10, 2);
+            $table->integer('subtotal');
+            $table->integer('total_iva');
+            $table->integer('total');
             $table->float('balance');
             $table->time('hour', $precision = 0);
             $table->date('date_sale');

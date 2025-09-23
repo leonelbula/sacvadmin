@@ -47,8 +47,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Departamento:</label>
-                                        <input type="text" class="form-control" name="Departament"
-                                            value="{{ old('Departament') }}">
+                                        <input type="text" class="form-control" name="departament"
+                                            value="{{ old('departament') }}">
                                     </div>
                                 </div>
                             </div>

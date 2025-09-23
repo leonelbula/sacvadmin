@@ -19,7 +19,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
 
-                    <form action="{{ route('product.store') }}" method="POST">
+                    <form action="{{ route('product.store') }}" method="POST" id="createProduct">
                         @csrf
                         <div class="row mb-3">
                             <div class="col-4">
@@ -129,7 +129,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-primary" id="btnSave">Guardar</button>
 
                     </form>
                     <!-- /.card-body -->

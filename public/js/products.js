@@ -29,3 +29,20 @@ document.getElementById("taxes_id").addEventListener("change", function () {
         tax_value.dataset.tax_value + " %";
     document.getElementById("value_tax").value = tax_value.dataset.tax_value;
 });
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const formulario = document.getElementById("createProduct");
+    const btnGuardar = document.getElementById("btnSave");
+
+    // Bloquea el envío por defecto
+    formulario.addEventListener("submit", function(e) {
+        e.preventDefault();
+    });
+
+    // Solo envía si se hace clic en Guardar
+    btnGuardar.addEventListener("click", function() {
+        formulario.submit();
+    });
+});
+

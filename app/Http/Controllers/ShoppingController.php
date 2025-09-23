@@ -31,10 +31,11 @@ class ShoppingController extends Controller
     }
     public function store(Request $request)
     {
+
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
             'invoice_number' => 'required|string|max:50',
-            'purchase_type' => 'required|in:credit,counted',
+            'payment_form' => 'required|in:credit,counted',
             'due_date' => 'nullable|date',
             'products' => 'required|array',
             'products.*' => 'exists:products,id',
@@ -42,7 +43,8 @@ class ShoppingController extends Controller
             'quantities.*' => 'integer|min:1',
             'prices' => 'required|array',
             'prices.*' => 'numeric|min:0',
-            'ivas' => 'nullable|array',
+            'tax'         => 'required|array|min:1',
+            'tax.*'       => 'numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -98,16 +100,24 @@ class ShoppingController extends Controller
                     'company_id' => Auth::user()->company_id,
                 ];
             }
+            if ($request->payment_form == 'counted') {
+                $due_date = $request->date_sale;
+            } else {
 
+                $fecha = $request->date_sale;
+                $day = $request->plazo;
+                $fechaActual = strtotime('+' . $day . ' day', strtotime($fecha));
+                $due_date = date('Y-m-d', $fechaActual);
+            }
             $shopping = Shopping::create([
                 'invoice_number' => $request->invoice_number,
-                'shopping_date' => $request->purchase_date,
-                'purchase_type' => $request->purchase_type,
+                'shopping_date' => $request->date_sale,
+                'purchase_type' => $request->payment_form,
                 'subtotal' => $subtotal,
                 'iva' => $iva_total,
                 'total' => $total,
                 'balance' => $total,
-                'due_date' => $request->purchase_type === 'credito' ? $request->due_date : null,
+                'due_date' => $due_date,
                 'supplier_id' => $request->supplier_id,
                 'company_id' => Auth::user()->company_id,
                 'user_id' => Auth::user()->id,
@@ -137,26 +147,36 @@ class ShoppingController extends Controller
     {
         if ($shopping->company_id == Auth::user()->company_id) {
             $company = Company::findOrFail(Auth::user()->company_id);
-            $suppliers = $company->suppliers()
-                ->orderBy('full_name', 'asc')->get();
-            $products = $company->products()
-                ->orderBy('name', 'asc')->get();
+            $shopping = Shopping::with([
+                'supplier',
+                'details.product'
+            ])->findOrFail($shopping->id);
 
-            $shopping->load('details.product', 'supplier');
+            $lineItems = $shopping->details->map(function ($d) {
+                return [
+                    'id'             => (int) $d->product_id,
+                    'name'           => (string) $d->product->name,
+                    'cost'           => (int) $d->price,
+                    'iva'            => (int) $d->iva,                // por compatibilidad con tu create
+                    'tax'            => (int) $d->has_iva,                // lo usas en la tabla
+                    'quantity'       => (int) $d->quantity,
+                    'stock'          => (int) ($d->product->quantity ?? 0),
+                ];
+            })->values()->toArray();
 
-            $shopping = Shopping::with('details')->findOrFail($shopping->id);
 
-            return view('shopping.edit', compact('shopping', 'suppliers', 'products'));
+            return view('shopping.edit', compact('shopping','lineItems'));
         } else {
             return redirect()->route('shopping.index');
         }
     }
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'supplier_id' => 'required|exists:suppliers,id',
             'invoice_number' => 'required|string|max:50',
-            'purchase_type' => 'required|in:credit,counted',
+            'payment_form' => 'required|in:credit,counted',
             'due_date' => 'nullable|date',
             'products' => 'required|array',
             'products.*' => 'exists:products,id',
@@ -164,7 +184,8 @@ class ShoppingController extends Controller
             'quantities.*' => 'integer|min:1',
             'prices' => 'required|array',
             'prices.*' => 'numeric|min:0',
-            'ivas' => 'nullable|array',
+            'tax'         => 'required|array|min:1',
+            'tax.*'       => 'numeric|min:0',
         ]);
 
         DB::beginTransaction();

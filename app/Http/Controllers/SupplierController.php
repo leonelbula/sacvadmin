@@ -21,6 +21,18 @@ class SupplierController extends Controller
             ->paginate(10);
         return view('supplier.index', compact('title', 'suppliers'));
     }
+    public function search(Request $request)
+    {
+        $query = $request['q'];
+
+        $suppliers =  Supplier::where('company_id', Auth::user()->company_id)
+            ->where('full_name', 'LIKE', "%{$query}%")
+            ->orWhere('identification_card', 'LIKE', "%{$query}%")
+            ->limit(5)
+            ->get();
+
+        return response()->json($suppliers);
+    }
     public function create()
     {
         $title = "Nuevo proveedor";
@@ -29,8 +41,8 @@ class SupplierController extends Controller
 
     public function store(Request $request)
     {
-        $data= $request->all();
-         if ($data['description'] == '') {
+        $data = $request->all();
+        if ($data['description'] == '') {
             $data['description']  = 'N/N';
         }
 
@@ -68,13 +80,13 @@ class SupplierController extends Controller
 
         if ($request->description == '') {
             $description = 'N/N';
-        }else{
+        } else {
             $description = $request->description;
         }
 
         if ($request->credit_amount == '') {
             $credit_amount = 0;
-        }else{
+        } else {
             $credit_amount = $request->credit_amount;
         }
 
@@ -90,14 +102,14 @@ class SupplierController extends Controller
 
 
         $supplier->save();
-         toastr()->success('Registro Guardado');
+        toastr()->success('Registro Guardado');
         return back();
     }
 
     public function destroy(Supplier $supplier)
     {
         $supplier->delete();
-           toastr()->success('Registro Eliminado');
+        toastr()->success('Registro Eliminado');
         return redirect()->route('supplier.index');
     }
 }

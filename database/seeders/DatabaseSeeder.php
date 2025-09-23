@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-             DepartamentsTableSeeder::class,
+            DepartamentsTableSeeder::class,
             CitiesTableSeeder::class,
             TaxesTableSeeder::class,
             OrganizationTypesTableSeeder::class,
@@ -34,5 +34,6 @@ class DatabaseSeeder extends Seeder
         Category::factory()->count(100)->create();
         Product::factory()->count(100)->create();
         Customer::factory()->count(100)->create();
+        Supplier::factory()->count(10)->create();
     }
 }

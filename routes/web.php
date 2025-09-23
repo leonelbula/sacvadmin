@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReturnSaleController;
@@ -37,6 +38,7 @@ Route::middleware('auth', 'company')->group(function () {
     Route::resource('shopping', ShoppingController::class);
     Route::resource('sale', SaleController::class);
     Route::resource('returnsale',ReturnSaleController::class);
+    Route::resource('pos', PosController::class);
 
 });
 
@@ -48,6 +50,7 @@ Route::middleware('auth', 'company')->group(function () {
 
 
 Route::get('/customers/search/{q}', [CustomerController::class, 'search']);
+Route::get('/suppliers/search/{q}', [SupplierController::class, 'search']);
 Route::get('/products/search/{q}', [ProductController::class, 'search']);
 
 

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('subtitle')
-    Lista de Productos
+    Lista de Proveedor
 @endsection
 @section('content')
     <div class="row">
@@ -36,7 +36,7 @@
                                     <td>{{ $supplier->identification_card }}</td>
                                     <td>{{ $supplier->phone }}</td>
                                     <td>{{ $supplier->city }}</td>
-                                    <td>{{ $supplier->Departament }}</td>
+                                    <td>{{ $supplier->departament }}</td>
                                     <td>
                                         <div class="btn-group">
                                              <a href="{{ route('supplier.show', $supplier) }}" class="btn btn-primary ">

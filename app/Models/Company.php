@@ -49,4 +49,8 @@ class Company extends Model
     {
         return $this->hasMany(Sale::class);
     }
+    public function pos(): HasMany
+    {
+        return $this->hasMany(Pos::class);
+    }
 }

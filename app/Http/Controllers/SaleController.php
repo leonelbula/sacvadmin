@@ -28,7 +28,6 @@ class SaleController extends Controller
     {
         $title = 'Nueva venta';
         $payments = PaymentMethod::all();
-        $products = Product::all();
         $terms = Term::all();
         return view('sale.create', compact('title', 'terms', 'payments'));
     }
