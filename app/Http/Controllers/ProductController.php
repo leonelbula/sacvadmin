@@ -8,6 +8,7 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Company;
 use App\Models\ProductType;
 use App\Models\Tax;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -36,18 +37,13 @@ class ProductController extends Controller
         $title = 'Lista de Productos';
         return view('product.index', compact('products', 'title', 'search'));
     }
-    public function search(Request $request)
+    public function search($query)
     {
-        $query = $request->get('q');
-
-        $productos = Product::where('company_id', Auth::user()->company_id)
-            ->where(function ($queryBuilder) use ($query) {
-                $queryBuilder->where('name', 'LIKE', "%{$query}%")
-                    ->orWhere('code', 'LIKE', "%{$query}%");
-            })
-            ->limit(5)
+        $productos = Product::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('code',$query)
+            ->orderBy('name', 'asc')
+            ->limit(10)
             ->get(['id', 'name', 'code', 'price', 'amount', 'cost', 'tax']);
-
 
         return response()->json($productos);
     }
@@ -209,5 +205,25 @@ class ProductController extends Controller
         $product->delete();
         toastr()->success('Registro Eliminado');
         return redirect(route('product.index'));
+    }
+
+     public function reporteValorInventario()
+    {
+        // Traer productos con stock > 0
+        $productos = Product::select('id', 'code', 'name', 'amount', 'cost', 'price')
+            ->where('amount', '>', 0)
+            ->get();
+
+        // Calcular totales
+        $totalCosto = $productos->sum(fn($p) => $p->amount * $p->cost);
+        $totalVenta = $productos->sum(fn($p) => $p->amount * $p->price);
+
+        $pdf = Pdf::loadView('reports.inventario_valor', [
+            'productos' => $productos,
+            'totalCosto' => $totalCosto,
+            'totalVenta' => $totalVenta,
+        ]);
+
+        return $pdf->setPaper('letter')->stream('reporte_inventario.pdf');
     }
 }

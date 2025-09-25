@@ -26,7 +26,7 @@
                                 {{-- Campo Fecha --}}
                                 <div class="mb-4">
                                     <label for="fecha" class="form-label fw-bold">Fecha</label>
-                                    <input type="date" id="fecha" name="start_date" class="form-control form-control-lg"
+                                    <input type="date" id="fecha" name="start_date" class="form-control form-control-lg" value="{{date('Y-m-d')}}"
                                         required>
                                 </div>
 

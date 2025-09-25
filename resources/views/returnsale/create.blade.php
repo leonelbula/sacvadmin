@@ -186,7 +186,7 @@
                         <td>${producto.code ?? ''}</td>
                         <td>${producto.name}</td>
                         <td>${producto.price}</td>
-                        <td>${producto.tax ?? 0}%</td>
+                        <td>${producto.amount }</td>
                         <td>
                             <button type="button" class="btn btn-sm btn-primary btn-add-product" data-product="${encoded}">
                                 Agregar

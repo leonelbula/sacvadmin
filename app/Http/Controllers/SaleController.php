@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
 
 class SaleController extends Controller
@@ -59,12 +59,13 @@ class SaleController extends Controller
             DB::beginTransaction();
             //var_dump($request->all());
             $company_id = Auth::user()->company_id;
+            $user_id = Auth::user()->id;
             $compania = Company::findOrFail($company_id);
             $last_sale = Sale::where('company_id', $company_id)
                 ->orderBy('id', 'desc')
                 ->first();
             $parameter = $compania->parameters()->first();
-            var_dump($parameter);
+            // var_dump($parameter);
             if ($last_sale) {
                 $saleNumber = $last_sale->sale_number + 1;
             } else {
@@ -117,6 +118,7 @@ class SaleController extends Controller
                 'payment_method' => $request->payment_form === 'counted' ? $request->payment_method : null,
                 'customer_id'  => $request->customer_id,
                 'company_id'   => $company_id,
+                'user_id'   => $user_id,
             ]);
 
 
@@ -143,7 +145,9 @@ class SaleController extends Controller
                 $product = Product::find($productId);
                 if ($product) {
                     if ($product->amount < $quantity) {
-                        throw new \Exception("Stock insuficiente para el producto: {$product->name}");
+                        //throw new \Exception("Stock insuficiente para el producto: {$product->name}");
+                        toastr()->error("Stock insuficiente para el producto: {$product->name}");
+                        return back();
                     }
                     $product->amount -= $quantity;
                     $product->save();
@@ -156,8 +160,8 @@ class SaleController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             toastr()->error('Error al guardar la informacion');
-            dd($e->getMessage());
-            //return back();
+            // dd($e->getMessage());
+            return back();
         }
     }
 
@@ -362,13 +366,13 @@ class SaleController extends Controller
         ])->findOrFail($sale->id);
         $company = Company::findOrFail(Auth::user()->company_id);
         $payments = PaymentMethod::all();
-        $pdf = Pdf::view('pdf.invoice', [
+        $pdf = Pdf::loadView('pdf.invoice', [
             'company' => $company,
             'payments' => $payments,
             'sale' => $sale,
-        ])->format('Letter') // 👈 Aquí defines tamaño Carta
-            ->margins(5, 5, 5, 5); // (arriba, derecha, abajo, izquierda) opcional;
-        return $pdf->inline("Factura_{$sale->sale_number}.pdf");
+        ])->setPaper('letter', 'portrait');
+
+        return $pdf->stream("Factura_{$sale->sale_number}.pdf");
     }
     public function ticket(Sale $sale)
     {
@@ -379,17 +383,13 @@ class SaleController extends Controller
         ])->findOrFail($sale->id);
         $company = Company::findOrFail(Auth::user()->company_id);
         $payments = PaymentMethod::all();
-        $pdf = Pdf::view('pdf.ticket', [
+        $pdf = Pdf::loadView('pdf.ticket', [
             'company' => $company,
             'payments' => $payments,
             'sale' => $sale,
-        ])->withBrowsershot(function (Browsershot $browsershot) {
-            $browsershot
-                ->margins(2, 2, 2, 2) // mm
-                ->setOption('width', '80mm')   // 👈 ancho fijo de ticket
-                ->setOption('height', '200mm'); // puedes poner 'auto', pero a veces necesita un valor
-        });
-        return $pdf->inline("ticket_{$sale->sale_number}.pdf");
+        ])->setPaper([0, 0, 226.77, 1000], 'portrait');
+
+        return $pdf->stream("ticket_{$sale->sale_number}.pdf");
     }
     public function downloadInvoice($sale)
     {
@@ -406,5 +406,74 @@ class SaleController extends Controller
         ]);
         // Descargar directamente
         return $pdf->download("Factura_{$sale->sale_number}.pdf");
+    }
+    public function reporte(Request $request)
+    {
+        // Validar rango de fechas
+        $data = $request->validate([
+            'fecha_inicio' => 'required|date',
+            'fecha_fin'    => 'required|date',
+            'user_id'      => 'nullable|integer',
+        ]);
+
+        // Consulta con filtros
+        $ventas = Sale::query()
+            ->whereBetween('created_at', [
+                $data['fecha_inicio'] . " 00:00:00",
+                $data['fecha_fin'] . " 23:59:59"
+            ])
+            ->when($data['user_id'], function ($q) use ($data) {
+                $q->where('user_id', $data['user_id']);
+            })
+            ->where('state', 1) // solo activas
+            ->get();
+
+        // Totales
+        $total = $ventas->sum('total');
+
+        // Generar PDF
+        $pdf = Pdf::loadView('reports.sales', [
+            'ventas' => $ventas,
+            'total'  => $total,
+            'fecha_inicio' => $data['fecha_inicio'],
+            'fecha_fin'    => $data['fecha_fin'],
+        ]);
+
+        return $pdf->setPaper('letter')->stream('reporte_ventas.pdf');
+    }
+
+
+    public function reporteTotalesPorDia(Request $request)
+    {
+        $data = $request->validate([
+            'fecha_inicio' => 'required|date',
+            'fecha_fin'    => 'required|date',
+            'user_id'      => 'nullable|integer',
+        ]);
+
+        // Consulta agrupada por día
+        $ventas = Sale::selectRaw('DATE(created_at) as fecha, SUM(total) as total')
+            ->whereBetween('created_at', [
+                $data['fecha_inicio'] . " 00:00:00",
+                $data['fecha_fin'] . " 23:59:59"
+            ])
+            ->when($data['user_id'], function ($q) use ($data) {
+                $q->where('user_id', $data['user_id']);
+            })
+            ->where('state', 1) // solo activas
+            ->groupBy('fecha')
+            ->orderBy('fecha')
+            ->get();
+
+        $granTotal = $ventas->sum('total');
+
+        $pdf = Pdf::loadView('reports.sales_day', [
+            'ventas' => $ventas,
+            'granTotal' => $granTotal,
+            'fecha_inicio' => $data['fecha_inicio'],
+            'fecha_fin'    => $data['fecha_fin'],
+        ]);
+
+        return $pdf->setPaper('letter')->stream('reporte_totales_por_dia.pdf');
     }
 }

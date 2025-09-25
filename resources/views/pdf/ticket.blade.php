@@ -233,7 +233,6 @@
     <div class="ticket">
         <div class="card">
             <!-- Header -->
-            <img src="{{ $company->logo == null ? '' : public_path($company->logo) }}" class="logo">
             <div class="center">
                 <h1>{{ $company->full_name }}</h1>
                 <div class="muted">

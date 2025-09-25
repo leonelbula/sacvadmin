@@ -22,13 +22,14 @@ return new class extends Migration
             $table->float('balance');
             $table->time('hour', $precision = 0);
             $table->date('date_sale');
-            $table->string('term',50);
+            $table->string('term', 50);
             $table->date('expiration_date');
             $table->integer('type_sale');
             $table->string('payment_form');
             $table->integer('payment_method')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();
             $table->timestamps();
         });
     }

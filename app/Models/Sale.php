@@ -28,6 +28,7 @@ class Sale extends Model
         'payment_method',
         'customer_id',
         'company_id',
+        'user_id',
     ];
 
     public function customer(): BelongsTo

@@ -30,10 +30,10 @@ class DatabaseSeeder extends Seeder
             ProductTypeSeeder::class,
         ]);
         User::factory()->count(5)->create();
-        Company::factory()->count(5)->create();
-        Category::factory()->count(100)->create();
-        Product::factory()->count(100)->create();
-        Customer::factory()->count(100)->create();
-        Supplier::factory()->count(10)->create();
+        //Company::factory()->count(5)->create();
+       // Category::factory()->count(100)->create();
+        //Product::factory()->count(100)->create();
+        //Customer::factory()->count(100)->create();
+        //Supplier::factory()->count(10)->create();
     }
 }

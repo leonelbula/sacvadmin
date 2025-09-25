@@ -21,10 +21,12 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('closing_date');
             $table->integer('bills');
-            $table->integer('returns');
+            $table->integer('consignment');
+            $table->integer('cash');
+            $table->integer('returns_sale');
             $table->integer('delivered_value');
             $table->boolean('state');
-             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

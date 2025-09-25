@@ -17,8 +17,11 @@
                     <a href="{{ route('sale.index') }}">
                         <button type="button" class="btn btn-primary">Lista Ventas</button>
                     </a>
+                    <a href="{{ route('sale.create') }}">
+                        <button type="button" class="btn btn-primary">Nueva Ventas</button>
+                    </a>
                        @if ($closingpos)
-                        <a href="{{ route('pos.create') }}">
+                        <a href="{{ route('previewclose') }}">
                             <button type="button" class="btn btn-primary">Cerrar ventas</button>
                         </a>
                     @else
@@ -35,8 +38,9 @@
                                 <th>Usuario</th>
                                 <th>Fecha</th>
                                 <th>fecha cierre</th>
-                                <th>valor</th>
+                                <th>Venta Total</th>
                                 <th>diferencia</th>
+                                <th>Estado</th>
                                 <th>acciones</th>
                             </tr>
                         </thead>
@@ -60,19 +64,28 @@
                                             <button class="btn btn-success btn-sm">{{ $closing->difference }}</button>
                                         @endif
                                     </td>
+                                     <td>
+                                        @if ($closing->state == 0)
+                                            <button class="btn btn-info btn-sm">
+                                              Cerrado
+                                            </button>
+                                        @else
+                                            <button class="btn btn-success btn-sm">Activo</button>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{ route('sale.ticket', $closing) }}" target="_blank">
+                                            <a href="{{ route('cierre.caja', $closing) }}" target="_blank">
                                                 <button class="btn btn-success" codesale="">
                                                     <i class="bi bi-file-earmark-check"></i>
                                                 </button>
                                             </a>
-                                            <a href="{{ route('sale.show', $closing) }}">
+                                            <a href="{{ route('pos.show', $closing) }}">
                                                 <button class="btn btn-primary " idsale="">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                             </a>
-                                            <a href="{{ route('sale.edit', $closing) }}">
+                                            <a href="">
                                                 <button type="button" class="btn btn-warning"><i
                                                         class="bi bi-pencil"></i></button>
                                             </a>

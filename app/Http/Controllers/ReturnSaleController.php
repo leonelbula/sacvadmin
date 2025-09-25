@@ -53,7 +53,7 @@ class ReturnSaleController extends Controller
         try {
             DB::beginTransaction();
             //var_dump($request->all());
-
+            $user_id = Auth::user()->id;
             $company_id = Auth::user()->company_id;
             $compania = Company::findOrFail($company_id);
             $last_sale = ReturnSale::where('company_id', $company_id)
@@ -85,6 +85,7 @@ class ReturnSaleController extends Controller
                 'reason'       => $request->reason,
                 'customer_id'  => $request->customer_id,
                 'company_id'   => $company_id,
+                'user_id'      => $user_id,
             ]);
 
 

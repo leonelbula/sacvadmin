@@ -7,9 +7,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnSaleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ShoppingController;
+use App\Http\Controllers\SpentController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,21 +39,41 @@ Route::middleware('auth', 'company')->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('shopping', ShoppingController::class);
     Route::resource('sale', SaleController::class);
-    Route::resource('returnsale',ReturnSaleController::class);
+    Route::resource('returnsale', ReturnSaleController::class);
     Route::resource('pos', PosController::class);
-
+    Route::resource('spent', SpentController::class);
 });
 
 Route::middleware('auth', 'company')->group(function () {
     Route::get('sale/factura/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
     Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
-     Route::get('returnsale/ticket/{returnsale}', [ReturnSaleController::class, 'ticket'])->name('returnsale.ticket');
+    Route::get('returnsale/ticket/{returnsale}', [ReturnSaleController::class, 'ticket'])->name('returnsale.ticket');
+    Route::get('previewposclose', [PosController::class, 'previewclose'])->name('previewclose');
+    Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');
+    Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
+
+    Route::get('/cierre-caja/{pos}', [PosController::class, 'cierre'])
+        ->name('cierre.caja');
+
+    Route::get('/reporte-ventas', [SaleController::class, 'reporte'])
+        ->name('ventas.reporte');
+    Route::get('/reporte-ventas-dia', [SaleController::class, 'reporteTotalesPorDia'])
+        ->name('ventas.reporte.dia');
+    Route::get('/reporte-inventario', [ProductController::class, 'reporteValorInventario'])
+        ->name('inventario.reporte');
+
+    Route::get('/reporte-ganancias-perdidas', [ReportController::class, 'gananciasPerdidas'])
+        ->name('reporte.ganancias_perdidas');
+    Route::get('/reports/profit-loss', [App\Http\Controllers\ReportController::class, 'profitLoss'])
+        ->name('reports.profit_loss');
+    Route::get('/reports/profit-loss-daily', [App\Http\Controllers\ReportController::class, 'profitLossDaily'])
+        ->name('reports.profit_loss_daily');
 });
 
 
 Route::get('/customers/search/{q}', [CustomerController::class, 'search']);
 Route::get('/suppliers/search/{q}', [SupplierController::class, 'search']);
-Route::get('/products/search/{q}', [ProductController::class, 'search']);
+Route::get('/products/search/{query}', [ProductController::class, 'search']);
 
 
 

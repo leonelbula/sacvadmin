@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\spent;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SpentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
     public function index()
     {
         $spents = spent::orderBy('id', 'DESC')->get();
@@ -28,20 +27,28 @@ class SpentController extends Controller
         $request->validate([
             'description' => 'required',
             'total' => 'required',
-            'date' => 'required',
+            'date_spent' => 'required',
         ]);
 
+        DB::beginTransaction();
+        try {
+            $spent = new spent();
+            $spent->description = $request->description;
+            $spent->total = $request->total;
+            $spent->hour = date('h:m:s');
+            $spent->date_spent = $request->date_spent;
+            $spent->user_id = Auth::user()->id;
 
-        $spent = new spent();
-        $spent->description = $request->description;
-        $spent->total = $request->total;
-        $spent->hour = date('h:m:s');
-        $spent->date_spent = $request->date;
-        $spent->user_id = auth()->user()->id;
+            $spent->save();
 
-        $spent->save();
-
-        return redirect()->route('gasto.index');
+            DB::commit();
+            toastr()->success('Informacion guardada correctamente');
+            return back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toastr()->error('Error al guardar la informacion');
+            return back();
+        }
     }
     public function edit(spent $spent)
     {
@@ -53,22 +60,26 @@ class SpentController extends Controller
         $request->validate([
             'description' => 'required',
             'total' => 'required',
-            'date' => 'required',
+            'date_spent' => 'required',
         ]);
-
-        $spent->description = $request->description;
-        $spent->total = $request->total;
-        $spent->hour = date('h:m:s');
-        $spent->date_spent = $request->date;
-        $spent->user_id = auth()->user()->id;
-
-        $spent->save();
-
-        return redirect()->route('gasto.index');
+        DB::beginTransaction();
+        try {
+            $spent->description = $request->description;
+            $spent->total = $request->total;
+            $spent->date_spent = $request->date_spent;
+            $spent->save();
+            DB::commit();
+            toastr()->success('Informacion guardada correctamente');
+            return redirect()->route('spent.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toastr()->error('Error al guardar la informacion');
+            return back();
+        }
     }
     public function destroy(spent $spent)
     {
         $spent->delete();
-        return redirect()->route('gasto.index');
+        return redirect()->route('spent.index');
     }
 }

@@ -14,7 +14,7 @@
                             <th>code</th>
                             <th>Nombre</th>
                             <th>Precio</th>
-                            <th>IVA</th>
+                            <th>STOCK</th>
                             <th></th>
                         </tr>
                     </thead>
