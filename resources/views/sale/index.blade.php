@@ -58,7 +58,7 @@
                                                     <i class="bi bi-printer"></i>
                                                 </button>
                                             </a>
-                                             <a href="{{ route('sale.ticket', $sale) }}" target="_blank">
+                                             <a href="{{ route('sale.ticketepson', $sale) }}" target="_blank">
                                                 <button class="btn btn-success" codesale="">
                                                    <i class="bi bi-file-earmark-check"></i>
                                                 </button>

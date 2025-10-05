@@ -47,6 +47,7 @@ Route::middleware('auth', 'company')->group(function () {
 Route::middleware('auth', 'company')->group(function () {
     Route::get('sale/factura/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
     Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
+    Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
     Route::get('returnsale/ticket/{returnsale}', [ReturnSaleController::class, 'ticket'])->name('returnsale.ticket');
     Route::get('previewposclose', [PosController::class, 'previewclose'])->name('previewclose');
     Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');
@@ -55,10 +56,12 @@ Route::middleware('auth', 'company')->group(function () {
     Route::get('/cierre-caja/{pos}', [PosController::class, 'cierre'])
         ->name('cierre.caja');
 
+    Route::get('/reporte-sale', [SaleController::class, 'report_sale'])
+        ->name('sale.report_sale');
     Route::get('/reporte-ventas', [SaleController::class, 'reporte'])
-        ->name('ventas.reporte');
+        ->name('sale.reporte');
     Route::get('/reporte-ventas-dia', [SaleController::class, 'reporteTotalesPorDia'])
-        ->name('ventas.reporte.dia');
+        ->name('sale.reporte.dia');
     Route::get('/reporte-inventario', [ProductController::class, 'reporteValorInventario'])
         ->name('inventario.reporte');
 
@@ -68,6 +71,17 @@ Route::middleware('auth', 'company')->group(function () {
         ->name('reports.profit_loss');
     Route::get('/reports/profit-loss-daily', [App\Http\Controllers\ReportController::class, 'profitLossDaily'])
         ->name('reports.profit_loss_daily');
+
+    Route::get('/reporte/productos-mas-vendidos', [ReportController::class, 'productsTopSelling'])->name('reporte.productos');
+    Route::get('/reporte/productos-mas-vendidos-dia', [ReportController::class, 'productsTopSellingByDate'])->name('reporte.productos.fechas');
+    Route::get('/reporte/productos-menos-vendidos', [ReportController::class, 'productsLessSellingByDate'])->name('reporte.productos.menos');
+    Route::get('/reporte/producto-code', [ReportController::class, 'productReportByCode'])->name('reporte.producto-code');
+
+
+    Route::get('/reportesale', [ReportController::class, 'reportsale'])->name('report.sale');
+    Route::post('/reportes/ventas-periodo/pdf', [ReportController::class, 'salesPeriodPDF'])->name('report.sales.period.pdf');
+    Route::post('/reportes/ganancias/pdf', [ReportController::class, 'profitLossPDF'])->name('report.profit.pdf');
+    Route::post('/reportes/ventas-mensuales/pdf', [ReportController::class, 'monthlySalesPDF'])->name('report.sales.month.pdf');
 });
 
 

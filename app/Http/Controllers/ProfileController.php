@@ -34,7 +34,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
         // Display a success toast with no title
-        flash()->success('Operation completed successfully.');
+        toastr()->success('Operation completed successfully.');
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -139,7 +139,7 @@
                                  </a>
                              </li>
                              <li class="nav-item">
-                                 <a href="" class="nav-link">
+                                 <a href="{{route('sale.report_sale')}}" class="nav-link">
                                      <i class="nav-icon bi bi-circle"></i>
                                      <p>REPORTES</p>
                                  </a>
@@ -262,13 +262,7 @@
                                  </a>
                              </li>
                              <li class="nav-item">
-                                 <a href="" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>Reportes de Productos</p>
-                                 </a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="" class="nav-link">
+                                 <a href="{{route('report.sale')}}" class="nav-link">
                                      <i class="nav-icon bi bi-circle"></i>
                                      <p>Reportes de Ventas</p>
                                  </a>

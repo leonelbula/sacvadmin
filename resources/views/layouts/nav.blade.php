@@ -151,7 +151,7 @@
                      </li>
 
                      <li class="user-footer">
-                         <a href="#" class="btn btn-default btn-flat">Profile</a>
+                         <a href="{{route('profile.edit')}}" class="btn btn-default btn-flat">Profile</a>
                          <form action="{{ route('logout') }}" method="POST" class="d-inline">
 
                              @csrf

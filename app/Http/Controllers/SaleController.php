@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\ReturnSale;
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use App\Models\spent;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
+use Carbon\Carbon;
 
 class SaleController extends Controller
 {
@@ -387,7 +390,24 @@ class SaleController extends Controller
             'company' => $company,
             'payments' => $payments,
             'sale' => $sale,
-        ])->setPaper([0, 0, 226.77, 1000], 'portrait');
+        ])->setPaper('letter', 'portrait');;
+
+        return $pdf->stream("ticket_{$sale->sale_number}.pdf");
+    }
+     public function ticketepson(Sale $sale)
+    {
+
+        $sale = Sale::with([
+            'customer.city',
+            'details.product'
+        ])->findOrFail($sale->id);
+        $company = Company::findOrFail(Auth::user()->company_id);
+        $payments = PaymentMethod::all();
+        $pdf = Pdf::loadView('pdf.ticketepson', [
+            'company' => $company,
+            'payments' => $payments,
+            'sale' => $sale,
+        ])->setPaper('letter', 'portrait');;
 
         return $pdf->stream("ticket_{$sale->sale_number}.pdf");
     }
@@ -406,6 +426,28 @@ class SaleController extends Controller
         ]);
         // Descargar directamente
         return $pdf->download("Factura_{$sale->sale_number}.pdf");
+    }
+    public function report_sale()
+    {
+        $title = "Reporte de Ventas";
+        $totalVentas = Sale::whereDate('date_sale', Carbon::today())
+            ->sum('total');
+        $totalUtilidad = Sale::whereDate('date_sale', Carbon::today())
+            ->sum('utility');
+        $totalDevoluciones = ReturnSale::whereDate('date_sale', Carbon::today())
+            ->sum('total');
+        $totalGastos = spent::whereDate('date_spent', Carbon::today())
+            ->sum('total');
+        return view(
+            'sale.report_sale',
+            compact(
+                'title',
+                'totalVentas',
+                'totalUtilidad',
+                'totalDevoluciones',
+                'totalGastos'
+            )
+        );
     }
     public function reporte(Request $request)
     {
