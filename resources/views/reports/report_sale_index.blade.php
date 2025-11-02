@@ -257,11 +257,11 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Fecha Inicio</label>
-                            <input type="date" name="start_month" class="form-control" required>
+                            <input type="date" name="start_date" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label>Fecha final</label>
-                            <input type="date" name="end_month" class="form-control" required>
+                            <input type="date" name="end_date" class="form-control" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -286,11 +286,11 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Fecha Inicio</label>
-                            <input type="date" name="start_month" class="form-control" required>
+                            <input type="date" name="start_date" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label>Fecha final</label>
-                            <input type="date" name="end_month" class="form-control" required>
+                            <input type="date" name="end_date" class="form-control" required>
                         </div>
                     </div>
                     <div class="modal-footer">

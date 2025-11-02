@@ -80,8 +80,6 @@ class CustomerController extends Controller
             return back();
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
-            die();
             toastr()->error('Error al guardar el cliente: ' . $e->getMessage());
             return back();
         }

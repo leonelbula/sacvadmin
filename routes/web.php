@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountStatusCustomerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnSaleController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SalePaymentController;
 use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\SpentController;
 use App\Http\Controllers\SupplierController;
@@ -42,6 +44,8 @@ Route::middleware('auth', 'company')->group(function () {
     Route::resource('returnsale', ReturnSaleController::class);
     Route::resource('pos', PosController::class);
     Route::resource('spent', SpentController::class);
+    Route::resource('accountstatecustomer', AccountStatusCustomerController::class);
+    Route::resource('salepyment', SalePaymentController::class);
 });
 
 Route::middleware('auth', 'company')->group(function () {
@@ -82,6 +86,13 @@ Route::middleware('auth', 'company')->group(function () {
     Route::post('/reportes/ventas-periodo/pdf', [ReportController::class, 'salesPeriodPDF'])->name('report.sales.period.pdf');
     Route::post('/reportes/ganancias/pdf', [ReportController::class, 'profitLossPDF'])->name('report.profit.pdf');
     Route::post('/reportes/ventas-mensuales/pdf', [ReportController::class, 'monthlySalesPDF'])->name('report.sales.month.pdf');
+
+    Route::get('abonarventa/{id}', [AccountStatusCustomerController::class, 'abonar'])->name('accountsale.abonar');
+    Route::get('accountsreceivable/', [AccountStatusCustomerController::class, 'accountsReceivable'])->name('accountstatecustomer.registro');
+
+    Route::get('/reports/sales-by-user-pdf', [ReportController::class, 'salesByUserPdf'])
+    ->name('reports.salesByUserPdf');
+    
 });
 
 

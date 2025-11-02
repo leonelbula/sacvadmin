@@ -10,6 +10,7 @@ use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\spent;
 use App\Models\Term;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +22,14 @@ use Carbon\Carbon;
 class SaleController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
         $title = "Lista de ventas";
-        $sales = Sale::orderBy('id', 'DESC')->get();
-        return view('sale.index', compact('title', 'sales'));
+        $sales = Sale::orderBy('id', 'DESC')
+            ->paginate(10);
+        $usuarios = User::all();
+        return view('sale.index', compact('title', 'sales', 'usuarios','search'));
     }
     public function create()
     {
@@ -394,7 +398,7 @@ class SaleController extends Controller
 
         return $pdf->stream("ticket_{$sale->sale_number}.pdf");
     }
-     public function ticketepson(Sale $sale)
+    public function ticketepson(Sale $sale)
     {
 
         $sale = Sale::with([

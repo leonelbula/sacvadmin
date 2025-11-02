@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Pos;
 use App\Models\ReturnSale;
 use App\Models\Sale;
+use App\Models\SalePayment;
 use App\Models\spent;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -143,13 +144,19 @@ class PosController extends Controller
             ->whereTime('created_at', '<=', $horaFin)
             ->sum('total');
 
+        $abono_sale = SalePayment::where('user_id', $userId)
+            ->whereBetween(DB::raw("DATE(created_at)"), [$fechaInicio, $fechaFin])
+            ->whereTime('created_at', '>=', $horaInicio)
+            ->whereTime('created_at', '<=', $horaFin)
+            ->sum('amount');
+
         $amount = $request->amount;
         $date = $request->date;
         $t = $totalVentasEfectivo + $totalVentasConsignacion;
-        $valueTotal = $amount + $totalVentasConsignacion + $returnsale + $spents;
+        $valueTotal = $amount + $totalVentasConsignacion + $returnsale + $spents + $abono_sale;
         $diferencia = $valueTotal - $totalVentas;
         $pos = $posActive;
-        return view('pos.preview', compact('title', 'pos', 'date', 'totalVentas', 'totalVentasEfectivo', 'totalVentasConsignacion', 'returnsale', 'spents', 'amount', 'diferencia'));
+        return view('pos.preview', compact('title', 'pos', 'date', 'totalVentas', 'totalVentasEfectivo', 'totalVentasConsignacion', 'returnsale', 'spents', 'amount', 'diferencia','abono_sale'));
     }
     public function previewPos(Request $request)
     {

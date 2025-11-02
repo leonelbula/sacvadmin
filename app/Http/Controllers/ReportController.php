@@ -10,6 +10,7 @@ use App\Models\Sale;
 use App\Models\ReturnSale;
 use App\Models\Spent;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -410,4 +411,43 @@ class ReportController extends Controller
         $pdf = PDF::loadView('reports.profit_loss_daily', compact('report', 'summary', 'start', 'end'));
         return $pdf->stream("reporte_ganancias_perdidas_diario.pdf");
     }
+
+
+    public function salesByUserPdf(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|integer',
+            'payment_method' => 'required|integer',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date',
+        ]);
+
+        $userId = $request->user_id;
+        $metodoPago = $request->payment_method;
+        $fechaInicio = $request->fecha_inicio;
+        $fechaFin = $request->fecha_fin;
+
+
+
+        $ventas = Sale::with('customer')
+            ->where('user_id', $userId)
+            ->where('payment_method', $metodoPago)
+            ->whereBetween(DB::raw("DATE(created_at)"), [$fechaInicio, $fechaFin])
+            ->get();
+
+        $total = $ventas->sum('total');
+
+        $nombreMetodo = $metodoPago == 1 ? 'Efectivo' : 'Consignación';
+
+        $pdf = Pdf::loadView('reports.sales_by_user_pdf', [
+            'ventas' => $ventas,
+            'total' => $total,
+            'fechaInicio' => $fechaInicio,
+            'fechaFin' => $fechaFin,
+            'nombreMetodo' => $nombreMetodo,
+        ]);
+
+        return $pdf->stream('reporte_ventas_usuario.pdf');
+    }
 }
+

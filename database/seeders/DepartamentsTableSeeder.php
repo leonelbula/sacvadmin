@@ -13,7 +13,7 @@ class DepartamentsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $Departaments = [
+        $departaments = [
             ['code' => 91, 'name' => 'Amazonas'],
             ['code' => 5, 'name' => 'Antioquia'],
             ['code' => 81, 'name' => 'Arauca'],
@@ -49,6 +49,6 @@ class DepartamentsTableSeeder extends Seeder
             ['code' => 11, 'name' => 'Bogotá D.C.'], // Distrito Capital
         ];
 
-        DB::table('Departaments')->insert($Departaments);
+        DB::table('Departaments')->insert($departaments);
     }
 }

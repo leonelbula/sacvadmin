@@ -20,7 +20,7 @@
                     <a href="{{ route('sale.create') }}">
                         <button type="button" class="btn btn-primary">Nueva Ventas</button>
                     </a>
-                       @if ($closingpos)
+                    @if ($closingpos)
                         <a href="{{ route('previewclose') }}">
                             <button type="button" class="btn btn-primary">Cerrar ventas</button>
                         </a>
@@ -64,10 +64,10 @@
                                             <button class="btn btn-success btn-sm">{{ $closing->difference }}</button>
                                         @endif
                                     </td>
-                                     <td>
+                                    <td>
                                         @if ($closing->state == 0)
                                             <button class="btn btn-info btn-sm">
-                                              Cerrado
+                                                Cerrado
                                             </button>
                                         @else
                                             <button class="btn btn-success btn-sm">Activo</button>
@@ -96,6 +96,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $closings->links() }}
+                    </div>
                 </div>
             </div>
         </div>
