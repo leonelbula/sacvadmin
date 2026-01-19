@@ -35,7 +35,7 @@
                                     <td>{{ $customer->city->name }}</td>
                                     <td>{{ $customer->departament->name }}</td>
                                     <td>
-                                        <a href="{{ route('customer.show', $customer) }}" class="btn btn-info btn-sm">
+                                        <a href="{{ route('customer.show', $customer) }}" class="btn btn-info btn-sm " >
                                            <i class="bi bi-eye"></i>
                                         </a>
                                         <a href="{{ route('customer.edit', $customer) }}" class="btn btn-warning btn-sm">

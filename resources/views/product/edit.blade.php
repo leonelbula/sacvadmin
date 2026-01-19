@@ -26,6 +26,7 @@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <div class="form-group">
+                                    <label for="Categoria">Codigo :</label>
                                     <input type="text" class="form-control" name="code" id="codigo"
                                         value="{{ $product->code }}" @if ($automatic_product) disabled @endif
                                         placeholder="Codigo">
@@ -33,6 +34,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="form-group">
+                                    <label for="Categoria">Nombre del Producto :</label>
                                     <input type="text" class="form-control" name="name" id="nameProduct"
                                         value="{{ $product->name }}" required placeholder="Nombre del Producto">
                                 </div>
@@ -41,18 +43,21 @@
                         <div class="row mb-3">
                             <div class="col-2">
                                 <div class="form-group">
+                                    <label for="Categoria">Costo :</label>
                                     <input type="number" class="form-control costo" name="cost" id="cost"
                                         value="{{ $product->cost }}" placeholder="Costo">
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="form-group">
+                                    <label for="Categoria">Utilidad :</label>
                                     <input type="number" class="form-control Utilidad" name="utility"
                                         value="{{ $product->utility }}" id="utility" required placeholder="Utilidad %">
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="form-group">
+                                    <label for="Categoria">Iva :</label>
                                     <input type="hidden" value="{{ $product->tax_value }}" name="tax_value" id="value_tax">
                                     <input type="text" class="form-control Utilidad" value="{{ $product->tax_value }}"
                                         id="tax_value" required placeholder="Iva %" readonly>
@@ -60,6 +65,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
+                                    <label for="Categoria">Precio de Venta :</label>
                                     <input type="number" class="form-control Precioventa" name="price"
                                         value="{{ $product->price }}" id="price" placeholder="Precio Venta">
                                 </div>
@@ -87,10 +93,10 @@
                                     <label for="Categoria">Categoria :</label>
 
                                     <select class="form-control seleccionarCategoria" name="category_id" required>
-                                        <option >Selecione una Categoria</option>
+                                        <option>Selecione una Categoria</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }} "
-                                                {{$product->category_id ==  $category->id ? 'selected' : '' }}>
+                                                {{ $product->category_id == $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}</option>
                                         @endforeach
                                     </select>
@@ -132,8 +138,11 @@
                                     <label for="Categoria">Activar :</label>
 
                                     <select class="form-control" name="state" required>
-                                        <option value="1" {{$product->state == true ? 'selected':''}}>Activo</option>
-                                        <option value="0" {{$product->state == false ? 'selected':''}}>Desactivado</option>
+                                        <option value="1" {{ $product->state == true ? 'selected' : '' }}>Activo
+                                        </option>
+                                        <option value="0" {{ $product->state == false ? 'selected' : '' }}>
+                                            Desactivado
+                                        </option>
 
                                     </select>
                                 </div>

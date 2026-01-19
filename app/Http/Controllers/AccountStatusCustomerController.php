@@ -118,4 +118,12 @@ class AccountStatusCustomerController extends Controller
             )
         );
     }
+    public function list_show(string $sale)
+    {
+        $title = "lista de Abonos";
+        $sale = Sale::find($sale);
+        $payment_sale = SalePayment::where('sale_id', $sale->id)->get();
+
+        return view('accountsattuscustomer.paymentlist', compact('title','sale','payment_sale'));
+    }
 }

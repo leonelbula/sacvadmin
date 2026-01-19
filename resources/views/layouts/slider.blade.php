@@ -49,12 +49,6 @@
                                      <p>PRODUCTOS</p>
                                  </a>
                              </li>
-                             <li class="nav-item">
-                                 <a href="" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>REPORTES</p>
-                                 </a>
-                             </li>
 
                          </ul>
                      </li>
@@ -78,12 +72,6 @@
                                  <a href="{{ route('accountstatecustomer.index') }}" class="nav-link">
                                      <i class="nav-icon bi bi-circle"></i>
                                      <p>ESTADO DE CUENTAS</p>
-                                 </a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>REPORTES</p>
                                  </a>
                              </li>
                          </ul>
@@ -167,12 +155,6 @@
                                      <p>LISTA DE VENTAS</p>
                                  </a>
                              </li>
-                             <li class="nav-item">
-                                 <a href="" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>REPORTES</p>
-                                 </a>
-                             </li>
                          </ul>
                      </li>
                      <li class="nav-item">
@@ -190,12 +172,7 @@
                                      <p>LISTA DE VOLUCIONES</p>
                                  </a>
                              </li>
-                             <li class="nav-item">
-                                 <a href="" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>REPORTES</p>
-                                 </a>
-                             </li>
+
                          </ul>
                      </li>
                      <li class="nav-item">
@@ -213,12 +190,6 @@
                                      <p>Lista Compras</p>
                                  </a>
                              </li>
-                             <li class="nav-item">
-                                 <a href="{{ route('shopping.index') }}" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>Reportes</p>
-                                 </a>
-                             </li>
                          </ul>
                      </li>
                      <li class="nav-item">
@@ -234,12 +205,6 @@
                                  <a href="{{ route('spent.index') }}" class="nav-link">
                                      <i class="nav-icon bi bi-circle"></i>
                                      <p>Lista Gastos</p>
-                                 </a>
-                             </li>
-                             <li class="nav-item">
-                                 <a href="" class="nav-link">
-                                     <i class="nav-icon bi bi-circle"></i>
-                                     <p>Reportes</p>
                                  </a>
                              </li>
                          </ul>
@@ -277,6 +242,18 @@
                                  <a href="" class="nav-link">
                                      <i class="nav-icon bi bi-circle"></i>
                                      <p>Reportes de Pos</p>
+                                 </a>
+                             </li>
+                              <li class="nav-item">
+                                 <a href="" class="nav-link">
+                                     <i class="nav-icon bi bi-circle"></i>
+                                     <p>Reportes de Gastos</p>
+                                 </a>
+                             </li>
+                              <li class="nav-item">
+                                 <a href="" class="nav-link">
+                                     <i class="nav-icon bi bi-circle"></i>
+                                     <p>Reportes de Devoluciones</p>
                                  </a>
                              </li>
                          </ul>

@@ -136,6 +136,11 @@ class SaleController extends Controller
                 $tax      = $request->tax[$index];
                 $cost     = $request->cost_product[$index];
 
+
+                //kardex
+
+                
+
                 // Crear detalle
                 SaleDetail::create([
                     'sale_id'   => $sale->id,
@@ -159,6 +164,8 @@ class SaleController extends Controller
                     $product->amount -= $quantity;
                     $product->save();
                 }
+                //kardex
+
             }
 
             DB::commit();

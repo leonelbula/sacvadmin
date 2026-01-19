@@ -6,11 +6,13 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Models\Company;
+use App\Models\Kardex;
 use App\Models\ProductType;
 use App\Models\Tax;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
@@ -40,7 +42,7 @@ class ProductController extends Controller
     public function search($query)
     {
         $productos = Product::where('name', 'LIKE', "%{$query}%")
-            ->orWhere('code',$query)
+            ->orWhere('code', $query)
             ->orderBy('name', 'asc')
             ->limit(10)
             ->get(['id', 'name', 'code', 'price', 'amount', 'cost', 'tax']);
@@ -111,13 +113,29 @@ class ProductController extends Controller
             }
             $data['company_id'] = Auth::user()->company_id;
 
-            Product::create($data);
+            $productNew = Product::create($data);
+            ///kardex
+            $dataKardex = [
+                'product_id' => $productNew->id,
+                'date' => now(),
+                'movement_type' => 'INGRESO',
+                'origin' => 'INVENTARIO',
+                'reference_id' => 0,
+                'quantity' => $data['amount'],
+                'stock_before' => 0,
+                'stock_after' => $data['amount'],
+                'unit_cost' => $data['price'],
+                'company_id' => Auth::user()->company_id
+            ];
+            Kardex::create($dataKardex);
             DB::commit();
             toastr()->success('Nuevo producto Registro');
             return back();
         } catch (\Exception $e) {
             DB::rollBack();
             toastr()->error('Error al guardar la informacion');
+            //dd($e->getMessage());
+            //die();
             return back();
         }
     }
@@ -189,8 +207,32 @@ class ProductController extends Controller
                 $data['tax'] = false;
             }
 
-            $product->update($data);
+            ///kardex
+            if ($product->amount != $data['amount']) {
+                if ($product->amount < $data['amount']) {
+                    $quantity =  $data['amount'] - $product->amount;
+                } else {
+                    $quantity =  $data['amount'] - $product->amount;
+                }
+                $stockBefore = $product->amount;
+                $stockAfter = $data['amount'];
 
+                $dataKardex = [
+                    'product_id' => $product->id,
+                    'date' => now(),
+                    'movement_type' => 'INGRESO',
+                    'origin' => 'INVENTARIO -  AJUSTE',
+                    'reference_id' => 0,
+                    'quantity' => $quantity,
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'unit_cost' => $data['price'],
+                    'company_id' => Auth::user()->company_id
+                ];
+                Kardex::create($dataKardex);
+            }
+
+            $product->update($data);
             DB::commit();
             toastr()->success('Producto Actulizado');
             return back();
@@ -207,7 +249,7 @@ class ProductController extends Controller
         return redirect(route('product.index'));
     }
 
-     public function reporteValorInventario()
+    public function reporteValorInventario()
     {
         // Traer productos con stock > 0
         $productos = Product::select('id', 'code', 'name', 'amount', 'cost', 'price')

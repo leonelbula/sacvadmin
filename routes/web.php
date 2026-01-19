@@ -56,6 +56,8 @@ Route::middleware('auth', 'company')->group(function () {
     Route::get('previewposclose', [PosController::class, 'previewclose'])->name('previewclose');
     Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');
     Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
+    Route::get('/accountcustomer/{sale}',[AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
+
 
     Route::get('/cierre-caja/{pos}', [PosController::class, 'cierre'])
         ->name('cierre.caja');
@@ -92,7 +94,7 @@ Route::middleware('auth', 'company')->group(function () {
 
     Route::get('/reports/sales-by-user-pdf', [ReportController::class, 'salesByUserPdf'])
     ->name('reports.salesByUserPdf');
-    
+
 });
 
 

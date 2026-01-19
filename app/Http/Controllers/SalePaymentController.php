@@ -19,7 +19,7 @@ class SalePaymentController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -78,7 +78,11 @@ class SalePaymentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $title = 'Detalles Abonos';
+        $payment = SalePayment::find($id);
+
+        return view('salepyment.show', compact('title','payment'));
+
     }
 
     /**

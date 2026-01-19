@@ -74,7 +74,7 @@
                                                 class="btn btn-info" target="_blank">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                             <a href="{{ route('pos.show', $venta) }}">
+                                             <a href="{{ route('accountsattuscustomer.list_show', $venta) }}">
                                                 <button class="btn btn-primary " idsale="">
                                                     <i class="bi bi-file-earmark-check"></i>
                                                 </button>
