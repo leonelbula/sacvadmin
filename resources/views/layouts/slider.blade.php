@@ -49,6 +49,12 @@
                                      <p>PRODUCTOS</p>
                                  </a>
                              </li>
+                              <li class="nav-item">
+                                 <a href="{{ route('product.settings') }}" class="nav-link">
+                                     <i class="nav-icon bi bi-circle"></i>
+                                     <p>PRODUCTOS AJUSTE</p>
+                                 </a>
+                             </li>
 
                          </ul>
                      </li>

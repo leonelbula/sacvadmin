@@ -268,4 +268,31 @@ class ProductController extends Controller
 
         return $pdf->setPaper('letter')->stream('reporte_inventario.pdf');
     }
+    public function settings()
+    {
+        $title = 'Ajustes Inventario';
+        return view('product.ajustes', compact('title'));
+    }
+    public function saveSettings(Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $product = Product::find($request->product_id);
+
+            $amountAct = $product->amount;
+            $newProduc = $request->newAmount + $amountAct;
+            $product->amount = $newProduc;
+
+            $product->update();
+           
+            DB::commit();
+            toastr()->success('Cantidad de producto Actualizada');
+            return back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toastr()->error('Error al guardar la informacion');
+            return back();
+        }
+    }
 }

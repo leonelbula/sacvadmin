@@ -32,8 +32,7 @@
                          <!--begin::Message-->
                          <div class="d-flex">
                              <div class="flex-shrink-0">
-                                 <img src="../../dist/assets/img/user1-128x128.jpg" alt="User Avatar"
-                                     class="img-size-50 rounded-circle me-3" />
+                                
                              </div>
                              <div class="flex-grow-1">
                                  <h3 class="dropdown-item-title">
@@ -53,8 +52,7 @@
                          <!--begin::Message-->
                          <div class="d-flex">
                              <div class="flex-shrink-0">
-                                 <img src="../../dist/assets/img/user8-128x128.jpg" alt="User Avatar"
-                                     class="img-size-50 rounded-circle me-3" />
+
                              </div>
                              <div class="flex-grow-1">
                                  <h3 class="dropdown-item-title">
@@ -76,8 +74,7 @@
                          <!--begin::Message-->
                          <div class="d-flex">
                              <div class="flex-shrink-0">
-                                 <img src="../../dist/assets/img/user3-128x128.jpg" alt="User Avatar"
-                                     class="img-size-50 rounded-circle me-3" />
+
                              </div>
                              <div class="flex-grow-1">
                                  <h3 class="dropdown-item-title">

@@ -138,8 +138,23 @@ class SaleController extends Controller
 
 
                 //kardex
+                /* $stockBefore = $product->amount;
+                 $stockAfter = $data['amount'];
 
-                
+                $dataKardex = [
+                    'product_id' => $product->id,
+                    'date' => now(),
+                    'movement_type' => 'SALIDA',
+                    'origin' => 'VENTA -  AJUSTE',
+                    'reference_id' => 0,
+                    'quantity' => $quantity,
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
+                    'unit_cost' => $data['price'],
+                    'company_id' => Auth::user()->company_id
+                ];
+                Kardex::create($dataKardex);*/
+
 
                 // Crear detalle
                 SaleDetail::create([

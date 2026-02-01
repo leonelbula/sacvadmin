@@ -57,7 +57,8 @@ Route::middleware('auth', 'company')->group(function () {
     Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');
     Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
     Route::get('/accountcustomer/{sale}',[AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
-
+    Route::get('/producto/ajuste',[ProductController::class, 'settings'])->name('product.settings');
+    Route::post('/producto/saveajuste',[ProductController::class, 'saveSettings'])->name('product.saveSettings');
 
     Route::get('/cierre-caja/{pos}', [PosController::class, 'cierre'])
         ->name('cierre.caja');
