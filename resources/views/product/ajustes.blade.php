@@ -13,6 +13,9 @@
                     <a href="{{ route('product.index') }}">
                         <button type="button" class="btn btn-primary">Volver</button>
                     </a>
+                     <a href="{{ route('product.create') }}">
+                        <button type="button" class="btn btn-primary">Nuevo Producto</button>
+                    </a>
 
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
                         data-bs-target="#productModal">Agregar Producto</button>
@@ -51,7 +54,7 @@
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="newAmount">Agregar :</label>
-                                    <input type="number" class="form-control newAmount" name="newAmount"
+                                    <input type="number" class="form-control newAmount" name="newAmount" min="1"
                                         value="{{ old('newAmount') }}" id="newAmount" required placeholder="Agregar">
                                 </div>
                             </div>

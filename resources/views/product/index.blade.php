@@ -73,6 +73,7 @@
                                     </td>
                                     <td>
                                         <div class="btn-group">
+                                          
 
                                             <a href="{{ route('product.show', $product) }}" class="btn btn-primary ">
                                                 <i class="bi bi-eye"></i>

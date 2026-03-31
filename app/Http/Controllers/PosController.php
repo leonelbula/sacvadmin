@@ -95,16 +95,28 @@ class PosController extends Controller
     }
     public function previewcloseConfirmar(Request $request)
     {
+		$userId = Auth::user()->id;
         $title = "Detalles Cierre";
         $posActive = Pos::where('user_id', Auth::user()->id)
             ->where('state', 1)
             ->first();
+			
+		$venta = Sale::where('user_id',$userId)
+		->latest()
+		->first();
 
-        $userId = Auth::user()->id;
+		
+
+        
         $fechaInicio = $posActive->start_date;
         $fechaFin = $request->date;
         $horaInicio = $posActive->start_time;
-        $horaFin = Carbon::now()->format('H:i:s');;
+		
+		$horaFin = $venta
+			? $venta->created_at->format('H:i:s')
+			:  Carbon::now()->format('H:i:s');
+			
+        //$horaFin = Carbon::now()->format('H:i:s');
 
         $totalVentas = Sale::where('user_id', $userId)
             ->whereBetween(DB::raw("DATE(created_at)"), [$fechaInicio, $fechaFin])

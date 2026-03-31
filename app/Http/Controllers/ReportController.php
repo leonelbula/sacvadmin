@@ -20,7 +20,7 @@ class ReportController extends Controller
         $totalInventario = Product::selectRaw('SUM(amount * cost) as total_inventario')
             ->value('total_inventario');
 
-        return view('reports.reporteinventario', compact('title', 'totalInventario'));
+        return view('reports.product.index', compact('title', 'totalInventario'));
     }
 
     public function productsTopSelling(Request $request)

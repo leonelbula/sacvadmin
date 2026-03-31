@@ -100,7 +100,7 @@
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="amount">Cantidad:</label>
-                                    <input type="number" class="form-control" name="amount" id="amount" value="0">
+                                    <input type="number" class="form-control" name="amount" id="amount" value="0" {{(Auth::user()->type == 'ingreso' ? 'readonly':'')}}>
                                 </div>
                             </div>
                             <div class="col-2">

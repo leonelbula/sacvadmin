@@ -7,6 +7,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductReports;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnSaleController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\SpentController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
+
+//nuevas rutas
 
 
 Route::get('/', function () {
@@ -56,9 +59,9 @@ Route::middleware('auth', 'company')->group(function () {
     Route::get('previewposclose', [PosController::class, 'previewclose'])->name('previewclose');
     Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');
     Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
-    Route::get('/accountcustomer/{sale}',[AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
-    Route::get('/producto/ajuste',[ProductController::class, 'settings'])->name('product.settings');
-    Route::post('/producto/saveajuste',[ProductController::class, 'saveSettings'])->name('product.saveSettings');
+    Route::get('/accountcustomer/{sale}', [AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
+    Route::get('/producto/ajuste', [ProductController::class, 'settings'])->name('product.settings');
+    Route::post('/producto/saveajuste', [ProductController::class, 'saveSettings'])->name('product.saveSettings');
 
     Route::get('/cierre-caja/{pos}', [PosController::class, 'cierre'])
         ->name('cierre.caja');
@@ -94,10 +97,47 @@ Route::middleware('auth', 'company')->group(function () {
     Route::get('accountsreceivable/', [AccountStatusCustomerController::class, 'accountsReceivable'])->name('accountstatecustomer.registro');
 
     Route::get('/reports/sales-by-user-pdf', [ReportController::class, 'salesByUserPdf'])
-    ->name('reports.salesByUserPdf');
-
+        ->name('reports.salesByUserPdf');
 });
 
+Route::middleware(['auth', 'company'])
+    ->prefix('inventario/reportes')
+    ->name('inventory.reports.')
+    ->group(function () {
+
+        Route::get('/', [ProductReports::class, 'index'])
+            ->name('index');
+
+        Route::get('/stock-general', [ProductReports::class, 'stockGeneral'])
+            ->name('stock');
+
+        Route::get('/pdfstockgeneral', [ProductReports::class, 'downloadPdfStock'])
+            ->name('downloadPdfStock');
+
+        Route::get('/bajo-stock', [ProductReports::class, 'lowStock'])
+            ->name('low_stock');
+
+        Route::get('/pdfstockbajo', [ProductReports::class, 'downloadlowStock'])
+            ->name('downloadPdflowStock');
+
+        Route::get('/kardex', [ProductReports::class, 'kardex'])
+            ->name('kardex');
+
+        Route::get('/por-categoria', [ProductReports::class, 'byCategory'])
+            ->name('category');
+
+        Route::get('/por-proveedor', [ProductReports::class, 'bySupplier'])
+            ->name('supplier');
+
+        Route::get('/valorizacion', [ProductReports::class, 'valuation'])
+            ->name('valuation');
+
+        Route::get('/vencidos', [ProductReports::class, 'expired'])
+            ->name('expired');
+
+        Route::get('/historial', [ProductReports::class, 'history'])
+            ->name('history');
+    });
 
 Route::get('/customers/search/{q}', [CustomerController::class, 'search']);
 Route::get('/suppliers/search/{q}', [SupplierController::class, 'search']);

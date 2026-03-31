@@ -248,7 +248,7 @@ class ProductController extends Controller
         toastr()->success('Registro Eliminado');
         return redirect(route('product.index'));
     }
-
+    //corregir filtrar cor compañia
     public function reporteValorInventario()
     {
         // Traer productos con stock > 0
@@ -285,7 +285,7 @@ class ProductController extends Controller
             $product->amount = $newProduc;
 
             $product->update();
-           
+
             DB::commit();
             toastr()->success('Cantidad de producto Actualizada');
             return back();

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Domain\Company\Repositories\CompanyRepository;
+use App\Infrastructure\Persistence\Eloquent\Repositories\CompanyRepositoryEloquent;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            CompanyRepository::class,
+            CompanyRepositoryEloquent::class,
+        );
     }
 
     /**
