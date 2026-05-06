@@ -126,4 +126,5 @@ class AccountStatusCustomerController extends Controller
 
         return view('accountsattuscustomer.paymentlist', compact('title','sale','payment_sale'));
     }
+
 }
