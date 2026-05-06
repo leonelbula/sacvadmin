@@ -43,7 +43,7 @@
                             <textarea name="note" id="note" class="form-control" rows="2"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary mt-3">Guardar Abono</button>
+                        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
                     </form>
                 </div>
             </div>

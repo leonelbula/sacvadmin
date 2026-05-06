@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone', 50);
             $table->string('email', 50);
             $table->string('address', 50);
-            $table->string('Departament', 50);
+            $table->string('departament', 50);
             $table->string('city', 50);
             $table->string('logo', 150)->nullable();
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();

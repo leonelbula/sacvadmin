@@ -63,6 +63,8 @@ Route::middleware('auth', 'company')->group(function () {
     Route::get('/producto/ajuste', [ProductController::class, 'settings'])->name('product.settings');
     Route::post('/producto/saveajuste', [ProductController::class, 'saveSettings'])->name('product.saveSettings');
 
+    Route::get('/recibopago/{id}', [SalePaymentController::class, 'print'])->name('salepayment.print');
+
     Route::get('/cierre-caja/{pos}', [PosController::class, 'cierre'])
         ->name('cierre.caja');
 

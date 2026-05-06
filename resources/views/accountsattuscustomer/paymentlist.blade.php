@@ -13,11 +13,17 @@
                     <a href="{{ route('accountstatecustomer.index') }}">
                         <button type="button" class="btn btn-primary">Volver</button>
                     </a>
+                    <a href="{{ route('accountsale.abonar', $sale->id) }}">
+                        <button type="button" class="btn btn-success">Registrar Abono</button>
+                    </a>
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <h3>Cliente: {{ $sale->customer->full_name }} </h3>
+                        </li>
+                         <li class="list-group-item">
+                            <h3>N° Factura: {{ $sale->sale_number }} </h3>
                         </li>
                         <li class="list-group-item">
                             <h4>Saldo Pendiente: {{ number_format($sale->total, 0, ',', '.') }}</h4>
@@ -51,10 +57,10 @@
                                             <a href="{{ route('salepyment.show', $pay) }}" class="btn btn-primary ">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="{{ route('category.edit', $pay) }}" class="btn btn-warning ">
+                                            <a href="{{ route('salepyment.edit', $pay) }}" class="btn btn-warning ">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form action="{{ route('category.destroy', $pay) }}" method="post"
+                                            <form action="{{ route('salepyment.destroy', $pay->id) }}" method="post"
                                                 style="display: inline">
                                                 @method('delete')
                                                 @csrf
