@@ -51,4 +51,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pos::class);
     }
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

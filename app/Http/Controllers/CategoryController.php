@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Company;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\DTOs\CategoryDTO;
+use App\Services\CategoryService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryStoreRequest;
 
 class CategoryController extends Controller
 {
+    protected $categoryService;
 
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
 
     public function index()
     {
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $categories = $compania->categories()
-            ->orderBy('name', 'asc')
-            ->paginate(10);
+
+        $categories = $this->categoryService->getAllCategories();
         $title = 'Categorias';
         return view(
             'category.index',
@@ -31,66 +34,43 @@ class CategoryController extends Controller
         $title = 'Nueva Categoria';
         return view('category.create', compact('title'));
     }
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
 
-        if (!Auth::user()->company_id) {
-            toastr()->error('Registro no guardado');
-            toastr()->warning('Debe registrar una empresa');
-            return back();
-        }
+        $categoryDTO = CategoryDTO::fromRequest($request);
+        $this->categoryService->createCategory($categoryDTO);
 
-        $request->validate([
-            'name' => 'required'
-        ]);
-
-        $name = $request->input('name');
-        $state = $request->input('state');
-
-        //asignacion masiva Category::create($request->all());
-        $category = new Category();
-        $category->name = $name;
-        $category->state = $state;
-        $category->company_id = Auth::user()->company_id;
-        $category->save();
         toastr()->success('Registro guardado');
         return back();
         // return redirect()->route('categoria.index');
     }
 
-    public function show(Category $category)
+    public function show(int $id)
     {
+        $category = $this->categoryService->getCategoryById($id);
         return view('category.edit', compact('category'));
     }
 
-    public function edit(Category $category)
+    public function edit(int $id)
     {
+        $category = $this->categoryService->getCategoryById($id);
         $title = 'Editar Categorias';
         return view('category.edit', compact('category', 'title'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(CategoryStoreRequest $request, int $id)
     {
-        $request->validate([
-            'name' => 'required'
-        ]);
-
-        $category->name = $request->name;
-
-        $state = $request->input('state');
-
-        $category->state = $state;
-        //$categoru->update($request->all())
-        $category->save();
-
+        $category = $this->categoryService->getCategoryById($id);
+        $categoryDTO = CategoryDTO::fromRequest($request);
+        $this->categoryService->updateCategory($id, $categoryDTO);
         toastr()->success('Registro guardado');
 
         return back();
     }
 
-    public function destroy(Category $category)
+    public function destroy(int $id)
     {
-        $category->delete();
+        $this->categoryService->deleteCategory($id);
         toastr()->success('Registro Eliminado');
         return redirect()->route('category.index');
     }
