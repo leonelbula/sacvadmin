@@ -54,7 +54,13 @@
                                      <i class="nav-icon bi bi-circle"></i>
                                      <p>PRODUCTOS AJUSTE</p>
                                  </a>
-                             </li>
+                             </li>                             
+                                <li class="nav-item">
+                                     <a href="{{ route('kardex.index') }}" class="nav-link">
+                                         <i class="nav-icon bi bi-circle"></i>
+                                         <p>KARDEX</p>
+                                     </a>   
+                                </li>
 
                          </ul>
                      </li>

@@ -115,13 +115,10 @@
                                     <label for="Categoria">Tipor de producto :</label>
 
                                     <select class="form-control" name="product_type_id" required>
-                                        <option>Tipo de Producto</option>
+                                        <option value="">Tipo de Producto</option>
                                         @foreach ($productTypes as $productType)
                                             <option value="{{ $productType->id }}">{{ $productType->name }}</option>
                                         @endforeach
-
-
-
                                     </select>
                                 </div>
                             </div>

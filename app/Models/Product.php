@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Scopes\CompanyScope;
+use App\Traits\BelongsToCompany;
+
 
 class Product extends Model
 {
     use HasFactory;
+    use BelongsToCompany;
 
     protected $fillable = [
         'code',
@@ -28,10 +30,7 @@ class Product extends Model
         'company_id'
     ];
 
-    protected static function booted()
-    {
-        static::addGlobalScope(new CompanyScope);
-    }
+   
 
     public function category(): BelongsTo
     {

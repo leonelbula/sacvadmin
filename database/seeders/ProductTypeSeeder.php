@@ -14,11 +14,9 @@ class ProductTypeSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            ['code' => 'PT001', 'name' => 'Producto terminado'],
-            ['code' => 'PT002', 'name' => 'Materia prima'],
+            ['code' => 'PT001', 'name' => 'Producto'],
             ['code' => 'PT003', 'name' => 'Servicio'],
-            ['code' => 'PT004', 'name' => 'Consumo interno'],
-            ['code' => 'PT005', 'name' => 'Bien de uso'],
+          
         ];
 
         foreach ($types as $type) {

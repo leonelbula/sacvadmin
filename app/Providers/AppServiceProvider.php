@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use App\Domain\Company\Repositories\CompanyRepository;
-use App\Infrastructure\Persistence\Eloquent\Repositories\CompanyRepositoryEloquent;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\ProductRepository;
+use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\KardexRepository;
+use App\Interfaces\KardexRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,10 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(
-            CompanyRepository::class,
-            CompanyRepositoryEloquent::class,
-        );
+        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(KardexRepositoryInterface::class, KardexRepository::class);
     }
 
     /**

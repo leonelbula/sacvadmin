@@ -9,31 +9,28 @@ use App\Models\Company;
 use App\Models\Kardex;
 use App\Models\ProductType;
 use App\Models\Tax;
+use App\Services\CategoryService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+
+use App\DTOs\ProductDTO;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        protected ProductService $productService,
+        protected CategoryService $categoryService,
+    ) {}
 
     public function index(Request $request)
     {
         $search = $request->input('search');
         if ($search) {
-            $products = Product::where('company_id', Auth::user()->company_id)
-                ->where(function ($queryBuilder) use ($search) {
-                    $queryBuilder->where('name', 'LIKE', "%{$search}%")
-                        ->orWhere('code', 'LIKE', "%{$search}%");
-                })
-                ->orderBy('id', 'desc')
-                ->paginate(10)
-                ->withQueryString();
+            $products = $this->productService->searchProducts($search);
         } else {
-            $compania = Company::findOrFail(Auth::user()->company_id);
-            $products = $compania->products()
-                ->orderBy('name', 'asc')
-                ->paginate(10);
+            $products = $this->productService->getAllProducts();
         }
 
         $title = 'Lista de Productos';
@@ -52,11 +49,12 @@ class ProductController extends Controller
     public function create()
     {
         $title = 'Nuevo Producto';
+        $categories = $this->categoryService->getAllCategories();
+
         $taxes = Tax::all();
         $productTypes = ProductType::all();
+
         $compania = Company::findOrFail(Auth::user()->company_id);
-        $categories = $compania->categories()
-            ->orderBy('name', 'asc')->get();
         $parameter = $compania->parameters()->first();
         if ($parameter) {
             $automatic_product = $parameter->automatic_product;
@@ -75,69 +73,18 @@ class ProductController extends Controller
     }
     public function store(ProductRequest $request)
     {
-        $data = $request->validated();
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $parameter = $compania->parameters()->first();
 
+        $dto = ProductDTO::fromRequest($request);
 
-        DB::beginTransaction();
-        try {
+        $product = $this->productService->create($dto);
 
-            if (!$request->code) {
-                if ($parameter->automatic_product) {
-                    $product = $compania->products()
-                        ->orderBy('created_at', 'desc')
-                        ->first();
-                    if ($product) {
-                        $code = (int)$product->code + 1;
-                    } else {
-                        $code = $parameter->product_code;
-                    }
-
-                    $data['code'] = $code;
-                }
-            } else {
-                $data['code'] = $request->code;
-            }
-
-            if ($request->state == '1') {
-                $data['state'] = true;
-            } else {
-                $data['state'] = false;
-            }
-
-            if (intval($request->tax_value) != 0) {
-                $data['tax'] = true;
-            } else {
-                $data['tax'] = false;
-            }
-            $data['company_id'] = Auth::user()->company_id;
-
-            $productNew = Product::create($data);
-            ///kardex
-            $dataKardex = [
-                'product_id' => $productNew->id,
-                'date' => now(),
-                'movement_type' => 'INGRESO',
-                'origin' => 'INVENTARIO',
-                'reference_id' => 0,
-                'quantity' => $data['amount'],
-                'stock_before' => 0,
-                'stock_after' => $data['amount'],
-                'unit_cost' => $data['price'],
-                'company_id' => Auth::user()->company_id
-            ];
-            Kardex::create($dataKardex);
-            DB::commit();
+        if ($product) {
             toastr()->success('Nuevo producto Registro');
-            return back();
-        } catch (\Exception $e) {
-            DB::rollBack();
+        } else {
             toastr()->error('Error al guardar la informacion');
-            //dd($e->getMessage());
-            //die();
-            return back();
         }
+
+        return back();
     }
     public function show(Product $product)
     {
@@ -170,82 +117,20 @@ class ProductController extends Controller
     }
     public function update(ProductRequest $request, Product $product)
     {
-        $data = $request->validated();
+        $dto = ProductDTO::fromRequest($request);
+        $updatedProduct = $this->productService->update($product->id, $dto);
 
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $parameter = $compania->parameters()->first();
-
-        DB::beginTransaction();
-        try {
-
-            if (!$request->code) {
-                if ($parameter->automatic_product) {
-                    $product = $compania->products()
-                        ->orderBy('created_at', 'desc')
-                        ->first();
-                    if ($product) {
-                        $code = (int)$product->code + 1;
-                    } else {
-                        $code = $parameter->product_code;
-                    }
-
-                    $data['code'] = $code;
-                }
-            } else {
-                $data['code'] = $request->code;
-            }
-
-            if ($request->state == '1') {
-                $data['state'] = true;
-            } else {
-                $data['state'] = false;
-            }
-
-            if (intval($request->tax_value) != 0) {
-                $data['tax'] = true;
-            } else {
-                $data['tax'] = false;
-            }
-
-            ///kardex
-            if ($product->amount != $data['amount']) {
-                if ($product->amount < $data['amount']) {
-                    $quantity =  $data['amount'] - $product->amount;
-                } else {
-                    $quantity =  $data['amount'] - $product->amount;
-                }
-                $stockBefore = $product->amount;
-                $stockAfter = $data['amount'];
-
-                $dataKardex = [
-                    'product_id' => $product->id,
-                    'date' => now(),
-                    'movement_type' => 'INGRESO',
-                    'origin' => 'INVENTARIO -  AJUSTE',
-                    'reference_id' => 0,
-                    'quantity' => $quantity,
-                    'stock_before' => $stockBefore,
-                    'stock_after' => $stockAfter,
-                    'unit_cost' => $data['price'],
-                    'company_id' => Auth::user()->company_id
-                ];
-                Kardex::create($dataKardex);
-            }
-
-            $product->update($data);
-            DB::commit();
-            toastr()->success('Producto Actulizado');
-            return back();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            toastr()->error('Error al guardar la informacion');
-            return back();
-        }
+        toastr()->success('Registro Actualizado');
+        return redirect(route('product.index'));
     }
-    public function destroy(Product $product)
+    public function destroy(int $id)
     {
-        $product->delete();
-        toastr()->success('Registro Eliminado');
+        $result = $this->productService->delete($id);
+        if ($result) {
+            toastr()->success('Registro Eliminado');
+        } else {
+            toastr()->error('Error al eliminar el registro');
+        }
         return redirect(route('product.index'));
     }
     //corregir filtrar cor compañia

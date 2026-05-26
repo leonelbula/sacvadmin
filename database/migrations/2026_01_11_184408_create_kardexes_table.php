@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kardexes', function (Blueprint $table) {
             $table->id();
             $table->dateTime('date');
-            $table->enum('movement_type', ['INGRESO', 'SALIDA']);
+            $table->string('movement_type'); // ENTRADA | SALIDA
             $table->string('origin'); // COMPRA | VENTA | AJUSTE
             $table->unsignedBigInteger('reference_id')->nullable();
             $table->integer('quantity');

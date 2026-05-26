@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Interfaces\ProductRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+
+class ProductRepository implements ProductRepositoryInterface
+{
+    public function searchProducts(?string $search = null, int $perPage = 10)
+    {
+        return Product::query()
+
+            ->with([
+                'category'
+            ])
+
+            ->when($search, function ($query) use ($search) {
+
+                $query->where(function ($q) use ($search) {
+
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
+                });
+            })
+
+            ->orderBy('name')
+
+            ->paginate($perPage)
+
+            ->withQueryString();
+    }
+    public function getAllProducts()
+    {
+        return Product::paginate($perPage = 10);
+    }
+
+    public function findOrFail(int $id)
+    {
+        return Product::findOrFail($id);
+    }
+
+    public function create(array $data)
+    {
+        return Product::create($data);
+    }
+
+    public function update(int $id, array $data)
+    {
+        $product = Product::findOrFail($id);
+
+        $product->update($data);
+
+        return $product;
+    }
+
+    public function delete(int $id)
+    {
+        $product = Product::findOrFail($id);
+
+        return $product->delete();
+    }
+
+    public function getNextCode(): string
+    {
+        $parameter = Auth::user()->company->parameters()->first();
+            if ($parameter && $parameter->automatic_product) {
+                $lastProduct = Product::withoutGlobalScopes()
+                    ->latest('id')
+                    ->first();
+    
+                if (!$lastProduct) {
+                    return 'P0001';
+                }
+    
+                $number = (int) substr(
+                    $lastProduct->code,
+                    1
+                );
+    
+                $number++;
+    
+                return 'P' . str_pad(
+                    $number,
+                    4,
+                    '0',
+                    STR_PAD_LEFT
+                );
+            } else {
+                return '';
+            }
+    
+    }
+}
