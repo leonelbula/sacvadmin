@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerRequest;
-use App\Models\Company;
+
 use App\Models\Customer;
 use App\Models\Departament;
 use App\Models\City;
@@ -11,20 +11,22 @@ use App\Models\CustomerTributes;
 use App\Models\IdentityDocument;
 use App\Models\OrganizationType;
 use App\Models\Tax;
-use Carbon\Exceptions\Exception;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Services\CustomerService;
+use App\Interfaces\CustomerRepositoryInterface;
+use App\DTOs\CustomerDTO;
 
 class CustomerController extends Controller
 {
+    public function __construct(
+        protected CustomerService $customerService,
+        protected CustomerRepositoryInterface $customerRepository
+    ) {}
+
     public function index()
     {
-        $compania = Company::findOrFail(Auth::user()->company_id);
-
-        $customers = $compania->customers()
-            ->orderBy('full_name', 'asc')
-            ->paginate(10);
+        $customers = $this->customerService->all();
 
         $title = "Lista de clientes";
         return view('customer.index', compact(
@@ -37,11 +39,7 @@ class CustomerController extends Controller
     {
         $query = $request['q'];
 
-        $clientes = Customer::with('city') // carga la relación con la ciudad
-            ->where('full_name', 'LIKE', "%{$query}%")
-            ->orWhere('identification_card', 'LIKE', "%{$query}%")
-            ->limit(5)
-            ->get();
+        $clientes = $this->customerService->search($query);
 
         return response()->json($clientes);
     }
@@ -68,21 +66,14 @@ class CustomerController extends Controller
 
     public function store(CustomerRequest $request)
     {
-        DB::beginTransaction();
-        try {
-
-            $data = $request->validated();
-            $data['company_id'] = Auth::user()->company_id;
-
-            Customer::create($data);
-            DB::commit();
+        $data = CustomerDTO::fromRequest($request);
+        $customer = $this->customerService->create($data);
+        if ($customer) {
             toastr()->success('Cliente guardado correctamente');
-            return back();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            toastr()->error('Error al guardar el cliente: ' . $e->getMessage());
-            return back();
+        } else {
+            toastr()->error('Error al guardar el cliente');
         }
+        return back();
     }
 
     public function show(Customer $customer)
@@ -114,31 +105,28 @@ class CustomerController extends Controller
 
     public function update(CustomerRequest $request, Customer $customer)
     {
-        DB::beginTransaction();
-        try {
-            $customer->update($request->validated());
-            DB::commit();
-            toastr()->success('Registro guardado');
-            return back();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            toastr()->error('Registro no guardado' . $e->getMessage());
-            return back();
+        $data = CustomerDTO::fromRequest($request);
+        $updatedCustomer = $this->customerService->update($customer->id, $data);
+
+        if ($updatedCustomer) {
+            toastr()->success('Cliente actualizado correctamente');
+        } else {
+            toastr()->error('Error al actualizar el cliente');
         }
+
+        return back();
     }
 
     public function destroy(Customer $customer)
     {
-        DB::beginTransaction();
-        try {
-            $customer->delete();
-            DB::commit();
-            toastr()->success('Registro Eliminado');
-            return redirect()->route('cliente.index');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            toastr()->error('Registro no eliminado' . $e->getMessage());
-            return back();
+        $deleted = $this->customerService->delete($customer->id);
+
+        if ($deleted) {
+            toastr()->success('Cliente eliminado correctamente');
+        } else {
+            toastr()->error('Error al eliminar el cliente');
         }
+
+        return back();
     }
 }
