@@ -412,7 +412,7 @@ class SaleController extends Controller
         ])->findOrFail($sale->id);
         $company = Company::findOrFail(Auth::user()->company_id);
         $payments = PaymentMethod::all();
-        $pdf = Pdf::loadView('pdf.ticket', [
+        $pdf = Pdf::loadView('pdf.tickete2', [
             'company' => $company,
             'payments' => $payments,
             'sale' => $sale,

@@ -14,8 +14,18 @@ class KardexRepository implements KardexRepositoryInterface
     {
         return Kardex::with('product')->orderBy('date', 'desc')->paginate(10);
     }
-    public function find($id)
+    public function search($query)
     {
-        return Kardex::find($id);
+        return Kardex::with('product')
+            ->whereHas('product', function ($q) use ($query) {
+                $q->where('name', 'like', "%$query%")
+                  ->orWhere('code', 'like', "%$query%");
+            })            
+            ->orderBy('date', 'desc')
+            ->paginate(10);
+    }
+    public function allId($id)
+    {
+        return Kardex::where('id', $id)->get();
     }
 }

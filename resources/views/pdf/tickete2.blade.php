@@ -38,7 +38,7 @@
     <!-- Datos de venta -->
     <table>
         <tr>
-            <td class="left">Factura: {{ $sale->sale_number }}</td>
+            <td class="left">Factura:2 {{ $sale->sale_number }}</td>
             <td class="right">{{ \Carbon\Carbon::parse($sale->date_sale)->format('d/m/Y H:i') }}</td>
         </tr>
         <tr>

@@ -11,20 +11,7 @@
                 <div class="card-header">
 
                     <div class="row">
-                        <div class="col-9">
-                            <form method="GET" action="{{ route('kardex.index', ['search' => $search]) }}" class="mb-3">
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Buscar por nombre o código..." value="{{ $search }}">
-                                    <button type="submit" class="btn btn-primary">Buscar</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-3">
-                            <a href="{{ route('kardex.index') }}" type="button" class="btn btn-block btn-primary">Mostrar
-                                todos</a>
-
-                        </div>
+                        <a href="{{ route('product.index') }}" type="button" class="btn btn-block btn-success">Volver</a>
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -45,7 +32,7 @@
                                  <th>Direfencia </th>
                                 <th>Cantidad Anterior</th>
                                 <th>Cantidad Actual</th>                             
-                                <th>Acciones</th>
+                             
                   
                             </tr>
                         </thead>
@@ -53,10 +40,13 @@
                             @php
                                 $i = 1;
                             @endphp
-                            @foreach ($all as $data)
+                            {{dd($detail)}}
+                            {{die()}}
+                            @foreach ($detail as $data)
+                           
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $data->id }}</td>
+                                    <td>{{ $data->date }}</td>
                                     <td>{{ $data->date }}</td>
                                     <td>{{ $data->product->name }}</td>
                                     <td>{{ $data->unit_cost }}</td>
@@ -65,9 +55,7 @@
                                     <td>{{ $data->quantity }}</td>
                                     <td>{{ $data->stock_before }}</td>                                    
                                     <td>{{ $data->stock_after }}</td>
-                                    <td>
-                                        <a href="{{ route('kardex.show', $data->id) }}" class="btn btn-info btn-sm">Ver Detalles</a>
-                                    </td>
+                                   
                                 </tr>
                             @endforeach
 
@@ -76,7 +64,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-center mt-4">
-                        {{ $all->links() }}
+                        {{ $detail->links() }}
                     </div>
                 </div>
                 <!-- /.card-body -->

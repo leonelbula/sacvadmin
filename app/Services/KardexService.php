@@ -15,8 +15,13 @@ class KardexService
     {
         return $this->kardexRepository->all();
     }
-    public function find($id)
+    public function search($query)
     {
-        return $this->kardexRepository->find($id);
+        return $this->kardexRepository->search($query);
+    }
+
+    public function allId($id)
+    {
+        return $this->kardexRepository->allId($id);
     }
 }
