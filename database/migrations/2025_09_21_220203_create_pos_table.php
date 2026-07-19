@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('box_base');
             $table->integer('total_sale');
-            $table->float('difference');
+            $table->integer('difference');
             $table->time('start_time', $precision = 0);
             $table->time('closing_time', $precision = 0);
             $table->date('start_date');
@@ -27,7 +27,6 @@ return new class extends Migration
             $table->integer('delivered_value');
             $table->boolean('state');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

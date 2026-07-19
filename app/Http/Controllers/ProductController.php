@@ -38,11 +38,15 @@ class ProductController extends Controller
     }
     public function search($query)
     {
+       // dd($query); // Debugging line to check the value of $query
+        var_dump($query); // Debugging line to check the value of $query
         $productos = Product::where('name', 'LIKE', "%{$query}%")
             ->orWhere('code', $query)
             ->orderBy('name', 'asc')
             ->limit(10)
             ->get(['id', 'name', 'code', 'price', 'amount', 'cost', 'tax']);
+
+            dd($productos); // Debugging line to check the value of $productos
 
         return response()->json($productos);
     }

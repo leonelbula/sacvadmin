@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('full_name', 150);
-            $table->string('identification_card', 20);
+            $table->string('identification', 20);
             $table->string('phone', 50);
             $table->string('email', 50);
             $table->string('address', 50);
             $table->string('city', 50);
-            $table->string('departament', 50);
-            $table->float('credit_amount');
+            $table->string('department', 50);
+            $table->integer('credit_amount');
             $table->string('description', 150);
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+           $table->boolean('state')->default(1);
             $table->timestamps();
         });
     }

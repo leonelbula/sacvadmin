@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('spents', function (Blueprint $table) {
             $table->id();
             $table->string('description', 45);
-            $table->float('total');
+            $table->integer('total');
             $table->date('date_spent');
             $table->time('hour', $precision = 0);
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');

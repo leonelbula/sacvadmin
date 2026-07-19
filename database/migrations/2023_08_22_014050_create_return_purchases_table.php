@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->integer('purchases_number');
             $table->text('content');
-            $table->float('cost');
-            $table->float('total');
+            $table->integer('cost');
+            $table->integer('total');
             $table->time('hour', $precision = 0);
             $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

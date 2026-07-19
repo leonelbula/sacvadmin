@@ -14,21 +14,19 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->integer('sale_number');
-            $table->float('cost');
-            $table->float('utility');
-            $table->integer('subtotal');
-            $table->integer('total_iva');
+            $table->integer('cost');
+            $table->integer('utility');
+            $table->integer('subtotal');         
             $table->integer('total');
-            $table->float('balance');
+            $table->integer('balance');
             $table->time('hour', $precision = 0);
             $table->date('date_sale');
             $table->string('term', 50);
             $table->date('expiration_date');
             $table->integer('type_sale');
             $table->string('payment_form');
-            $table->integer('payment_method')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('payment_method_id')->constrained('payment_methods')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();
             $table->timestamps();
         });

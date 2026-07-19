@@ -15,10 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->enum('type',['admin','vendor','uservendor'])->default('vendor');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->enum('type',['admin','vendor','uservendor'])->default('uservendor');
             $table->string('password');
-            $table->integer('company_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

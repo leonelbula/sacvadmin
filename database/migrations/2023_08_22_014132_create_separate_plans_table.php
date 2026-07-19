@@ -15,14 +15,13 @@ return new class extends Migration
             $table->id();
             $table->integer('separate_number');
             $table->text('content');
-            $table->float('cost');
-            $table->float('utility');
-            $table->float('total');
-            $table->float('balance');
+            $table->integer('cost');
+            $table->integer('utility');
+            $table->integer('total');
+            $table->integer('balance');
             $table->time('hour', $precision = 0);
             $table->date('expiration_date');
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

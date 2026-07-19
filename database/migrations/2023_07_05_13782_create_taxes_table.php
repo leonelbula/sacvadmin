@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code',10);
             $table->string('name',50);
             $table->string('description',50);
-            $table->float('value');
+            $table->integer('value');
             $table->timestamps();
         });
     }

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('invoice_number');
             $table->date('shopping_date')->default(now());
             $table->enum('purchase_type', ['credit', 'counted']);
-            $table->decimal('subtotal', 10, 1);
-            $table->decimal('iva', 10, 1);
-            $table->decimal('total', 10, 1);
-            $table->float('balance');
+            $table->integer('subtotal');
+            $table->integer('iva');
+            $table->integer('total');
+            $table->integer('balance');
             $table->date('due_date')->nullable();
             $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');

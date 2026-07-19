@@ -509,8 +509,6 @@ class SaleController extends Controller
 
         return $pdf->setPaper('letter')->stream('reporte_ventas.pdf');
     }
-
-
     public function reporteTotalesPorDia(Request $request)
     {
         $data = $request->validate([

@@ -150,7 +150,6 @@
                 .then(data => {
                     const tbody = document.querySelector('#tablaClientes tbody');
                     tbody.innerHTML = '';
-
                     data.forEach(cliente => {
                         tbody.innerHTML += `
                     <tr>
@@ -161,6 +160,7 @@
                             <button class="btn btn-sm btn-success" onclick="seleccionarCliente(${cliente.id}, '${cliente.full_name}','${cliente.identification_card}','${cliente.address}','${cliente.city['name']}')">Seleccionar</button>
                         </td>
                     </tr>`;
+                    console.log("Clientes encontrados:", data); // 👈 debug
                     });
                 });
         });

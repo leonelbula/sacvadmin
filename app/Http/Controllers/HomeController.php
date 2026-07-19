@@ -32,12 +32,13 @@ class HomeController extends Controller
             $data = $request->all();
             $data['logo'] = 'n/n';
             $data['user_id'] = Auth::user()->id;
-            Company::create($data);
+           $company =  Company::create($data);
 
 
 
-            $company = Company::select('id')->where('user_id', Auth::user()->id)->first();
-
+            //$company = Company::select('id')->where('user_id', Auth::user()->id)->first();
+            var_dump($company->id);
+die();
             $parameter = [
                 'sale_code' => 0,
                 'tax_include' => 1,
@@ -60,7 +61,8 @@ class HomeController extends Controller
             DB::rollBack();
 
             toastr()->error('Informcion no guardada');
-            return back();
+            var_dump($e->getMessage());
+           // return back();
         }
     }
 }

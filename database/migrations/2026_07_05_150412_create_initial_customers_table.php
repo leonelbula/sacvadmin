@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_pos', function (Blueprint $table) {
+        Schema::create('initial_customers', function (Blueprint $table) {
             $table->id();
+            $table->string('number_facturas');
+            $table->string('descripcion');
+            $table->integer('value_fact');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_pos');
+        Schema::dropIfExists('initial_customers');
     }
 };

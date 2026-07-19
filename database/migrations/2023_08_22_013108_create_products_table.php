@@ -15,18 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('code', 150);
             $table->string('name', 150);
-            $table->float('cost');
-            $table->float('price');
-            $table->float('utility');
-            $table->float('minimum_amount');
-            $table->float('amount');
-            $table->boolean('tax');
-            $table->integer('tax_value');
-            $table->boolean('state');
-            $table->foreignId('product_type_id')->constrained('product_types')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('taxes_id')->constrained('taxes')->onUpdate('cascade')->onDelete('restrict');
+            $table->integer('cost');
+            $table->integer('price');
+            $table->integer('utility');
+            $table->integer('stock_min');
+            $table->integer('stock');        
+            $table->boolean('state')->default(1);          
             $table->foreignId('category_id')->constrained('categories')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

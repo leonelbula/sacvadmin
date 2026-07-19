@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignId('shopping_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
-            $table->decimal('price', 10, 0);
+            $table->integer('price');
             $table->boolean('has_iva')->default(true);
-            $table->decimal('subtotal', 10, 0);
-            $table->decimal('iva', 10, 0);
-            $table->decimal('total', 10, 0);
+            $table->integer('subtotal');
+            $table->integer('iva');
+            $table->integer('total');
             $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

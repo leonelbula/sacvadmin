@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
-            $table->integer('sale_code');
-            $table->boolean('tax_include');
+            $table->integer('sale_code');           
             $table->integer('product_code');
             $table->boolean('automatic_product');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }
