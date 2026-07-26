@@ -20,8 +20,7 @@ return new class extends Migration
             $table->boolean('has_iva')->default(true);
             $table->integer('subtotal');
             $table->integer('iva');
-            $table->integer('total');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->integer('total');           
             $table->timestamps();
         });
     }

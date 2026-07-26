@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\DTOs\ProductDTO;
+use App\Models\Parameter;
 use App\Services\ProductService;
 
 class ProductController extends Controller
@@ -39,7 +40,7 @@ class ProductController extends Controller
     public function search($query)
     {
        // dd($query); // Debugging line to check the value of $query
-        var_dump($query); // Debugging line to check the value of $query
+        //var_dump($query); // Debugging line to check the value of $query
         $productos = Product::where('name', 'LIKE', "%{$query}%")
             ->orWhere('code', $query)
             ->orderBy('name', 'asc')
@@ -53,26 +54,19 @@ class ProductController extends Controller
     public function create()
     {
         $title = 'Nuevo Producto';
-        $categories = $this->categoryService->getAllCategories();
-
-        $taxes = Tax::all();
-        $productTypes = ProductType::all();
-
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $parameter = $compania->parameters()->first();
-        if ($parameter) {
+        $categories = $this->categoryService->getAllCategories();       
+        $parameter = Parameter::first();
+       
+        if ($parameter->product_code) {
             $automatic_product = $parameter->automatic_product;
         } else {
             $automatic_product = 0;
         }
 
-
         return view('product.create', compact(
             'title',
             'categories',
             'automatic_product',
-            'taxes',
-            'productTypes',
         ));
     }
     public function store(ProductRequest $request)
@@ -98,13 +92,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
 
-        $title = 'Editar Producto';
-        $taxes = Tax::all();
-        $productTypes = ProductType::all();
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $categories = $compania->categories()
-            ->orderBy('name', 'asc')->get();
-        $parameter = $compania->parameters()->first();
+        $title = 'Editar Producto';      
+        $parameter = Parameter::first();
         if ($parameter) {
             $automatic_product = $parameter->automatic_product;
         } else {

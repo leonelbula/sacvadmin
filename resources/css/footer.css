@@ -1,0 +1,222 @@
+.footer {
+    height: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    border-top: 1px solid #e5e7eb;
+
+    background: white;
+}
+
+.footer .footer-left {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.top-navbar {
+    position: fixed;
+
+    top: 0;
+
+    right: 0;
+
+    left: 270px;
+
+    height: 75px;
+
+    background: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+
+    z-index: 1000;
+}
+
+.search-box {
+    width: 420px;
+
+    background: #f4f7fc;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 15px;
+}
+
+.search-box input {
+    border: none;
+
+    background: none;
+
+    height: 50px;
+
+    width: 100%;
+
+    outline: none;
+}
+
+.navbar-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.icon-btn {
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #f4f7fc;
+
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+
+    top: 6px;
+
+    right: 6px;
+}
+
+/* ===============================
+USER DROPDOWN
+================================ */
+
+.user-box {
+    border: none;
+
+    background: none;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.user-box::after {
+    margin-left: 8px;
+}
+
+.user-box img {
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+.user-info {
+    text-align: left;
+}
+
+.user-info strong {
+    display: block;
+
+    font-size: 14px;
+}
+
+.user-info small {
+    color: #64748b;
+}
+
+/* MENU */
+
+.user-menu {
+    width: 280px;
+
+    border: none;
+
+    border-radius: 18px;
+
+    padding: 10px;
+
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.15);
+}
+
+.user-header {
+    display: flex;
+
+    gap: 15px;
+
+    align-items: center;
+
+    padding: 15px;
+}
+
+.user-header img {
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 50%;
+}
+
+.user-header strong {
+    display: block;
+}
+
+.user-header small {
+    color: #64748b;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+}
+
+.dropdown-item:hover {
+    background: #f1f5f9;
+}
+
+.logout-item {
+    color: #ef4444;
+
+    width: 100%;
+
+    border: none;
+
+    background: none;
+}
+
+.logout-item:hover {
+    background: #fee2e2;
+
+    color: #b91c1c;
+}

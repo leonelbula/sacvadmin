@@ -1,0 +1,499 @@
+/* =====================================================
+   SACVAdmin - RESPONSIVE DESIGN
+===================================================== */
+
+
+/* =====================================================
+   LAPTOP PEQUEÑA / TABLET GRANDE
+===================================================== */
+
+@media (max-width:1200px){
+
+    .kpi-card{
+        padding:20px;
+    }
+
+
+    .kpi-icon{
+
+        width:60px;
+        height:60px;
+
+        font-size:25px;
+
+    }
+
+
+    .kpi-body h3{
+
+        font-size:24px;
+
+    }
+
+
+    .search-box{
+
+        width:300px;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(max-width:992px){
+
+
+    body{
+
+        overflow-x:hidden;
+
+    }
+
+
+    /*
+       Sidebar móvil
+    */
+
+
+    .sidebar{
+
+        transform:translateX(-100%);
+
+        transition:.35s ease;
+
+    }
+
+
+
+    .sidebar.show{
+
+        transform:translateX(0);
+
+    }
+
+
+
+    /*
+       Si está colapsado en escritorio
+       se desactiva en móvil
+    */
+
+
+    .sidebar.collapsed{
+
+        width:270px;
+
+    }
+
+
+
+    /*
+       Contenido
+    */
+
+
+    .main,
+    .main.expanded{
+
+        margin-left:0;
+
+    }
+
+
+
+    /*
+       Navbar
+    */
+
+
+    .top-navbar,
+    .top-navbar.expanded{
+
+        left:0;
+
+        padding:0 20px;
+
+    }
+
+
+
+    .menu-toggle{
+
+        display:flex;
+
+    }
+
+
+
+    .search-box{
+
+        display:none;
+
+    }
+
+
+
+    .user-box div{
+
+        display:none;
+
+    }
+
+
+
+    .content{
+
+        padding:20px;
+
+    }
+
+
+
+    /*
+       Header página
+    */
+
+
+    .page-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+
+    }
+
+
+
+    /*
+       Cards
+    */
+
+
+    .kpi-card{
+
+        height:auto;
+
+        min-height:120px;
+
+    }
+
+
+}
+
+
+
+/* =====================================================
+   MOVILES GRANDES
+===================================================== */
+
+@media(max-width:768px){
+
+
+
+    .top-navbar{
+
+        height:65px;
+
+    }
+
+
+
+    .content{
+
+        margin-top:65px;
+
+        padding:15px;
+
+    }
+
+
+
+    /*
+       Logo
+    */
+
+
+    .brand-text{
+
+        display:none;
+
+    }
+
+
+
+    /*
+       KPI
+    */
+
+
+    .kpi-card{
+
+        border-radius:15px;
+
+    }
+
+
+
+    .kpi-body h3{
+
+        font-size:22px;
+
+    }
+
+
+
+    .kpi-icon{
+
+        width:55px;
+
+        height:55px;
+
+    }
+
+
+
+    /*
+       Dashboard cards
+    */
+
+
+    .dashboard-card{
+
+        padding:18px;
+
+        border-radius:15px;
+
+    }
+
+
+
+    .card-header-custom{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:10px;
+
+    }
+
+
+
+    /*
+       Tablas
+    */
+
+
+    .table-responsive{
+
+        overflow-x:auto;
+
+    }
+
+
+
+    .sales-table{
+
+        min-width:900px;
+
+    }
+
+
+
+    /*
+       Acciones rápidas
+    */
+
+
+    .quick-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+
+}
+
+
+
+
+/* =====================================================
+   MOVILES PEQUEÑOS
+===================================================== */
+
+@media(max-width:480px){
+
+
+    .navbar-right{
+
+        gap:8px;
+
+    }
+
+
+
+    .icon-btn{
+
+        width:38px;
+
+        height:38px;
+
+    }
+
+
+
+    .kpi-card{
+
+        flex-direction:row;
+
+    }
+
+
+
+    .kpi-icon{
+
+        width:50px;
+
+        height:50px;
+
+        font-size:22px;
+
+    }
+
+
+
+    .kpi-title{
+
+        font-size:13px;
+
+    }
+
+
+
+    .kpi-body h3{
+
+        font-size:20px;
+
+    }
+
+
+
+    .quick-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+
+
+    .quick-card{
+
+        height:95px;
+
+    }
+
+
+
+    .timeline-content p{
+
+        font-size:14px;
+
+    }
+
+
+
+    .page-title{
+
+        font-size:24px;
+
+    }
+
+
+}
+
+
+
+/* =====================================================
+   SIDEBAR OVERLAY MOBILE
+===================================================== */
+
+
+.sidebar-overlay{
+
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(3px);
+
+    z-index:1040;
+
+}
+
+
+
+.sidebar-overlay.show{
+
+    display:block;
+
+}
+
+
+
+
+/* =====================================================
+   ANIMACIONES
+===================================================== */
+
+
+@media(prefers-reduced-motion:no-preference){
+
+
+    .kpi-card,
+    .dashboard-card,
+    .quick-card{
+
+
+        animation:fadeUp .4s ease;
+
+
+    }
+
+}
+
+
+
+@keyframes fadeUp{
+
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+
+}

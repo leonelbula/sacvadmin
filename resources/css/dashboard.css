@@ -1,0 +1,766 @@
+/* =====================================================
+   SACVAdmin - Dashboard Main Styles
+===================================================== */
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+    --primary: #2563eb;
+    --dark: #0f172a;
+    --body: #f5f7fb;
+    --text: #1e293b;
+    --muted: #64748b;
+    --white: #ffffff;
+
+    --radius: 20px;
+}
+
+/* =====================================================
+   BODY
+===================================================== */
+
+body {
+    background: var(--body);
+
+    color: var(--text);
+
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+/* =====================================================
+   LAYOUT
+===================================================== */
+
+.main {
+    margin-left: 270px;
+
+    min-height: 100vh;
+
+    transition: 0.35s ease;
+}
+
+.main.expanded {
+    margin-left: 90px;
+}
+
+.content {
+    padding: 30px;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    height: 100vh;
+
+    width: 270px;
+
+    background: #0f172a;
+
+    color: white;
+
+    z-index: 1050;
+
+    transition: 0.35s ease;
+
+    overflow-y: auto;
+}
+
+.sidebar.collapsed {
+    width: 90px;
+}
+
+.sidebar-header {
+    height: 80px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 20px;
+}
+
+.brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    text-decoration: none;
+
+    color: white;
+}
+
+.brand-icon {
+    width: 45px;
+
+    height: 45px;
+
+    background: #2563eb;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+}
+
+.brand-text h5 {
+    margin: 0;
+
+    font-weight: 700;
+}
+
+.sidebar-menu {
+    padding: 15px;
+}
+
+/* Menu */
+
+.menu-item {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 14px 16px;
+
+    border-radius: 14px;
+
+    color: #cbd5e1;
+
+    text-decoration: none;
+
+    background: none;
+
+    border: none;
+
+    margin-bottom: 8px;
+
+    transition: 0.3s;
+}
+
+.menu-item i {
+    font-size: 20px;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background: #2563eb;
+
+    color: white;
+}
+
+/* Sidebar reducido */
+
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .menu-item span,
+.sidebar.collapsed .arrow {
+    display: none;
+}
+
+.sidebar.collapsed .menu-item {
+    justify-content: center;
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.top-navbar {
+    position: fixed;
+
+    top: 0;
+
+    right: 0;
+
+    left: 270px;
+
+    height: 75px;
+
+    background: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    z-index: 1000;
+
+    transition: 0.35s ease;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.top-navbar.expanded {
+    left: 90px;
+}
+
+/* =====================================================
+   ICON BUTTONS
+===================================================== */
+
+.icon-btn {
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #f1f5f9;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.top-navbar {
+    position: fixed;
+
+    top: 0;
+
+    right: 0;
+
+    left: 270px;
+
+    height: 75px;
+
+    background: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+
+    z-index: 1000;
+}
+
+.search-box {
+    width: 420px;
+
+    background: #f4f7fc;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 15px;
+}
+
+.search-box input {
+    border: none;
+
+    background: none;
+
+    height: 50px;
+
+    width: 100%;
+
+    outline: none;
+}
+
+.navbar-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.icon-btn {
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #f4f7fc;
+
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+
+    top: 6px;
+
+    right: 6px;
+}
+
+/* ===============================
+USER DROPDOWN
+================================ */
+
+.user-box {
+    border: none;
+
+    background: none;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.user-box::after {
+    margin-left: 8px;
+}
+
+.user-box img {
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+.user-info {
+    text-align: left;
+}
+
+.user-info strong {
+    display: block;
+
+    font-size: 14px;
+}
+
+.user-info small {
+    color: #64748b;
+}
+
+/* MENU */
+
+.user-menu {
+    width: 280px;
+
+    border: none;
+
+    border-radius: 18px;
+
+    padding: 10px;
+
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.15);
+}
+
+.user-header {
+    display: flex;
+
+    gap: 15px;
+
+    align-items: center;
+
+    padding: 15px;
+}
+
+.user-header img {
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 50%;
+}
+
+.user-header strong {
+    display: block;
+}
+
+.user-header small {
+    color: #64748b;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+}
+
+.dropdown-item:hover {
+    background: #f1f5f9;
+}
+
+.logout-item {
+    color: #ef4444;
+
+    width: 100%;
+
+    border: none;
+
+    background: none;
+}
+
+.logout-item:hover {
+    background: #fee2e2;
+
+    color: #b91c1c;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+    margin-top: 80px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 30px;
+
+    font-weight: 700;
+}
+
+/* =====================================================
+   KPI CARDS
+===================================================== */
+
+.kpi-card {
+    background: white;
+
+    border-radius: var(--radius);
+
+    padding: 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    height: 140px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+
+    transition: 0.3s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-6px);
+}
+
+.kpi-icon {
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    font-size: 30px;
+}
+
+.sales .kpi-icon {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.purchase .kpi-icon {
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+}
+
+.inventory .kpi-icon {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.customers .kpi-icon {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.kpi-title {
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+.kpi-body h3 {
+    font-size: 30px;
+
+    margin: 5px 0;
+
+    font-weight: 700;
+}
+
+/* =====================================================
+   DASHBOARD CARDS
+===================================================== */
+
+.dashboard-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+
+    height: 100%;
+}
+
+.card-header-custom {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.card-header-custom h5 {
+    font-weight: 700;
+}
+
+/* =====================================================
+   TABLES
+===================================================== */
+
+.sales-table thead th {
+    border: none;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.sales-table tbody td {
+    padding: 18px 10px;
+
+    border: none;
+}
+
+.sales-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* =====================================================
+   BADGES
+===================================================== */
+
+.status,
+.payment {
+    padding: 6px 12px;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.success {
+    background: #dcfce7;
+
+    color: #15803d;
+}
+
+.warning {
+    background: #fef3c7;
+
+    color: #b45309;
+}
+
+.danger {
+    background: #fee2e2;
+
+    color: #b91c1c;
+}
+
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+.quick-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+.quick-card {
+    height: 110px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: white;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+.quick-card:hover {
+    transform: translateY(-5px);
+
+    color: white;
+}
+
+/* =====================================================
+   TIMELINE
+===================================================== */
+
+.timeline-item {
+    display: flex;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.timeline-icon {
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+}
+
+/* =====================================================
+   SUBMENU
+===================================================== */
+
+.submenu {
+    max-height: 0;
+
+    overflow: hidden;
+
+    transition: 0.35s;
+}
+
+.menu-group.active .submenu {
+    max-height: 300px;
+}
+
+.submenu a {
+    display: block;
+
+    padding: 12px 20px 12px 55px;
+
+    color: #94a3b8;
+
+    text-decoration: none;
+}
+
+.submenu a:hover {
+    color: white;
+}
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+.sidebar-divider {
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    margin: 20px;
+}
+
+.logout-btn:hover {
+    background: #ef4444;
+
+    color: white;
+}
+.footer {
+    height: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    border-top: 1px solid #e5e7eb;
+
+    background: white;
+}
+
+.footer .footer-left {
+
+    display: flex;
+
+    align-items: center;
+
+}

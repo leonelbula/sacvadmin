@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\BelongsToCompany;
+
 
 
 class Product extends Model
 {
     use HasFactory;
-    use BelongsToCompany;
 
     protected $fillable = [
         'code',
@@ -21,13 +20,8 @@ class Product extends Model
         'utility',
         'minimum_amount',
         'amount',
-        'tax',
-        'tax_value',
         'state',
-        'product_type_id',
-        'taxes_id',
         'category_id',
-        'company_id'
     ];
 
    
@@ -35,10 +29,6 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
     }
     public function kardex()
     {

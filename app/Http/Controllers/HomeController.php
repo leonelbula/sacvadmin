@@ -14,10 +14,7 @@ class HomeController extends Controller
 {
     public function dashboard()
     {
-        if (Auth::user()->company_id != '') {
-            return redirect()->route('companydata.index');
-        }
-        return view('home.dashboard');
+        return view('dashboard.index');
     }
     public function companycreate()
     {

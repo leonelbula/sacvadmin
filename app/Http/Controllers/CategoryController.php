@@ -6,6 +6,8 @@ use App\DTOs\CategoryDTO;
 use App\Services\CategoryService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryStoreRequest;
+use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -16,47 +18,39 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index()
+    public function index(Category $category = null,Request $request)
     {
+        $search = $request->input('search');
+    
+        if ($search) {
+            $categories = $this->categoryService->searchCategort($request->input('search'));
+        } else {
+           $categories = $this->categoryService->getAllCategories();
+        }
 
-        $categories = $this->categoryService->getAllCategories();
+        
         $title = 'Categorias';
         return view(
             'category.index',
             compact(
                 'categories',
-                'title'
+                'title',
+                'category'
             )
         );
     }
-    public function create()
-    {
-        $title = 'Nueva Categoria';
-        return view('category.create', compact('title'));
-    }
+   
     public function store(CategoryStoreRequest $request)
     {
-
+       
         $categoryDTO = CategoryDTO::fromRequest($request);
         $this->categoryService->createCategory($categoryDTO);
 
         toastr()->success('Registro guardado');
         return back();
         // return redirect()->route('categoria.index');
-    }
-
-    public function show(int $id)
-    {
-        $category = $this->categoryService->getCategoryById($id);
-        return view('category.edit', compact('category'));
-    }
-
-    public function edit(int $id)
-    {
-        $category = $this->categoryService->getCategoryById($id);
-        $title = 'Editar Categorias';
-        return view('category.edit', compact('category', 'title'));
-    }
+    } 
+   
 
     public function update(CategoryStoreRequest $request, int $id)
     {

@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Repositories;
+
 use App\Interfaces\CategoryRepositoryInterface;
 
 use App\Models\Category;
@@ -10,6 +12,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return Category::orderBy('name', 'asc')
             ->paginate(10);
+    }
+
+    public function searchCategories(?string $search = null, int $perPage = 10)
+    {
+        return Category::where('name', 'like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%")
+
+            ->orderBy('name')
+
+            ->paginate($perPage)
+
+            ->withQueryString();
     }
 
     public function getCategoryById($id)

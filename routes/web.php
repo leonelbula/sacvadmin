@@ -24,10 +24,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
-Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified', 'company'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/companycreate', [HomeController::class, 'companycreate'])->middleware(['auth', 'verified'])->name('createcompany');
 Route::post('/homecompanydata', [HomeController::class, 'store'])->middleware('auth')->name('homecompanydata.store');
 
@@ -37,8 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('auth', 'company')->group(function () {
-    Route::resource('category', CategoryController::class);
+Route::middleware('auth')->group(function () {
+   // Route::resource('category', CategoryController::class);
     Route::resource('product', ProductController::class);
     Route::resource('companydata', CompanyController::class);
     Route::resource('customer', CustomerController::class);
@@ -52,7 +52,11 @@ Route::middleware('auth', 'company')->group(function () {
     Route::resource('salepyment', SalePaymentController::class);
 });
 
-Route::middleware('auth', 'company')->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::get('category/{category?}/{request?}',[CategoryController::class, 'index'])->name('category.index');
+    Route::post('category',[CategoryController::class, 'store'])->name('category.store');
+    Route::put('category',[CategoryController::class, 'update'])->name('category.update');
+    Route::delete('category/{id}',[CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('sale/factura/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
     Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
     Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
@@ -105,7 +109,7 @@ Route::middleware('auth', 'company')->group(function () {
         ->name('reports.salesByUserPdf');
 });
 
-Route::middleware(['auth', 'company'])
+Route::middleware(['auth'])
     ->prefix('inventario/reportes')
     ->name('inventory.reports.')
     ->group(function () {

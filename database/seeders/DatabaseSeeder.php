@@ -19,16 +19,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        $this->call([
-            //DepartamentsTableSeeder::class,
-            //CitiesTableSeeder::class,
-            TaxesTableSeeder::class,
-            OrganizationTypesTableSeeder::class,
-            PaymentMethodsTableSeeder::class,
-            IdentityDocumentsTableSeeder::class,
-            CustomerTributesTableSeeder::class,
-            ProductTypeSeeder::class,
-        ]);
         User::factory()->count(5)->create();
         //Company::factory()->count(5)->create();
        // Category::factory()->count(100)->create();

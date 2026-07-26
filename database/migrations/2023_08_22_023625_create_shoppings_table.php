@@ -21,8 +21,7 @@ return new class extends Migration
             $table->integer('total');
             $table->integer('balance');
             $table->date('due_date')->nullable();
-            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');           
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

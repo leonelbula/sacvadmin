@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.10.1",
         "php-flasher/flasher-toastr-laravel": "^2.1",
         "spatie/laravel-pdf": "^1.6",
+        "spatie/laravel-permission": "^8.3",
         "yoeunes/toastr": "*"
     },
     "require-dev": {

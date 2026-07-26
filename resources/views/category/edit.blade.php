@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.app')
 @section('subtitle')
     Categoria Editar
 @endsection

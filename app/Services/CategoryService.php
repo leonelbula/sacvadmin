@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\DTOs\CategoryDTO;
@@ -6,21 +7,26 @@ use App\Repositories\CategoryRepository;
 use App\Actions\Category\CreateCategoryAction;
 use App\Actions\Category\UpdateCategoryAction;
 use App\Actions\Category\DeleteCategoryAction;
+
 class CategoryService
 {
-  
+
 
     public function __construct(
         protected CategoryRepository $categoryRepository,
         protected CreateCategoryAction $createCategoryAction,
         protected UpdateCategoryAction $updateCategoryAction,
         protected DeleteCategoryAction $deleteCategoryAction
-        )
-    {}
+    ) {}
 
     public function getAllCategories()
     {
         return $this->categoryRepository->getAllCategories();
+    }
+
+    public function searchCategort(?string $search = null)
+    {
+        return $this->categoryRepository->searchCategories($search);
     }
 
     public function getCategoryById($id)
@@ -30,7 +36,7 @@ class CategoryService
 
     public function createCategory(CategoryDTO $categoryDTO)
     {
-      
+
         return $this->createCategoryAction->execute($categoryDTO);
     }
 
@@ -42,7 +48,7 @@ class CategoryService
 
     public function deleteCategory(int $id)
     {
-         $category = $this->categoryRepository->getCategoryById($id);
+        $category = $this->categoryRepository->getCategoryById($id);
         return $this->deleteCategoryAction->execute($category);
     }
 }

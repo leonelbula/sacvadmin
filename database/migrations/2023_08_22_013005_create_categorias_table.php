@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name',45);
             $table->boolean('state');
-            $table->foreignId('company_id')->constrained('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
 
         });
