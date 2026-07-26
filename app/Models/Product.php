@@ -18,8 +18,8 @@ class Product extends Model
         'cost',
         'price',
         'utility',
-        'minimum_amount',
-        'amount',
+        'stock_min',
+        'stock',
         'state',
         'category_id',
     ];

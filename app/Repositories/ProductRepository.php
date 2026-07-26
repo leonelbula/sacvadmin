@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\ProductRepositoryInterface;
+use App\Models\Parameter;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 
@@ -64,7 +65,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getNextCode(): string
     {
-        $parameter = Auth::user()->company->parameters()->first();
+        $parameter = Parameter::first();
             if ($parameter && $parameter->automatic_product) {
                 $lastProduct = Product::withoutGlobalScopes()
                     ->latest('id')

@@ -32,11 +32,11 @@ class UpdateProductAction
 
             $this->repository->update($product->id, $data);
 
-            if ($product->amount != $data['amount']) {
-                if ($product->amount < $data['amount']) {
-                    $quantity =  $data['amount'] - $product->amount;
+            if ($product->stock != $data['stock']) {
+                if ($product->stock < $data['stock']) {
+                    $quantity =  $data['stock'] - $product->stock;
                 } else {
-                    $quantity =  $data['amount'] - $product->amount;
+                    $quantity =  $data['stock'] - $product->stock;
                 }
 
                 $kardexData = [
@@ -46,8 +46,8 @@ class UpdateProductAction
                     'origin' => 'INVENTARIO',
                     'reference_id' => 0,
                     'quantity' => $quantity,
-                    'stock_before' => $product->getOriginal('amount'),
-                    'stock_after' => $data['amount'],
+                    'stock_before' => $product->getOriginal('stock'),
+                    'stock_after' => $data['stock'],
                     'unit_cost' => $product->price,
                 ];
 

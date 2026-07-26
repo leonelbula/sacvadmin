@@ -39,9 +39,9 @@ class CreateProductAction
                 'movement_type' => 'INGRESO-NUEVO ' . Auth::user()->name,
                 'origin' => 'INVENTARIO',
                 'reference_id' => 0,
-                'quantity' => $product->amount,
+                'quantity' => $product->stock,
                 'stock_before' => 0,
-                'stock_after' => $product->amount,
+                'stock_after' => $product->stock,
                 'unit_cost' => $product->price,
             ];
 

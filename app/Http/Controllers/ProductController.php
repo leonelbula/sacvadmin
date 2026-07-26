@@ -57,7 +57,7 @@ class ProductController extends Controller
         $categories = $this->categoryService->getAllCategories();       
         $parameter = Parameter::first();
        
-        if ($parameter->product_code) {
+        if ($parameter) {
             $automatic_product = $parameter->automatic_product;
         } else {
             $automatic_product = 0;
@@ -71,7 +71,7 @@ class ProductController extends Controller
     }
     public function store(ProductRequest $request)
     {
-
+       
         $dto = ProductDTO::fromRequest($request);
 
         $product = $this->productService->create($dto);
@@ -99,17 +99,17 @@ class ProductController extends Controller
         } else {
             $automatic_product = 0;
         }
+         $categories = $this->categoryService->getAllCategories();       
         return view('product.edit', compact(
             'product',
             'title',
             'categories',
-            'automatic_product',
-            'taxes',
-            'productTypes'
+            'automatic_product'
         ));
     }
     public function update(ProductRequest $request, Product $product)
     {
+      
         $dto = ProductDTO::fromRequest($request);
         $updatedProduct = $this->productService->update($product->id, $dto);
 

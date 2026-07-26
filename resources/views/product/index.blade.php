@@ -97,7 +97,7 @@
                             <td>{{ $product->cost }}</td>
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->category->name }}</td>
-                            <td>{{ $product->amount }}</td>
+                            <td>{{ $product->stock }}</td>
                             <td>
                                 @if ($product->state == 1)
                                     <button type="button" class="btn btn-sm btn-success btn-sm">Activada</button>

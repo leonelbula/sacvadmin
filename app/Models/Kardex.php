@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\BelongsToCompany;
+
 
 class Kardex extends Model
 {
 
-
-    use BelongsToCompany;
 
     protected $fillable = [
         'date',
@@ -22,15 +20,11 @@ class Kardex extends Model
         'stock_after',
         'unit_cost',
         'product_id',
-        'company_id'
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
-    }
+    
 }

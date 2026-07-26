@@ -26,13 +26,9 @@ class ProductRequest extends FormRequest
             'cost' => 'required',
             'price' => 'required|numeric|min:0|integer',
             'utility' => 'required',
-            'minimum_amount' => 'required',
-            'amount' => 'required',
-            'category_id' => 'required',
-            'tax_value' =>'required',
-            'state'=> 'required',
-            'taxes_id' =>'required',
-            'product_type_id'=>'required'
+            'stock_min' => 'required',
+            'stock' => 'required',
+            'category_id' => 'required',           
         ];
     }
 }
