@@ -15,11 +15,13 @@ class Kardex extends Model
         'movement_type',
         'origin',
         'reference_id',
-        'quantity',
+        'income',
+        'output',
         'stock_before',
         'stock_after',
         'unit_cost',
         'product_id',
+        'user_name',
     ];
 
     public function product()

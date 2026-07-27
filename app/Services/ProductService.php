@@ -59,4 +59,8 @@ class ProductService
         $product = $this->repository->findOrFail($id);
         return $this->deleteAction->execute($product);
     }
+
+    public function countProduct() {
+        return  $this->repository->countProduct();
+    }
 }

@@ -3,53 +3,59 @@
     Kaedex
 @endsection
 @section('content')
-    <div class="container-fluid  py-4 mt-4">
+    <div class="container-fluid py-4 mt-4">
 
-        <!-- Header -->
+        <!-- Encabezado -->
 
         <div class="card shadow border-0 rounded-4 mb-4">
 
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="card-header bg-primary text-white">
 
-                <div>
+                <div class="d-flex justify-content-between align-items-center">
 
-                    <h3 class="mb-0">
+                    <div>
 
-                        <i class="bi bi-clock-history"></i>
+                        <h3 class="mb-0">
 
-                        Kardex del Producto
+                            <i class="bi bi-clock-history"></i>
 
-                    </h3>
+                            Kardex General
 
-                    <small>Historial completo de movimientos de inventario</small>
+                        </h3>
 
-                </div>
+                        <small>
+                            Historial completo de movimientos del inventario
+                        </small>
 
-                <div>
+                    </div>
 
-                    <button class="btn btn-light">
+                    <div>
 
-                        <i class="bi bi-printer"></i>
+                        <button class="btn btn-light">
 
-                        Imprimir
+                            <i class="bi bi-file-earmark-excel"></i>
 
-                    </button>
+                            Excel
 
-                    <button class="btn btn-success">
+                        </button>
 
-                        <i class="bi bi-file-earmark-pdf"></i>
+                        <button class="btn btn-success">
 
-                        PDF
+                            <i class="bi bi-file-earmark-pdf"></i>
 
-                    </button>
+                            PDF
 
-                    <button class="btn btn-secondary">
+                        </button>
 
-                        <i class="bi bi-arrow-left"></i>
+                        <button class="btn btn-warning">
 
-                        Volver
+                            <i class="bi bi-printer"></i>
 
-                    </button>
+                            Imprimir
+
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -57,21 +63,21 @@
 
         </div>
 
-        <!-- Información del producto -->
+        <!-- Resumen -->
 
         <div class="row mb-4">
 
-            <div class="col-lg-3">
+            <div class="col-md-3">
 
                 <div class="card border-primary shadow-sm">
 
-                    <div class="card-body">
+                    <div class="card-body text-center">
 
-                        <small class="text-muted">Producto</small>
+                        <i class="bi bi-box-seam fs-1 text-primary"></i>
 
-                        <h5>Coca Cola 350ml</h5>
+                        <h3>{{ $totalProduct }}</h3>
 
-                        <span class="badge bg-success">Activo</span>
+                        <small>Productos</small>
 
                     </div>
 
@@ -79,17 +85,17 @@
 
             </div>
 
-            <div class="col-lg-2">
+            <div class="col-md-3">
 
-                <div class="card shadow-sm">
+                <div class="card border-success shadow-sm">
 
                     <div class="card-body text-center">
 
-                        <i class="bi bi-upc fs-2 text-primary"></i>
+                        <i class="bi bi-arrow-down-circle fs-1 text-success"></i>
 
-                        <h6 class="mt-2">Código</h6>
+                        <h3> {{ $movimentos->total_income }}</h3>
 
-                        <strong>PRD-001</strong>
+                        <small>Entradas</small>
 
                     </div>
 
@@ -97,17 +103,17 @@
 
             </div>
 
-            <div class="col-lg-2">
+            <div class="col-md-3">
 
-                <div class="card shadow-sm">
+                <div class="card border-danger shadow-sm">
 
                     <div class="card-body text-center">
 
-                        <i class="bi bi-tags fs-2 text-info"></i>
+                        <i class="bi bi-arrow-up-circle fs-1 text-danger"></i>
 
-                        <h6 class="mt-2">Categoría</h6>
+                        <h3>{{ $movimentos->total_output }}</h3>
 
-                        <strong>Bebidas</strong>
+                        <small>Salidas</small>
 
                     </div>
 
@@ -115,35 +121,17 @@
 
             </div>
 
-            <div class="col-lg-2">
+            <div class="col-md-3">
 
-                <div class="card shadow-sm border-success">
-
-                    <div class="card-body text-center">
-
-                        <i class="bi bi-box-seam fs-2 text-success"></i>
-
-                        <h6 class="mt-2">Stock</h6>
-
-                        <h3>143</h3>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-3">
-
-                <div class="card shadow-sm border-warning">
+                <div class="card border-warning shadow-sm">
 
                     <div class="card-body text-center">
 
-                        <i class="bi bi-exclamation-triangle fs-2 text-warning"></i>
+                        <i class="bi bi-clock-history fs-1 text-warning"></i>
 
-                        <h6 class="mt-2">Stock Mínimo</h6>
+                        <h3>{{ $movimentos->total }}</h3>
 
-                        <h3>20</h3>
+                        <small>Movimientos</small>
 
                     </div>
 
@@ -158,72 +146,44 @@
         <div class="card shadow-sm border-0 mb-4">
 
             <div class="card-body">
+                <div class="row">
+                    <form class="row g-3" action="" method="GET">
 
-                <form class="row g-3 align-items-end">
+                        <div class="col-lg-8">
 
-                    <div class="col-lg-3">
+                            <label class="form-label">Producto</label>
 
-                        <label class="form-label">Buscar</label>
+                            <input class="form-control" placeholder="Nombre o código" name="search">
 
-                        <input type="text" class="form-control" placeholder="Referencia...">
+                        </div>
 
-                    </div>
 
-                    <div class="col-lg-2">
+                        <div class="col-lg-1 d-grid">
 
-                        <label class="form-label">Desde</label>
+                            <label class="form-label">&nbsp;</label>
 
-                        <input type="date" class="form-control">
+                            <button type="submit" class="btn btn-primary">
 
-                    </div>
+                                <i class="bi bi-search"></i>
 
-                    <div class="col-lg-2">
+                            </button>
 
-                        <label class="form-label">Hasta</label>
+                        </div>
+                        <div class="col-lg-2 d-grid">
 
-                        <input type="date" class="form-control">
+                            <label class="form-label">&nbsp;</label>
 
-                    </div>
+                            <a href="{{ route('kardex.index') }}" type="button" class="btn btn-block btn-primary">Mostrar
+                                todos</a>
 
-                    <div class="col-lg-2">
+                        </div>
 
-                        <label class="form-label">Movimiento</label>
+                    </form>
+                </div>
 
-                        <select class="form-select">
 
-                            <option>Todos</option>
 
-                            <option>Entrada</option>
 
-                            <option>Salida</option>
-
-                            <option>Ajuste</option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="col-lg-3">
-
-                        <button class="btn btn-primary">
-
-                            <i class="bi bi-search"></i>
-
-                            Buscar
-
-                        </button>
-
-                        <button class="btn btn-outline-secondary">
-
-                            <i class="bi bi-arrow-clockwise"></i>
-
-                            Limpiar
-
-                        </button>
-
-                    </div>
-
-                </form>
 
             </div>
 
@@ -233,175 +193,96 @@
 
         <div class="card shadow border-0">
 
-            <div class="card-body p-0">
+            <div class="table-responsive">
 
-                <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
 
-                    <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
 
-                        <thead class="table-dark">
+                        <tr>
 
+                            <th>Fecha</th>
+
+                            <th>Producto</th>
+
+                            <th>Movimiento</th>
+
+                            <th>Origen</th>
+
+                            <th>Referencia</th>
+
+                            <th class="text-success">Entrada</th>
+
+                            <th class="text-danger">Salida</th>
+
+                            <th>Stock</th>
+                            <th>Costo </th>
+
+                            <th>Usuario</th>
+
+
+                            <th>Detalle</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($all as $data)
                             <tr>
 
-                                <th>Fecha</th>
+                                <td>{{ $data->created_at }}</td>
 
-                                <th>Movimiento</th>
+                                <td>{{ $data->product->name }}</td>
 
-                                <th>Origen</th>
+                                <td><span class="btn btn-sm bg-success">{{ $data->movement_type }}</span></td>
 
-                                <th>Referencia</th>
+                                <td>{{ $data->origin }}</td>
+                                <td>{{ $data->reference_id }}</td>
 
-                                <th class="text-success">Entrada</th>
+                                <td class="fw-bold text-success"> {{ $data->income }} </td>
+                                <td class="fw-bold text-danger"> {{ $data->output }} </td>
 
-                                <th class="text-danger">Salida</th>
+                                <td> {{ $data->stock_after }} </td>
 
-                                <th>Stock</th>
+                                <td>{{ $data->unit_cost }} </td>
+                                <td> {{ $data->user_name }} </td>
 
-                                <th>Costo</th>
-
-                                <th>Usuario</th>
-
-                                <th width="80">Acción</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-
-                                <td>26/07/2026 09:30</td>
 
                                 <td>
 
-                                    <span class="badge bg-success">
-
-                                        Compra
-
-                                    </span>
-
-                                </td>
-
-                                <td>Compras</td>
-
-                                <td>CP-00012</td>
-
-                                <td class="text-success fw-bold">50</td>
-
-                                <td>-</td>
-
-                                <td>150</td>
-
-                                <td>$2.500</td>
-
-                                <td>Administrador</td>
-
-                                <td>
-
-                                    <button class="btn btn-sm btn-primary">
+                                    <a href="{{ route('kardex.show', $data->product_id) }}" class="btn btn-sm btn-outline-primary">
 
                                         <i class="bi bi-eye"></i>
 
-                                    </button>
+                                    </a>
 
                                 </td>
 
                             </tr>
+                        @endforeach ($all as $data)
 
-                            <tr>
 
-                                <td>26/07/2026 11:15</td>
 
-                                <td>
+                    </tbody>
 
-                                    <span class="badge bg-danger">
-
-                                        Venta
-
-                                    </span>
-
-                                </td>
-
-                                <td>Ventas</td>
-
-                                <td>FV-00152</td>
-
-                                <td>-</td>
-
-                                <td class="text-danger fw-bold">10</td>
-
-                                <td>140</td>
-
-                                <td>$2.500</td>
-
-                                <td>Administrador</td>
-
-                                <td>
-
-                                    <button class="btn btn-sm btn-primary">
-
-                                        <i class="bi bi-eye"></i>
-
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
+                </table>
 
             </div>
 
-            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+            <div class="card-footer d-flex justify-content-between align-items-center">
 
                 <small class="text-muted">
 
-                    Mostrando 1 a 10 de 150 movimientos
+                    Mostrando 1 a 20 de 15.840 movimientos
 
                 </small>
 
-                <nav>
 
-                    <ul class="pagination pagination-sm mb-0">
-
-                        <li class="page-item disabled">
-
-                            <a class="page-link">Anterior</a>
-
-                        </li>
-
-                        <li class="page-item active">
-
-                            <a class="page-link">1</a>
-
-                        </li>
-
-                        <li class="page-item">
-
-                            <a class="page-link">2</a>
-
-                        </li>
-
-                        <li class="page-item">
-
-                            <a class="page-link">3</a>
-
-                        </li>
-
-                        <li class="page-item">
-
-                            <a class="page-link">Siguiente</a>
-
-                        </li>
-
-                    </ul>
-
-                </nav>
+                <div class="pagination pagination-sm mb-0">
+                    {{ $all->links() }}
+                </div>
 
             </div>
 

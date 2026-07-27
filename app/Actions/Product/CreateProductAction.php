@@ -36,13 +36,15 @@ class CreateProductAction
             $kardexData = [
                 'product_id' => $product->id,
                 'date' => now(),
-                'movement_type' => 'INGRESO-NUEVO ' . Auth::user()->name,
+                'movement_type' => 'Ingreso ',
                 'origin' => 'INVENTARIO',
                 'reference_id' => 0,
-                'quantity' => $product->stock,
+                'income' => $product->stock,
+                'output' => 0,
                 'stock_before' => 0,
                 'stock_after' => $product->stock,
                 'unit_cost' => $product->price,
+                'user_name' => Auth::user()->name,
             ];
 
             $this->kardexRepository->create($kardexData);

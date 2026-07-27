@@ -24,4 +24,11 @@ class KardexService
     {
         return $this->kardexRepository->allId($id);
     }
+    public function getId($id) {
+         return $this->kardexRepository->getId($id);
+    }
+    public function countRegistro()
+    {
+        return $this->kardexRepository->countRegister();
+    }
 }

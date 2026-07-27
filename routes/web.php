@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
     Route::get('kardex/index/{search?}', [KardexController::class, 'index'])->name('kardex.index');
     Route::get('kardex/show/{id}', [KardexController::class, 'show'])->name('kardex.show');
+    Route::get('kardex/showdetail/{id}', [KardexController::class, 'showDetail'])->name('kardex.showDetail');
     Route::get('returnsale/ticket/{returnsale}', [ReturnSaleController::class, 'ticket'])->name('returnsale.ticket');
     Route::get('previewposclose', [PosController::class, 'previewclose'])->name('previewclose');
     Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');

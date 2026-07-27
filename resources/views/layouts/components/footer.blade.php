@@ -10,7 +10,7 @@
 
     <div>
 
-        Versión 1.0.0  by Ing. Leonel Bula Gómez
+        Versión 2.0.0  by Ing. Leonel Bula Gómez
 
     </div>
 

@@ -93,4 +93,8 @@ class ProductRepository implements ProductRepositoryInterface
             }
     
     }
+
+    public function countProduct()  {
+        return $totalProduct = Product::count();
+    }
 }

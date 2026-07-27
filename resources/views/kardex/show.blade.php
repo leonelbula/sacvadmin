@@ -1,7 +1,5 @@
 @extends('layouts.app')
-@section('subtitle')
-    Kaedex
-@endsection
+
 @section('content')
     <div class="container-fluid  py-4 mt-4">
 
@@ -43,13 +41,13 @@
 
                     </button>
 
-                    <button class="btn btn-secondary">
+                    <a href="{{route('kardex.index')}}" class="btn btn-secondary">
 
                         <i class="bi bi-arrow-left"></i>
 
                         Volver
 
-                    </button>
+                    </a>
 
                 </div>
 
@@ -60,97 +58,95 @@
         <!-- Información del producto -->
 
         <div class="row mb-4">
+          
+            
+                <div class="col-lg-3">
 
-            <div class="col-lg-3">
+                    <div class="card border-primary shadow-sm">
 
-                <div class="card border-primary shadow-sm">
+                        <div class="card-body">
 
-                    <div class="card-body">
+                            <h6 class="text-muted mt-2">Producto</h6>
 
-                        <small class="text-muted">Producto</small>
+                            <strong>{{ $produc->product->name }}</strong>
+                            @if ($produc->product->state == 1)
+                                <span class="badge bg-success">Activo</span>
+                            @else
+                                <span class="badge bg-secondary">Desactivado</span>
+                            @endif
 
-                        <h5>Coca Cola 350ml</h5>
 
-                        <span class="badge bg-success">Activo</span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-2">
-
-                <div class="card shadow-sm">
-
-                    <div class="card-body text-center">
-
-                        <i class="bi bi-upc fs-2 text-primary"></i>
-
-                        <h6 class="mt-2">Código</h6>
-
-                        <strong>PRD-001</strong>
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="col-lg-2">
 
-            <div class="col-lg-2">
+                    <div class="card shadow-sm">
 
-                <div class="card shadow-sm">
+                        <div class="card-body text-center">
 
-                    <div class="card-body text-center">
+                            <h6 class="text-muted mt-2">Código</h6>
 
-                        <i class="bi bi-tags fs-2 text-info"></i>
+                            <strong>{{ $produc->product->code }}</strong>
 
-                        <h6 class="mt-2">Categoría</h6>
-
-                        <strong>Bebidas</strong>
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="col-lg-2">
 
-            <div class="col-lg-2">
+                    <div class="card shadow-sm">
 
-                <div class="card shadow-sm border-success">
+                        <div class="card-body text-center">
 
-                    <div class="card-body text-center">
+                            <h6 class="text-muted mt-2">Categoría</h6>
 
-                        <i class="bi bi-box-seam fs-2 text-success"></i>
+                            <strong>{{ $produc->product->category->name }}</strong>
 
-                        <h6 class="mt-2">Stock</h6>
-
-                        <h3>143</h3>
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="col-lg-2">
 
-            <div class="col-lg-3">
+                    <div class="card shadow-sm border-success">
 
-                <div class="card shadow-sm border-warning">
+                        <div class="card-body text-center">
 
-                    <div class="card-body text-center">
+                            <h6 class="text-muted mt-2">Stock</h6>
 
-                        <i class="bi bi-exclamation-triangle fs-2 text-warning"></i>
+                            <strong>{{ $produc->product->stock }}</strong>
 
-                        <h6 class="mt-2">Stock Mínimo</h6>
-
-                        <h3>20</h3>
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
+                <div class="col-lg-3">
 
+                    <div class="card shadow-sm border-warning">
+
+                        <div class="card-body text-center">
+
+
+                            <h6 class="text-muted mt-2">Stock Mínimo</h6>
+
+                            <strong>{{ $produc->product->stock_min }}</strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+           
         </div>
 
         <!-- Filtros -->
@@ -165,7 +161,7 @@
 
                         <label class="form-label">Buscar</label>
 
-                        <input type="text" class="form-control" placeholder="Referencia...">
+                        <input type="text" class="form-control" placeholder="Referencia..." readonly>
 
                     </div>
 
@@ -268,87 +264,50 @@
                         </thead>
 
                         <tbody>
+                            @foreach ($detail as $reg)
+                                <tr>
 
-                            <tr>
+                                    <td>{{$reg->date}}</td>
 
-                                <td>26/07/2026 09:30</td>
+                                    <td>
 
-                                <td>
+                                        <span class="btn  bg-success">
 
-                                    <span class="badge bg-success">
+                                            {{$reg->movement_type}}
 
-                                        Compra
+                                        </span>
 
-                                    </span>
+                                    </td>
 
-                                </td>
+                                    <td> {{$reg->origin}}</td>
 
-                                <td>Compras</td>
+                                    <td>{{$reg->reference_id}}</td>
 
-                                <td>CP-00012</td>
+                                    <td class="text-success fw-bold">{{$reg->income}}</td>
 
-                                <td class="text-success fw-bold">50</td>
+                                    <td>{{$reg->output}}</td>
 
-                                <td>-</td>
+                                    <td>{{$reg->stock_after}}</td>
 
-                                <td>150</td>
+                                    <td>{{$reg->unit_cost}}</td>
 
-                                <td>$2.500</td>
+                                    <td>{{$reg->user_name}}</td>
 
-                                <td>Administrador</td>
+                                    <td>
 
-                                <td>
+                                        <a href="{{route('kardex.showDetail',$reg->id)}}" class="btn btn-sm btn-primary">
 
-                                    <button class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye"></i>
 
-                                        <i class="bi bi-eye"></i>
+                                        </a>
 
-                                    </button>
+                                    </td>
 
-                                </td>
+                                </tr>
+                            @endforeach
 
-                            </tr>
 
-                            <tr>
-
-                                <td>26/07/2026 11:15</td>
-
-                                <td>
-
-                                    <span class="badge bg-danger">
-
-                                        Venta
-
-                                    </span>
-
-                                </td>
-
-                                <td>Ventas</td>
-
-                                <td>FV-00152</td>
-
-                                <td>-</td>
-
-                                <td class="text-danger fw-bold">10</td>
-
-                                <td>140</td>
-
-                                <td>$2.500</td>
-
-                                <td>Administrador</td>
-
-                                <td>
-
-                                    <button class="btn btn-sm btn-primary">
-
-                                        <i class="bi bi-eye"></i>
-
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
+                          
                         </tbody>
 
                     </table>

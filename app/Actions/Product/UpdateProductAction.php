@@ -34,21 +34,25 @@ class UpdateProductAction
 
             if ($product->stock != $data['stock']) {
                 if ($product->stock < $data['stock']) {
-                    $quantity =  $data['stock'] - $product->stock;
+                    $income =  $data['stock'] - $product->stock;
+                    $output = 0;
                 } else {
-                    $quantity =  $data['stock'] - $product->stock;
+                    $output =  $data['stock'] - $product->stock;
+                    $income = 0;
                 }
 
                 $kardexData = [
                     'product_id' => $product->id,
                     'date' => now(),
-                    'movement_type' => 'ACTUALIZACION ' . Auth::user()->name,
+                    'movement_type' => 'Actilizado',
                     'origin' => 'INVENTARIO',
                     'reference_id' => 0,
-                    'quantity' => $quantity,
+                    'income' => $income,
+                    'output' => $output,
                     'stock_before' => $product->getOriginal('stock'),
                     'stock_after' => $data['stock'],
                     'unit_cost' => $product->price,
+                    'user_name' => Auth::user()->name,
                 ];
 
                 $this->kardexRepository->create($kardexData);

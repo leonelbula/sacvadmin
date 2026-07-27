@@ -20,4 +20,6 @@ interface ProductRepositoryInterface
     public function delete(int $id);
 
     public function getNextCode();
+
+    public function countProduct();
 }

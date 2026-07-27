@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('movement_type'); // ENTRADA | SALIDA
             $table->string('origin'); // COMPRA | VENTA | AJUSTE
             $table->unsignedBigInteger('reference_id')->nullable();
-            $table->integer('quantity');
+            $table->integer('income');
+            $table->integer('output');
             $table->integer('stock_before');
             $table->integer('stock_after');
             $table->integer('unit_cost')->default(0);
