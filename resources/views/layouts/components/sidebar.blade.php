@@ -129,7 +129,7 @@
 
 
 
-        <a href="#" class="menu-item">
+        <a href="{{route('customer.index')}}" class="menu-item">
 
             <i class="bi bi-people"></i>
 

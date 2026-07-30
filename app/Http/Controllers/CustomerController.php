@@ -24,14 +24,16 @@ class CustomerController extends Controller
         protected CustomerRepositoryInterface $customerRepository
     ) {}
 
-    public function index()
+    public function index( Request $request)
     {
+         $search = $request->input('search');
         $customers = $this->customerService->all();
 
         $title = "Lista de clientes";
         return view('customer.index', compact(
             'customers',
-            'title'
+            'title',
+            'search'
         ));
     }
 
@@ -47,20 +49,9 @@ class CustomerController extends Controller
     public function create()
     {
         $title = "Nuevo clientes";
-        $departaments = Departament::all();
-        $citys = City::all();
-        $taxes = Tax::all();
-        $organization_types = OrganizationType::all();
-        $typeDocuments = IdentityDocument::all();
-        $customerTribute = CustomerTributes::all();
+        
         return view('customer.create', compact(
-            'title',
-            'departaments',
-            'citys',
-            'taxes',
-            'organization_types',
-            'typeDocuments',
-            'customerTribute'
+            'title'
         ));
     }
 
@@ -85,21 +76,9 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         $title = "Editar Cliente";
-        $departaments = Departament::all();
-        $citys = City::all();
-        $taxes = Tax::all();
-        $organization_types = OrganizationType::all();
-        $typeDocuments = IdentityDocument::all();
-        $customerTribute = CustomerTributes::all();
         return view('customer.edit', compact(
             'customer',
-            'title',
-            'departaments',
-            'citys',
-            'taxes',
-            'organization_types',
-            'typeDocuments',
-            'customerTribute'
+            'title',           
         ));
     }
 
