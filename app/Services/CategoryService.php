@@ -24,7 +24,7 @@ class CategoryService
         return $this->categoryRepository->getAllCategories();
     }
 
-    public function searchCategort(?string $search = null)
+    public function searchCategory(?string $search = null)
     {
         return $this->categoryRepository->searchCategories($search);
     }

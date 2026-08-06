@@ -9,28 +9,12 @@ use App\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function searchProducts(?string $search = null, int $perPage = 10)
+    public function searchProducts(?string $search = null, int $perPage = 5)
     {
         return Product::query()
-
-            ->with([
-                'category'
-            ])
-
-            ->when($search, function ($query) use ($search) {
-
-                $query->where(function ($q) use ($search) {
-
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('code', 'like', "%{$search}%");
-                });
-            })
-
-            ->orderBy('name')
-
-            ->paginate($perPage)
-
-            ->withQueryString();
+            ->where('name', 'like', '%' . $search . '%')
+            ->orWhere('code', 'like', '%' . $search . '%')
+            ->get(['id', 'code', 'name','cost', 'price', 'stock', 'stock_min', 'state']);
     }
     public function getAllProducts()
     {
@@ -66,35 +50,35 @@ class ProductRepository implements ProductRepositoryInterface
     public function getNextCode(): string
     {
         $parameter = Parameter::first();
-            if ($parameter && $parameter->automatic_product) {
-                $lastProduct = Product::withoutGlobalScopes()
-                    ->latest('id')
-                    ->first();
-    
-                if (!$lastProduct) {
-                    return 'P0001';
-                }
-    
-                $number = (int) substr(
-                    $lastProduct->code,
-                    1
-                );
-    
-                $number++;
-    
-                return 'P' . str_pad(
-                    $number,
-                    4,
-                    '0',
-                    STR_PAD_LEFT
-                );
-            } else {
-                return '';
+        if ($parameter && $parameter->automatic_product) {
+            $lastProduct = Product::withoutGlobalScopes()
+                ->latest('id')
+                ->first();
+
+            if (!$lastProduct) {
+                return 'P0001';
             }
-    
+
+            $number = (int) substr(
+                $lastProduct->code,
+                1
+            );
+
+            $number++;
+
+            return 'P' . str_pad(
+                $number,
+                4,
+                '0',
+                STR_PAD_LEFT
+            );
+        } else {
+            return '';
+        }
     }
 
-    public function countProduct()  {
+    public function countProduct()
+    {
         return $totalProduct = Product::count();
     }
 }

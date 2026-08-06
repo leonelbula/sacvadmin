@@ -22,6 +22,7 @@ class Product extends Model
         'stock',
         'state',
         'category_id',
+        'tax_id',
     ];
 
    

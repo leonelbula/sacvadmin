@@ -14,6 +14,6 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
-@vite(['resources/css/dashboard.css', 'resources/css/responsive.css', 'resources/js/dashboard.js'])
+@vite(['resources/css/dashboard.css', 'resources/css/responsive.css', 'resources/js/dashboard.js','resources/css/app.css', 'resources/js/app.js'])
 
 @stack('styles')

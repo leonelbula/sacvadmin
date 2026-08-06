@@ -35,17 +35,12 @@ class ProductFactory extends Factory
             'cost' => $cost,
             'price' => $price,
             'utility' => $utility,
-            'minimum_amount' => $this->faker->numberBetween(1, 10),
-            'amount' => $this->faker->numberBetween(10, 50),
-            'tax' => $taxIncluded,
-            'tax_value' => $taxIncluded ? $this->faker->randomElement([0, 5, 19]) : 19,
-            'state' => $this->faker->boolean(90),
-
+            'stock_min' => $this->faker->numberBetween(1, 10),
+            'stock' => $this->faker->numberBetween(10, 50),
+            'state' => $this->faker->boolean(),
             // Relaciones
-            'product_type_id' => ProductType::inRandomOrder()->first()->id ?? 1,
-            'taxes_id' => Tax::inRandomOrder()->first()->id ?? 1,
+            'tax_id' => Tax::inRandomOrder()->first()->id ?? 1,
             'category_id' => Category::inRandomOrder()->first()->id ?? 1,
-            'company_id' => Company::inRandomOrder()->first()->id ?? 1,
         ];
     }
 }

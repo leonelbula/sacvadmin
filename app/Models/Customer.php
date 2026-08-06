@@ -20,10 +20,11 @@ class Customer extends Model
         'email',
         'address',
         'credit_amount',
-        'department',
-        'city',
+        'department_id',
+        'city_id',
+        'customer_tribute_id',
+        'identification_document_code',
         'state',
-       
     ];
 
     public function sale(): HasMany

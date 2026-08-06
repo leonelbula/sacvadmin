@@ -28,6 +28,7 @@ class ProductRequest extends FormRequest
             'utility' => 'required',
             'stock_min' => 'required',
             'stock' => 'required',
+            'tax_id' => 'required|integer',
             'category_id' => 'required',           
         ];
     }

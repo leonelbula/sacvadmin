@@ -11,8 +11,8 @@
                 <i class="bi bi-upc-scan"></i>
             </span>
 
-            <input type="text" class="form-control" placeholder="Código del producto" value="{{ old('code',$product->code ?? '') }}"
-                @if ($automatic_product != 0) disabled @endif>
+            <input type="text" class="form-control" placeholder="Código del producto"
+                value="{{ old('code', $product->code ?? '') }}" @if ($automatic_product != 0) disabled @endif>
         </div>
     </div>
 
@@ -68,7 +68,8 @@
 
         <div class="input-group">
             <input type="number" name="utility" id="utility" value="{{ old('utility', $product->utility ?? '') }}"
-                class="form-control Utilidad" >
+                class="form-control Utilidad" min="0" step="1"
+                placeholder="0">
 
             <span class="input-group-text">
                 %
@@ -77,7 +78,7 @@
     </div>
 
     <!-- Categoría -->
-    <div class="col-md-6">
+    <div class="col-md-3">
         <label class="form-label fw-semibold">
             Categoría
         </label>
@@ -90,6 +91,24 @@
                 <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id ?? '') == $category->id)>
 
                     {{ $category->name }}
+
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label fw-semibold">
+            Tipo de impuesto
+        </label>
+
+        <select class="form-select seleccionarCategoria " name="tax_id" required>
+            <option selected>
+                Seleccione un tipo de impuesto
+            </option>
+            @foreach ($texes as $tax)
+                <option value="{{ $tax->id }}" @selected(old('tax_id', $product->tax_id ?? '') == $tax->id)>
+
+                    {{ $tax->name }}
 
                 </option>
             @endforeach
@@ -131,6 +150,6 @@
         </div>
 
     </div>
-    
+
 
 </div>

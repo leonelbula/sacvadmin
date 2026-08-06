@@ -56,7 +56,7 @@
             <div class="submenu">
 
 
-                <a href="#">
+                <a href="{{route('sale.index')}}">
                     <i class="bi bi-receipt"></i>
                     Facturas
                 </a>

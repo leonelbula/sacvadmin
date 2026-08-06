@@ -20,7 +20,8 @@ return new class extends Migration
             $table->integer('utility');
             $table->integer('stock_min');
             $table->integer('stock');        
-            $table->boolean('state')->default(1);          
+            $table->boolean('state')->default(1); 
+            $table->foreignId('tax_id')->constrained('taxes')->onUpdate('cascade')->onDelete('restrict');         
             $table->foreignId('category_id')->constrained('categories')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

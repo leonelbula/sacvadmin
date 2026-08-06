@@ -24,7 +24,6 @@ class CategoryFactory extends Factory
         return [
             'name' => $this->faker->words(2, true), // genera nombres como "Ropa Deportiva"
             'state' => $this->faker->boolean(90),   // 90% probabilidad de que sea true
-            'company_id' => Company::inRandomOrder()->first()->id ?? Company::factory(),
         ];
     }
 }

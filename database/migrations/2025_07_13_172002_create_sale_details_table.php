@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('quantity');
             $table->integer('subtotal');
+            $table->integer('utility');
+            $table->foreignId('tax_id')->constrained('taxes')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

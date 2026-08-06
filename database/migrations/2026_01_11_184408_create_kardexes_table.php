@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('stock_before');
             $table->integer('stock_after');
             $table->integer('unit_cost')->default(0);
+            $table->string('user_name',50);
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

@@ -5,10 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
-use App\Models\Company;
-use App\Models\Kardex;
-use App\Models\ProductType;
-use App\Models\Tax;
 use App\Services\CategoryService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +13,14 @@ use Illuminate\Support\Facades\DB;
 use App\DTOs\ProductDTO;
 use App\Models\Parameter;
 use App\Services\ProductService;
+use App\Services\TaxService;
 
 class ProductController extends Controller
 {
     public function __construct(
         protected ProductService $productService,
         protected CategoryService $categoryService,
+        protected TaxService $taxService,
     ) {}
 
     public function index(Request $request)
@@ -37,26 +35,19 @@ class ProductController extends Controller
         $title = 'Lista de Productos';
         return view('product.index', compact('products', 'title', 'search'));
     }
-    public function search($query)
+    public function search(string $search)
     {
-       // dd($query); // Debugging line to check the value of $query
-        //var_dump($query); // Debugging line to check the value of $query
-        $productos = Product::where('name', 'LIKE', "%{$query}%")
-            ->orWhere('code', $query)
-            ->orderBy('name', 'asc')
-            ->limit(10)
-            ->get(['id', 'name', 'code', 'price', 'amount', 'cost', 'tax']);
+        $products = $this->productService->searchProducts($search);
 
-            dd($productos); // Debugging line to check the value of $productos
-
-        return response()->json($productos);
+        return response()->json($products);
     }
     public function create()
     {
         $title = 'Nuevo Producto';
-        $categories = $this->categoryService->getAllCategories();       
+        $categories = $this->categoryService->getAllCategories();
+        $texes = $this->taxService->getAllTaxes();
         $parameter = Parameter::first();
-       
+
         if ($parameter) {
             $automatic_product = $parameter->automatic_product;
         } else {
@@ -67,11 +58,12 @@ class ProductController extends Controller
             'title',
             'categories',
             'automatic_product',
+            'texes'
         ));
     }
     public function store(ProductRequest $request)
     {
-       
+
         $dto = ProductDTO::fromRequest($request);
 
         $product = $this->productService->create($dto);
@@ -92,24 +84,26 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
 
-        $title = 'Editar Producto';      
+        $title = 'Editar Producto';
         $parameter = Parameter::first();
+         $texes = $this->taxService->getAllTaxes();
         if ($parameter) {
             $automatic_product = $parameter->automatic_product;
         } else {
             $automatic_product = 0;
         }
-         $categories = $this->categoryService->getAllCategories();       
+        $categories = $this->categoryService->getAllCategories();
         return view('product.edit', compact(
             'product',
             'title',
             'categories',
-            'automatic_product'
+            'automatic_product',
+            'texes'
         ));
     }
     public function update(ProductRequest $request, Product $product)
     {
-      
+
         $dto = ProductDTO::fromRequest($request);
         $updatedProduct = $this->productService->update($product->id, $dto);
 

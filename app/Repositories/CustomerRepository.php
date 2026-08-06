@@ -40,9 +40,8 @@ class CustomerRepository implements CustomerRepositoryInterface
 
     public function search(string $query)
     {
-        $clientes = Customer::with('city')
-            ->where('full_name', 'LIKE', "%{$query}%")
-            ->orWhere('identification_card', 'LIKE', "%{$query}%")
+        $clientes = Customer::where('full_name', 'LIKE', "%{$query}%")
+            ->orWhere('identification', 'LIKE', "%{$query}%")
             ->limit(5)
             ->get();
 

@@ -19,9 +19,11 @@ return new class extends Migration
             $table->string('email');
             $table->string('address');
             $table->integer('credit_amount');
-            $table->string('department');
-            $table->string('city');
+            $table->foreignId('departament_id')->constrained('departaments')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('city_id')->constrained('cities')->onUpdate('cascade')->onDelete('restrict');
+            $table->integer('identification_document_code');
             $table->boolean('state')->default(1);
+            $table->foreignId('customer_tribute_id')->constrained('customer_tributes')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }

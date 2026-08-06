@@ -14,7 +14,8 @@ class ProductDTO
         public readonly int $utility,
         public readonly int $stock_min,
         public readonly int $stock,       
-        public readonly bool $state,      
+        public readonly bool $state,    
+        public readonly int $tax_id,  
         public readonly int $category_id
     ) {}
 
@@ -31,7 +32,8 @@ class ProductDTO
             stock_min: (int) $request->stock_min,
             stock: (int) $request->stock,           
             state: $request->state,          
-            category_id: $request->category_id
+            tax_id: (int) $request->tax_id,
+            category_id: (int) $request->category_id
         );
     }
     public function toArray(): array
@@ -45,6 +47,7 @@ class ProductDTO
             'stock_min' => $this->stock_min,
             'stock' => $this->stock,            
             'state' => $this->state,            
+            'tax_id' => $this->tax_id,
             'category_id' => $this->category_id
         ];
     }

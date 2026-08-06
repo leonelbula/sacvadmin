@@ -28,8 +28,7 @@ class SaleController extends Controller
         $title = "Lista de ventas";
         $sales = Sale::orderBy('id', 'DESC')
             ->paginate(10);
-        $usuarios = User::all();
-        return view('sale.index', compact('title', 'sales', 'usuarios','search'));
+        return view('sale.index', compact('title', 'sales', 'search'));
     }
     public function create()
     {
@@ -46,7 +45,6 @@ class SaleController extends Controller
             'date_sale'   => 'required|date',
             'payment_form' => 'required|in:counted,credit',
             'subtotal'    => 'required|numeric|min:0',
-            'iva'         => 'nullable|numeric|min:0',
             'total'       => 'required|numeric|min:0',
             'products'    => 'required|array|min:1',
             'products.*'  => 'exists:products,id',
@@ -54,8 +52,6 @@ class SaleController extends Controller
             'quantities.*' => 'numeric|min:1',
             'prices'      => 'required|array|min:1',
             'prices.*'    => 'numeric|min:0',
-            'tax'         => 'required|array|min:1',
-            'tax.*'       => 'numeric|min:0',
             'cost_product' => 'required|array|min:1',
             'cost_product.*' => 'numeric|min:0',
         ]);

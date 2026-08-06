@@ -10,6 +10,8 @@ use App\Repositories\KardexRepository;
 use App\Interfaces\KardexRepositoryInterface;
 use App\Repositories\CustomerRepository;
 use App\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\TaxRepository;
+use App\Interfaces\TaxRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(KardexRepositoryInterface::class, KardexRepository::class);
         $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
+        $this->app->bind(TaxRepositoryInterface::class, TaxRepository::class);
     }
 
     /**

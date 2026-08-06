@@ -24,8 +24,8 @@
                 <div class="row">
 
                     <!--=====================
-                                                                                FORMULARIO
-                                                                            ======================-->
+                                                                                    FORMULARIO
+                                                                                ======================-->
 
                     <div class="col-lg-4 mb-4">
 
@@ -38,10 +38,10 @@
                                 </h5>
 
                                 <form method="POST"
-                                    action="{{ isset($category) ? route('category.update', $category->id) : route('category.store') }} ">
+                                    action="{{ isset($category->id) ? route('category.update', $category->id) : route('category.store') }} ">
                                     @csrf
 
-                                    @isset($category)
+                                    @isset($category->id)
                                         @method('PUT')
                                     @endisset
 
@@ -114,8 +114,8 @@
                     </div>
 
                     <!--=====================
-                                                                                TABLA
-                                                                            ======================-->
+                                                                                    TABLA
+                                                                                ======================-->
 
                     <div class="col-lg-8">
 
@@ -165,7 +165,7 @@
                                     </div>
 
                                     <div class="col-auto">
-                                        <a href="{{route('category.index')}}" class="btn btn-outline-secondary">
+                                        <a href="{{ route('category.index') }}" class="btn btn-outline-secondary">
 
                                             <i class="bi bi-arrow-clockwise"></i>
 
