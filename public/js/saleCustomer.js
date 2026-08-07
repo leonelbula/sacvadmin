@@ -6,9 +6,11 @@ const customerNameInput = document.getElementById("full_name");
 const customerIdentificationInput = document.getElementById("identification");
 const customerPhoneInput = document.getElementById("phone");
 const customerAddressInput = document.getElementById("address");
+const customerCityInput = document.getElementById("city");
+const btnSearchCustomer = document.getElementById("btnSearchCustomer");
 
 const btnClear = document.getElementById("btnClear");
-const searchCustomer = document.getElementById("seachcustomer");
+const searchCustomer = document.getElementById("searchCustomer");
 const tbody = document.querySelector("#tablaCustomer tbody");
 
 const STORAGE_KEY = "datosCustomer";
@@ -107,8 +109,6 @@ function loadCustomerData() {
 
     customerInput(customer);
 }
-
-
 
 // =========================
 // LLENAR INPUTS

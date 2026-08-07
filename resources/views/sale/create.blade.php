@@ -1,38 +1,44 @@
 @extends('layouts.app')
 
-@section('title','Factura Electrónica')
+@section('title', 'Factura Electrónica')
 
 @section('content')
 
-<div class="container-fluid py-4 mt-4">
+    <div class="container-fluid py-4 mt-4">
 
-    @include('sale.components.header')
+        @include('sale.components.header')
 
-    @include('sale.components.customer')
+        @include('sale.components.customer')
 
-    @include('sale.components.products')
+        @include('sale.components.products')
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-lg-8">
+            <div class="col-lg-8">
 
-            @include('sale.components.payment')
+                @include('sale.components.payment')
+
+            </div>
+
+            <div class="col-lg-4">
+
+                @include('sale.components.summary')
+
+            </div>
 
         </div>
 
-        <div class="col-lg-4">
-
-            @include('sale.components.summary')
-
-        </div>
+        @include('sale.components.footer')
 
     </div>
 
-    @include('sale.components.footer')
+    @include('sale.modals.customers')
+    @include('sale.modals.products')
 
-</div>
+@endsection
 
-@include('sale.modals.customers')
-@include('sale.modals.products')
+@section('script')
+    <script src="{{ asset('js/saleCustomer.js') }}"></script>
+    <script src="{{ asset('js/saleProduct.js') }}"></script>
 
 @endsection

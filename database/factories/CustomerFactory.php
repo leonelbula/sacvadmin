@@ -30,20 +30,20 @@ class CustomerFactory extends Factory
     {
         return [
             'full_name' => $this->faker->name(),
-            'identification_card' => $this->faker->unique()->numberBetween(10000000, 999999999),
+            'identification' => $this->faker->unique()->numberBetween(10000000, 999999999),
             'phone' => $this->faker->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'address' => $this->faker->address(),
-            'credit_amount' => $this->faker->randomFloat(100000,1000000),
+            'credit_amount' => $this->faker->numberBetween(100000, 1000000),
 
             // Relaciones (asegúrate de tener datos en estas tablas)
-            'Departament_id' => Departament::inRandomOrder()->first()->id ?? 1,
+            'departament_id' => Departament::inRandomOrder()->first()->id ?? 1,
             'city_id' => City::inRandomOrder()->first()->id ?? 1,
-            'tax_id' => Tax::inRandomOrder()->first()->id ?? 1,
-            'type_organice_id' => OrganizationType::inRandomOrder()->first()->id ?? 1,
-            'identity_document_id' => IdentityDocument::inRandomOrder()->first()->id ?? 1,
             'customer_tribute_id' => CustomerTributes::inRandomOrder()->first()->id ?? 1,
-            'company_id' => Company::inRandomOrder()->first()->id ?? 1,
+            'identification_document_id' => IdentityDocument::inRandomOrder()->first()->id ?? 1,
+            'responsibilities' => $this->faker->sentence(),
+            'organization_type_id' => OrganizationType::inRandomOrder()->first()->id ?? 1,
+            'state' => $this->faker->boolean(),
         ];
     }
 }

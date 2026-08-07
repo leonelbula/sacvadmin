@@ -43,7 +43,7 @@ class CustomerRepository implements CustomerRepositoryInterface
         $clientes = Customer::where('full_name', 'LIKE', "%{$query}%")
             ->orWhere('identification', 'LIKE', "%{$query}%")
             ->limit(5)
-            ->get();
+            ->paginate(5);
 
         return $clientes;
     }

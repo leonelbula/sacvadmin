@@ -24,10 +24,14 @@ class CustomerController extends Controller
         protected CustomerRepositoryInterface $customerRepository
     ) {}
 
-    public function index( Request $request)
+    public function index(Request $request)
     {
-         $search = $request->input('search');
-        $customers = $this->customerService->all();
+        $search = $request->input('search');
+        if ($search) {
+            $customers = $this->customerService->search($search);
+        } else {
+            $customers = $this->customerService->all();
+        }
 
         $title = "Lista de clientes";
         return view('customer.index', compact(
@@ -49,14 +53,25 @@ class CustomerController extends Controller
     public function create()
     {
         $title = "Nuevo clientes";
-        
+        $departments = Departament::all();
+        $cities = City::all();
+        $customerTributes = CustomerTributes::all();
+        $identityDocuments = IdentityDocument::all();
+        $organizationTypes = OrganizationType::all();
         return view('customer.create', compact(
-            'title'
+            'title',
+            'departments',
+            'cities',
+            'customerTributes',
+            'identityDocuments',
+            'organizationTypes'
         ));
     }
 
     public function store(CustomerRequest $request)
     {
+
+   
         $data = CustomerDTO::fromRequest($request);
         $customer = $this->customerService->create($data);
         if ($customer) {
@@ -76,9 +91,19 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         $title = "Editar Cliente";
+        $departments = Departament::all();
+        $cities = City::all();
+        $customerTributes = CustomerTributes::all();
+        $identityDocuments = IdentityDocument::all();
+        $organizationTypes = OrganizationType::all();
         return view('customer.edit', compact(
             'customer',
-            'title',           
+            'title',
+            'departments',
+            'cities',
+            'customerTributes',
+            'identityDocuments',
+            'organizationTypes'
         ));
     }
 

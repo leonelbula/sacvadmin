@@ -40,7 +40,7 @@
                                    </label>
 
                                    <input type="text" class="form-control" placeholder="Nombre o documento"
-                                       id="seachcustomer" name="seachcustomer">
+                                       id="searchCustomer" name="searchCustomer">
 
                                </div>
 
@@ -48,7 +48,7 @@
 
                                <div class="col-lg-3 d-flex align-items-end">
 
-                                   <button class="btn btn-primary me-2" id="btnSeachCustomer">
+                                   <button class="btn btn-primary me-2" id="btnSearchCustomer">
 
                                        <i class="bi bi-search"></i>
 

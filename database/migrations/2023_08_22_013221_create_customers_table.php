@@ -21,9 +21,11 @@ return new class extends Migration
             $table->integer('credit_amount');
             $table->foreignId('departament_id')->constrained('departaments')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('city_id')->constrained('cities')->onUpdate('cascade')->onDelete('restrict');
-            $table->integer('identification_document_code');
-            $table->boolean('state')->default(1);
             $table->foreignId('customer_tribute_id')->constrained('customer_tributes')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('identification_document_id')->constrained('identity_documents')->onUpdate('cascade')->onDelete('restrict');
+            $table->string('responsibilities', 255);
+            $table->foreignId('organization_type_id')->constrained('organization_types')->onUpdate('cascade')->onDelete('restrict');
+            $table->boolean('state')->default(1);
             $table->timestamps();
         });
     }

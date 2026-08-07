@@ -40,7 +40,7 @@
 
 
             <div class="align-items-center col-9">
-                <form method="GET" action="{{ route('product.index') }}" class="mb-3">
+                <form method="GET" action="{{ route('customer.index') }}" class="mb-3">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control"
                             placeholder="Buscar por nombre o identificacion..." value="{{$search}}">
@@ -51,7 +51,7 @@
             </div>
 
             <div class="align-items-center col-3 mb-3">
-                <a href="{{ route('product.index') }}" type="button" class="btn btn-block btn-primary">Mostrar
+                <a href="{{ route('customer.index') }}" type="button" class="btn btn-block btn-primary">Mostrar
                     todos</a>
 
             </div>
@@ -90,8 +90,8 @@
                             <td>{{ $customer->id }}</td>
                             <td>{{ $customer->full_name }}</td>
                             <td>{{ $customer->identification }}</td>
-                            <td>{{ $customer->city }}</td>
-                            <td>{{ $customer->department }}</td>
+                            <td>{{ $customer->city->name }}</td>
+                            <td>{{ $customer->departament->name }}</td>
                             <td>
                                 <div class="btn-group">
 

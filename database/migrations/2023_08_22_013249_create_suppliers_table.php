@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('department', 50);
             $table->integer('credit_amount');
             $table->string('description', 150);
-           $table->boolean('state')->default(1);
+            $table->boolean('state')->default(1);
             $table->timestamps();
         });
     }

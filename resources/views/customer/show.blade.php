@@ -116,7 +116,7 @@
 
                                 <label class="text-muted">Departamento</label>
 
-                                <h5>{{ $customer->department }}</h5>
+                                <h5>{{ $customer->departament->name }}</h5>
 
                             </div>
 
@@ -124,7 +124,7 @@
 
                                 <label class="text-muted">Ciudad</label>
 
-                                <h5>{{ $customer->city }}</h5>
+                                <h5>{{ $customer->city->name }}</h5>
 
                             </div>
 

@@ -24,8 +24,8 @@ class ProductFactory extends Factory
 
     public function definition(): array
     {
-       $cost = $this->faker->randomFloat(1, 1000, 100000);
-        $utility = $this->faker->randomFloat(1, 5, 50); // Porcentaje
+       $cost = $this->faker->numberBetween(1000, 100000);
+        $utility = $this->faker->numberBetween(5, 50); // Porcentaje
         $price = $cost + ($cost * ($utility / 100));
         $taxIncluded = $this->faker->boolean();
 
