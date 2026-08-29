@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /*$this->call([
+        $this->call([
             IdentityDocumentsTableSeeder::class,
             CustomerTributesTableSeeder::class,
             OrganizationTypesTableSeeder::class,
@@ -26,12 +26,12 @@ class DatabaseSeeder extends Seeder
             DepartamentsTableSeeder::class,
             CitiesTableSeeder::class,
             PaymentMethodsTableSeeder::class,
-        ]);*/
+        ]);
 
-       // User::factory()->count(5)->create();
-       // Category::factory()->count(100)->create();
-        // Product::factory()->count(100)->create();
-        //Customer::factory()->count(100)->create();
+        User::factory()->count(5)->create();
+        Category::factory()->count(20)->create();
+        Product::factory()->count(100)->create();
+        Customer::factory()->count(20)->create();
         Supplier::factory()->count(10)->create();
     }
 }

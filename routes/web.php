@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-   // Route::resource('category', CategoryController::class);
+    // Route::resource('category', CategoryController::class);
     Route::resource('product', ProductController::class);
     Route::resource('companydata', CompanyController::class);
     Route::resource('customer', CustomerController::class);
@@ -53,18 +53,20 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('category/{category?}/{request?}',[CategoryController::class, 'index'])->name('category.index');
-    Route::post('category',[CategoryController::class, 'store'])->name('category.store');
-    Route::put('category/{category}',[CategoryController::class, 'update'])->name('category.update');
-    Route::delete('category/{id}',[CategoryController::class, 'destroy'])->name('category.destroy');
-    Route::get('sale/factura/{sale}', [SaleController::class, 'invocesPdf'])->name('sale.invocesPdf');
+    Route::get('category/{category?}/{request?}', [CategoryController::class, 'index'])->name('category.index');
+    Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+    Route::put('category/{category}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+    Route::get('/product/search/{query}', [ProductController::class, 'search'])->name('product.search');
+    Route::get('/sales/{sale}/print',[SaleController::class, 'print'])->name('sale.print');
     Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
+    Route::post('/sale/store', [SaleController::class, 'store']);
     Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
     Route::get('kardex/index/{search?}', [KardexController::class, 'index'])->name('kardex.index');
     Route::get('kardex/show/{id}', [KardexController::class, 'show'])->name('kardex.show');
     Route::get('kardex/showdetail/{id}', [KardexController::class, 'showDetail'])->name('kardex.showDetail');
     Route::get('returnsale/ticket/{returnsale}', [ReturnSaleController::class, 'ticket'])->name('returnsale.ticket');
-    Route::get('previewposclose', [PosController::class, 'previewclose'])->name('previewclose');
+    Route::get('previewposclose', [PosController::class, 'previewclose'])->name('pos.previewclose');
     Route::get('/previewcloseConfirmar', [PosController::class, 'previewcloseConfirmar'])->name('previewcloseConfirmar');
     Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
     Route::get('/accountcustomer/{sale}', [AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');

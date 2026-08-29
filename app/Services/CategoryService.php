@@ -19,9 +19,9 @@ class CategoryService
         protected DeleteCategoryAction $deleteCategoryAction
     ) {}
 
-    public function getAllCategories()
+    public function getAllCategories($paginate = null)
     {
-        return $this->categoryRepository->getAllCategories();
+        return $this->categoryRepository->getAllCategories($paginate);
     }
 
     public function searchCategory(?string $search = null)

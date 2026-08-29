@@ -25,12 +25,18 @@ class Product extends Model
         'tax_id',
     ];
 
-   
+
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function tax(): BelongsTo
+    {
+        return $this->belongsTo(Tax::class);
+    }
+
     public function kardex()
     {
         return $this->hasMany(Kardex::class);

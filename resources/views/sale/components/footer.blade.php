@@ -56,44 +56,16 @@
 
                     <!-- Limpiar -->
 
-                    <button
-                        type="button"
-                        id="btnClear"
-                        class="btn btn-outline-warning rounded-pill px-4">
-
-                        <i class="bi bi-arrow-clockwise"></i>
-
-                        Nueva Factura
-
-                    </button>
 
                     <!-- Guardar Borrador -->
 
-                    <button
-                        type="button"
-                        id="btnDraft"
-                        class="btn btn-outline-primary rounded-pill px-4">
-
-                        <i class="bi bi-save"></i>
-
-                        Guardar Borrador
-
-                    </button>
+                   
 
                     <!-- Guardar -->
 
-                    <button
-                        type="submit"
-                        id="btnSaveSale"
-                        class="btn btn-primary rounded-pill px-4">
+                   
 
-                        <i class="bi bi-check-circle"></i>
-
-                        Guardar Venta
-
-                    </button>
-
-                    <!-- Factura Electrónica -->
+                    <!-- Factura Electrónica
 
                     <button
                         type="submit"
@@ -105,9 +77,8 @@
                         Emitir Factura
 
                     </button>
-
-                    <!-- Imprimir -->
-
+ -->
+                    <!-- Imprimir 
                     <button
                         type="button"
                         id="btnPrint"
@@ -117,7 +88,7 @@
 
                         Imprimir
 
-                    </button>
+                    </button> -->
 
                 </div>
 

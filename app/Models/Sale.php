@@ -23,27 +23,33 @@ class Sale extends Model
         'date_sale',
         'term',
         'expiration_date',
-        'type_sale',
         'payment_form',
-        'payment_method',
+        'payment_method_id',
+        'observation',
+        'taxes',
         'customer_id',
         'user_id',
+        'state',
     ];
 
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
-    public function saleDetail(): BelongsTo
-    {
-        return $this->belongsTo(SaleDetail::class);
-    }
+
+    // CORREGIDO: Se eliminó el método saleDetail() de aquí
+
     public function details(): HasMany
     {
-        return $this->hasMany(SaleDetail::class);
+        return $this->hasMany(SaleDetail::class, 'sale_id');
     }
-    public function payments()
+
+    public function paymentMethod(): BelongsTo
     {
-        return $this->hasMany(SalePayment::class);
+        return $this->belongsTo(PaymentMethod::class);
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

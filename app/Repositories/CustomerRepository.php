@@ -38,11 +38,14 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $customer->delete();
     }
 
-    public function search(string $query)
+    public function search(string $search)
     {
-        $clientes = Customer::where('full_name', 'LIKE', "%{$query}%")
-            ->orWhere('identification', 'LIKE', "%{$query}%")
-            ->limit(5)
+        $clientes = Customer::with('city')
+            ->where(function ($query) use ($search) {
+                $query->where('full_name', 'LIKE', "%{$search}%")
+                    ->orWhere('identification', 'LIKE', "%{$search}%");
+            })
+            ->distinct()
             ->paginate(5);
 
         return $clientes;

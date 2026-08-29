@@ -25,7 +25,7 @@ class CategoryController extends Controller
         if ($search) {
             $categories = $this->categoryService->searchCategory($request->input('search'));
         } else {
-           $categories = $this->categoryService->getAllCategories();
+           $categories = $this->categoryService->getAllCategories(10);
         }
 
         

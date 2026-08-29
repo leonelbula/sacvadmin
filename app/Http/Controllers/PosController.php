@@ -2,128 +2,132 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\PosDTO;
 use App\Models\Company;
 use App\Models\Pos;
 use App\Models\ReturnSale;
 use App\Models\Sale;
 use App\Models\SalePayment;
 use App\Models\spent;
+use App\Services\PosService;
+use App\Services\SaleService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 date_default_timezone_set('America/Bogota'); // ✅ OK para Colombia
 
 class PosController extends Controller
 {
+
+    public function __construct(
+        protected PosService $pos_service,
+        protected SaleService $sale_service
+    ) {}
     public function index(): View
     {
         $title = 'Pos';
-        $compania = Company::findOrFail(Auth::user()->company_id);
-        $closings = $compania->pos()
-            ->orderBy('start_date', 'asc')
-            ->paginate(10);
-        $closingpos = Pos::where('user_id', Auth::user()->id)
-            ->where('state', 1)
-            ->first();
-        return view('pos.index', compact('title', 'closings', 'closingpos'));
+        $closures = [];
+
+        return view('pos.index', compact('title', 'closures'));
     }
-    public function create(): View
+    public function create()
     {
-        $title = 'Nuevo';
-        return view('pos.create', compact('title',));
+        $title = 'Iniciar Pos';
+
+        $posActive = $this->pos_service->posActive(Auth::user()->id);
+
+        if ($posActive) {
+            return  redirect()->route('pos.previewclose');
+        }
+
+        return view('pos.start-pos', compact('title'));
     }
-    public function show($pos)
+    public function show($id)
     {
 
-        $title = 'Cieere de caja';
-        $pos = Pos::find($pos);
-       return view('pos.show',compact('title', 'pos'));
+        $title = 'Cierre de caja';
+        $pos =  $this->pos_service->findById($id);
+        return view('pos.show', compact('title', 'pos'));
     }
     public function store(Request $request)
     {
-
-        $data = $request->validate([
-            'start_date'   => 'required|date',
-            'box_base'       => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'box_base'   => 'required|numeric|min:0',
         ]);
 
-        $registros = Pos::where('user_id', Auth::user()->id)
-            ->where('state', 1)
-            ->get();
 
-        if (empty($registros)) {
-            if ($registros->state == 1) {
-                toastr()->error('El Usuario ya tiene Pos activo');
-                return back();
-            }
+
+        $userId = Auth::id();
+        $posActive = $this->pos_service->posActive($userId);
+
+        if ($posActive) {
+            toastr()->error('El usuario ya tiene un punto de venta activo.');
+            return back();
         }
 
-        DB::beginTransaction();
-        $data = $request->all();
         try {
-            $data['total_sale'] = 0;
-            $data['difference'] = 0;
-            $data['start_time'] = Carbon::now()->format('H:i:s');
-            $data['closing_time'] = Carbon::now()->format('H:i:s');
-            $data['closing_date'] = date('Y-m-d');
-            $data['bills'] = 0;
-            $data['consignment'] = 0;
-            $data['cash'] = 0;
-            $data['returns_sale'] = 0;
-            $data['state'] = 1;
-            $data['delivered_value'] = 0;
-            $data['user_id'] = Auth::user()->id;
-            $data['company_id'] = Auth::user()->company_id;
-            Pos::create($data);
-            DB::commit();
-            toastr()->success('Punto de Venta iniciado correctamnente');
+            $dto = PosDTO::fromRequest($request);
+            $this->pos_service->create($dto);
+
+            toastr()->success('Punto de venta iniciado correctamente.');
             return redirect()->route('sale.create');
         } catch (\Exception $e) {
-            DB::rollBack();
-            toastr()->error('Error al iniciar punto de venta');
+            // 3. Loguear el error para depuración y mostrar mensaje seguro al usuario
+            Log::error('Error al iniciar punto de venta: ' . $e->getMessage(), [
+                'exception' => $e,
+                'user_id'   => $userId
+            ]);
+
+            toastr()->error('No se pudo iniciar el punto de venta. Intente nuevamente.' . $e->getMessage());
+            //dd($e->getMessage());
             return back();
         }
     }
     public function previewclose()
     {
         $title = "Cierre de Pos";
-        return view('pos.frmclose', compact('title'));
+        $box = $this->pos_service->posActive(Auth::id());
+        $sales = $this->sale_service->getSalesByBox($box);
+
+        return view('pos.preview', [
+            'box' => $box,
+            'sales' => $sales['sales'],
+            'quantity' => $sales['quantity'],
+            'totalSales' => $sales['total_sales'],
+        ]);
     }
     public function previewcloseConfirmar(Request $request)
     {
-		$userId = Auth::user()->id;
+        $userId = Auth::user()->id;
         $title = "Detalles Cierre";
         $posActive = Pos::where('user_id', Auth::user()->id)
             ->where('state', 1)
             ->first();
-			
-		$venta = Sale::where('user_id',$userId)
-		->latest()
-		->first();
 
-		
+        $venta = Sale::where('user_id', $userId)
+            ->latest()
+            ->first();
 
-        
+
+
+
         $fechaInicio = $posActive->start_date;
         $fechaFin = $request->date;
         $horaInicio = $posActive->start_time;
-		
-		$horaFin = $venta
-			? $venta->created_at->format('H:i:s')
-			:  Carbon::now()->format('H:i:s');
-			
+
+        $horaFin = $venta
+            ? $venta->created_at->format('H:i:s')
+            :  Carbon::now()->format('H:i:s');
+
         //$horaFin = Carbon::now()->format('H:i:s');
 
-        $totalVentas = Sale::where('user_id', $userId)
-            ->whereBetween(DB::raw("DATE(created_at)"), [$fechaInicio, $fechaFin])
-            ->where('payment_form', 'counted')
-            ->whereTime('created_at', '>=', $horaInicio)
-            ->whereTime('created_at', '<=', $horaFin)
-            ->sum('total');
+
 
         $returnsale = ReturnSale::where('user_id', $userId)
             ->whereBetween(DB::raw("DATE(created_at)"), [$fechaInicio, $fechaFin])
@@ -166,9 +170,9 @@ class PosController extends Controller
         $date = $request->date;
         $t = $totalVentasEfectivo + $totalVentasConsignacion;
         $valueTotal = $amount + $totalVentasConsignacion + $returnsale + $spents + $abono_sale;
-        $diferencia = $valueTotal - $totalVentas;
+        //$diferencia = $valueTotal - $totalVentas;
         $pos = $posActive;
-        return view('pos.preview', compact('title', 'pos', 'date', 'totalVentas', 'totalVentasEfectivo', 'totalVentasConsignacion', 'returnsale', 'spents', 'amount', 'diferencia','abono_sale'));
+        // return view('pos.preview', compact('title', 'pos', 'date', 'totalVentas', 'totalVentasEfectivo', 'totalVentasConsignacion', 'returnsale', 'spents', 'amount', 'diferencia', 'abono_sale'));
     }
     public function previewPos(Request $request)
     {

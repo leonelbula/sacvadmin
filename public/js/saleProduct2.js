@@ -1,4 +1,3 @@
-
 /*=========================================================
 =            CONFIGURACIÓN                                =
 =========================================================*/
@@ -68,7 +67,8 @@ function registerEvents() {
     // Limpiar venta
     btnClear.addEventListener("click", () => {
         if (confirm("¿Desea limpiar la venta actual?")) {
-            clearSaleData();
+            clearSaleData()
+            re
         }
     });
 }

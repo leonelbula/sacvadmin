@@ -8,10 +8,14 @@ use App\Models\Category;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
-    public function getAllCategories()
+    public function getAllCategories($paginate = null)
     {
-        return Category::orderBy('name', 'asc')
-            ->paginate(10);
+        if($paginate){
+            return Category::orderBy('name', 'asc')->paginate($paginate);
+        }else{
+            return Category::all();
+        }
+        
     }
 
     public function searchCategories(?string $search = null, int $perPage = 10)

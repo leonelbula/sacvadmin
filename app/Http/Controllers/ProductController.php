@@ -35,11 +35,13 @@ class ProductController extends Controller
         $title = 'Lista de Productos';
         return view('product.index', compact('products', 'title', 'search'));
     }
-    public function search(string $search)
+    public function search(Request $request)
     {
-        $products = $this->productService->searchProducts($search);
+        //dd($request->all());
+        $search = $request->input('search');
+        $products = $this->productService->searchProductSale($search);
 
-        return response()->json($products);
+        return $products;
     }
     public function create()
     {

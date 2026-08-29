@@ -85,7 +85,7 @@
 
         <select class="form-select seleccionarCategoria " name="category_id" required>
             <option selected>
-                Seleccione una categoría
+                Seleccione una categoría 
             </option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id ?? '') == $category->id)>

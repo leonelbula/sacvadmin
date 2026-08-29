@@ -315,7 +315,7 @@ body {
 }
 
 .badge {
-    position: absolute;
+    position:relative;
 
     top: 6px;
 
@@ -437,7 +437,6 @@ USER DROPDOWN
 
     color: #b91c1c;
 }
-
 
 /* =====================================================
    PAGE HEADER
@@ -597,7 +596,6 @@ USER DROPDOWN
    BADGES
 ===================================================== */
 
-
 .status,
 .payment {
     padding: 6px 12px;
@@ -696,33 +694,259 @@ USER DROPDOWN
 }
 
 /* =====================================================
-   SUBMENU
+   SUBMENUS
 ===================================================== */
+
+.menu-group {
+    position: relative;
+}
+
+/* ---------------------------------------------
+   SIDEBAR NORMAL
+--------------------------------------------- */
 
 .submenu {
     max-height: 0;
 
     overflow: hidden;
 
-    transition: 0.35s;
+    opacity: 0;
+
+    transition:
+        max-height 0.35s ease,
+        opacity 0.25s ease;
+
+    margin: 0;
 }
+
+/* Submenu abierto */
 
 .menu-group.active .submenu {
-    max-height: 300px;
+    max-height: 500px;
+
+    opacity: 1;
 }
 
-.submenu a {
-    display: block;
+/* Enlaces del submenu */
 
-    padding: 12px 20px 12px 55px;
+.submenu a {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px 20px 11px 55px;
 
     color: #94a3b8;
 
     text-decoration: none;
+
+    white-space: nowrap;
+
+    border-radius: 10px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
 }
 
 .submenu a:hover {
     color: white;
+
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* =====================================================
+   SIDEBAR COLAPSADO
+===================================================== */
+
+/*
+   IMPORTANTE:
+
+   Permitimos que el submenu pueda salir
+   por fuera de los 90px del sidebar.
+*/
+
+.sidebar.collapsed {
+    overflow: visible;
+}
+
+/*
+   El contenedor principal sigue permitiendo
+   desplazamiento vertical.
+*/
+
+.sidebar.collapsed .sidebar-menu {
+    overflow: visible;
+}
+
+/*
+   Cada grupo será el punto de referencia
+   para el submenu flotante.
+*/
+
+.sidebar.collapsed .menu-group {
+    position: relative;
+}
+
+/*
+   Ocultar submenu cuando no está activo
+*/
+
+.sidebar.collapsed .menu-group .submenu {
+    display: none;
+
+    max-height: none;
+
+    opacity: 1;
+}
+
+/*
+   SUBMENU ABIERTO EN SIDEBAR COLAPSADO
+
+   Sale hacia la derecha.
+*/
+
+.sidebar.collapsed .menu-group.active .submenu {
+    display: block;
+
+    position: absolute;
+
+    top: 0;
+
+    left: calc(100% - 5px);
+
+    width: 230px;
+
+    max-height: none;
+
+    padding: 8px;
+
+    background: var(--dark);
+
+    border-radius: 0 12px 12px 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    z-index: 9999;
+}
+
+/*
+   Enlaces cuando el submenu está flotando
+*/
+
+.sidebar.collapsed .menu-group.active .submenu a {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    padding: 11px 14px;
+
+    border-radius: 8px;
+
+    color: #cbd5e1;
+}
+
+/*
+   Hover del submenu flotante
+*/
+
+.sidebar.collapsed .menu-group.active .submenu a:hover {
+    background: rgba(255, 255, 255, 0.1);
+
+    color: white;
+}
+
+/*
+   Si el submenu tiene iconos
+*/
+
+.sidebar.collapsed .menu-group.active .submenu a i {
+    font-size: 17px;
+
+    min-width: 20px;
+}
+
+/* =====================================================
+   FLECHA DEL MENU
+===================================================== */
+
+.menu-toggle-item .arrow {
+    margin-left: auto;
+
+    transition: transform 0.3s ease;
+}
+
+/*
+   Girar flecha cuando está abierto
+*/
+
+.menu-group.active .menu-toggle-item .arrow {
+    transform: rotate(180deg);
+}
+
+/*
+   Cuando el sidebar está minimizado
+   escondemos la flecha porque no hay espacio.
+*/
+
+.sidebar.collapsed .menu-toggle-item .arrow {
+    display: none;
+}
+
+/* =====================================================
+   MENU ITEM EN SIDEBAR COLAPSADO
+===================================================== */
+
+.sidebar.collapsed .menu-item {
+    justify-content: center;
+
+    position: relative;
+}
+
+/*
+   Mantener los iconos centrados
+*/
+
+.sidebar.collapsed .menu-item > i:first-child {
+    margin: 0;
+
+    flex-shrink: 0;
+}
+
+/* =====================================================
+   MARCAR EL GRUPO ACTIVO
+===================================================== */
+
+.sidebar.collapsed .menu-group.active > .menu-toggle-item {
+    background: #2563eb;
+
+    color: white;
+}
+
+/* =====================================================
+   EVITAR QUE EL SUBMENU DESAPAREZCA POR ANIMACION
+===================================================== */
+
+.sidebar.collapsed .menu-group.active .submenu {
+    animation: submenuShow 0.18s ease;
+}
+
+@keyframes submenuShow {
+    from {
+        opacity: 0;
+        transform: translateX(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* =====================================================
@@ -759,9 +983,7 @@ USER DROPDOWN
 }
 
 .footer .footer-left {
-
     display: flex;
 
     align-items: center;
-
 }

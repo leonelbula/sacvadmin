@@ -14,16 +14,12 @@ class SaleDetail extends Model
         'price',
         'cost',
         'quantity',
-        'iva',
         'subtotal',
-        'company_id',
+        'utility',
+        'tax_id',
     ];
 
 
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
-    }
 
     public function sale(): BelongsTo
     {
@@ -32,5 +28,9 @@ class SaleDetail extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+     public function tax()
+    {
+        return $this->belongsTo(Tax::class, 'tax_id');
     }
 }

@@ -2,8 +2,7 @@
     RESUMEN DE LA FACTURA
 =========================================================== -->
 
-<div class="card border-0 shadow rounded-4 sticky-top" style="top:90px;">
-
+<div class="card border-0 shadow rounded-4 sticky-top" style="top:80px; z-index: 10;">
     <div class="card-header bg-success text-white rounded-top-4 border-0">
 
         <div class="d-flex justify-content-between align-items-center">
@@ -34,6 +33,8 @@
 
             <div class="list-group-item d-flex justify-content-between">
 
+                <input type="hidden" id="subTotal" name="subtotal">
+
                 <span>
 
                     <i class="bi bi-cart text-primary me-2"></i>
@@ -50,43 +51,6 @@
 
             </div>
 
-            <div class="list-group-item d-flex justify-content-between">
-
-                <span>
-
-                    <i class="bi bi-percent text-warning me-2"></i>
-
-                    Descuento
-
-                </span>
-
-                <strong
-                    class="text-danger"
-                    id="discountInvoice">
-
-                    $0
-
-                </strong>
-
-            </div>
-
-            <div class="list-group-item d-flex justify-content-between">
-
-                <span>
-
-                    <i class="bi bi-calculator text-secondary me-2"></i>
-
-                    Base Gravable
-
-                </span>
-
-                <strong id="taxableInvoice">
-
-                    $0
-
-                </strong>
-
-            </div>
 
         </div>
 
@@ -106,10 +70,10 @@
 
                     <span>
 
-                        IVA 19%
+                        IVA
 
                     </span>
-
+                    <input type="hidden" name="tax" id="tax">
                     <strong id="iva19Invoice">
 
                         $0
@@ -118,53 +82,8 @@
 
                 </div>
 
-                <div class="d-flex justify-content-between mb-2">
 
-                    <span>
 
-                        IVA 5%
-
-                    </span>
-
-                    <strong id="iva5Invoice">
-
-                        $0
-
-                    </strong>
-
-                </div>
-
-                <div class="d-flex justify-content-between mb-2">
-
-                    <span>
-
-                        Exentos
-
-                    </span>
-
-                    <strong id="exemptInvoice">
-
-                        $0
-
-                    </strong>
-
-                </div>
-
-                <div class="d-flex justify-content-between">
-
-                    <span>
-
-                        Excluidos
-
-                    </span>
-
-                    <strong id="excludedInvoice">
-
-                        $0
-
-                    </strong>
-
-                </div>
 
             </div>
 
@@ -179,10 +98,8 @@
                 TOTAL A PAGAR
 
             </small>
-
-            <h1
-                class="fw-bold mb-0"
-                id="totalInvoice">
+            <input type="hidden" name="total" id="total">
+            <h1 class="fw-bold mb-0" id="totalInvoice">
 
                 $0
 
@@ -200,9 +117,7 @@
 
                     <i class="bi bi-box-seam fs-3 text-primary"></i>
 
-                    <h3
-                        class="fw-bold mt-2 mb-0"
-                        id="productsInvoice">
+                    <h3 class="fw-bold mt-2 mb-0" id="productsInvoice">
 
                         0
 
@@ -224,9 +139,7 @@
 
                     <i class="bi bi-123 fs-3 text-success"></i>
 
-                    <h3
-                        class="fw-bold mt-2 mb-0"
-                        id="quantityInvoice">
+                    <h3 class="fw-bold mt-2 mb-0" id="quantityInvoice">
 
                         0
 
@@ -252,55 +165,32 @@
 
                 <div class="d-flex justify-content-between mb-2">
 
-                    <span>
+                    @if (Route::is('sale.create'))
+                        <button type="button" id="btnClear" class="btn btn-outline-warning rounded-pill px-4">
 
-                        Recibido
+                            <i class="bi bi-arrow-clockwise"></i>
 
-                    </span>
+                            Nueva Factura
 
-                    <strong id="receivedText">
+                        </button>
+                    @endif
 
-                        $0
 
-                    </strong>
+                    <button type="submit" id="btnSaveSale" class="btn btn-primary rounded-pill px-4">
 
-                </div>
+                        <i class="bi bi-check-circle"></i>
 
-                <div class="d-flex justify-content-between">
+                        Guardar
 
-                    <span>
-
-                        Cambio
-
-                    </span>
-
-                    <strong
-                        class="text-success"
-                        id="changeText">
-
-                        $0
-
-                    </strong>
+                    </button>
 
                 </div>
+
 
             </div>
 
         </div>
 
-        <!-- Estado -->
-
-        <div class="alert alert-warning text-center mt-4 mb-0">
-
-            <i class="bi bi-info-circle me-2"></i>
-
-            <strong id="invoiceStatus">
-
-                Factura en edición
-
-            </strong>
-
-        </div>
 
     </div>
 

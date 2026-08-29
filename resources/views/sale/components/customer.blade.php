@@ -28,21 +28,32 @@
 
             <div class="d-flex gap-2 mt-3 mt-lg-0">
 
-                <button class="btn btn-outline-success rounded-pill px-4">
+                @if (Route::is('sale.create'))
+                    <button class="btn btn-outline-success rounded-pill px-4" id="btn-clear-customer">
 
-                    <i class="bi bi-person-plus"></i>
+                        <i class="bi bi-trash"></i>
 
-                    Nuevo Cliente
+                        Borrar
 
-                </button>
+                    </button>
+                @endif
 
-                <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#customerModal">
+
+
+
+                <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal"
+                    data-bs-target="#customerModal">
 
                     <i class="bi bi-search"></i>
 
                     Buscar Cliente
 
                 </button>
+                <a href="{{ route('sale.index') }}" id="btnBackSale"
+                    class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left-circle"></i>
+                    Volver
+                </a>
 
             </div>
 
@@ -76,7 +87,7 @@
 
                 <label class="form-label fw-semibold">
 
-                    Tipo Documento
+                    Tipo Doc.
 
                 </label>
 
@@ -86,7 +97,7 @@
 
             <!-- Cliente -->
 
-            <div class="col-lg-5">
+            <div class="col-lg-6">
 
                 <label class="form-label fw-semibold">
 
@@ -98,23 +109,17 @@
 
             </div>
 
-            <!-- Estado -->
+            <!-- fecha -->
 
-            <div class="col-lg-3">
+            <div class="col-lg-2">
 
                 <label class="form-label fw-semibold">
 
-                    Estado
+                    Fecha
 
                 </label>
 
-                <div class="form-control bg-success-subtle text-success fw-bold">
-
-                    <i class="bi bi-check-circle-fill me-2"></i>
-
-                    Cliente Activo
-
-                </div>
+                <input type="date" class="form-control" id="date_sale" name="date_sale" value="{{ date('Y-m-d') }}">
 
             </div>
 

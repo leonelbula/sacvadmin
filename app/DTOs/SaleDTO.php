@@ -8,42 +8,44 @@ class SaleDTO
 {
     public function __construct(
         public readonly int $sale_number,
-        public readonly float $cost,
-        public readonly float $utility,
-        public readonly float $subtotal,
-        public readonly float $total_iva,
-        public readonly float $total,
-        public readonly float $balance,
+        public readonly int $cost,
+        public readonly int $utility,
+        public readonly int $subtotal,
+        public readonly int $total,
+        public readonly int $balance,
         public readonly string $hour,
         public readonly string $date_sale,
         public readonly string $term,
-        public readonly string $expiration_date,
-        public readonly string $type_sale,
+        public readonly ?string $expiration_date,
         public readonly string $payment_form,
-        public readonly string $payment_method,
+        public readonly int $payment_method_id, // Corregido a int
+        public readonly ?string $observation,   // Permitir null si viene vacío
+        public readonly int $taxes,
         public readonly int $customer_id,
-        public readonly int $user_id
+        public readonly int $user_id,
+        public readonly string $state
     ) {}
 
     public static function fromRequest($request): self
     {
         return new self(
-            sale_number: $request->input('sale_number', 0),
-            cost: $request->input('cost', 0),
-            utility: $request->input('utility', 0),
-            subtotal: $request->input('subtotal', 0),
-            total_iva: $request->input('total_iva', 0),
-            total: $request->input('total', 0),
-            balance: $request->input('balance', 0),
+            sale_number: (int)$request->input('sale_number'),
+            cost: (int)$request->input('cost',),
+            utility: (int)$request->input('utility'),
+            subtotal: (int)$request->input('subtotal'),
+            total: (int)$request->input('total'),
+            balance: (int)$request->input('balance'),
             hour: $request->input('hour', ''),
             date_sale: $request->input('date_sale', ''),
             term: $request->input('term', ''),
             expiration_date: $request->input('expiration_date', ''),
-            type_sale: $request->input('type_sale', ''),
             payment_form: $request->input('payment_form', ''),
-            payment_method: $request->input('payment_method', ''),
-            customer_id: $request->input('customer_id', 0),
-            user_id: Auth::user()->id
+            payment_method_id: (int)$request->input('payment_method_id', 0), // Casteo explícito
+            observation: $request->observation ?? 'Sin Observaciones',
+            taxes: (int)$request->input('tax'),
+            customer_id: (int)$request->input('customer_id', 1),
+            user_id: Auth::id(), // Forma más limpia de obtener el ID
+            state: $request->state ?? 'pending' // Valor por defecto si no viene
         );
     }
     public function toArray(): array
@@ -53,18 +55,19 @@ class SaleDTO
             'cost' => $this->cost,
             'utility' => $this->utility,
             'subtotal' => $this->subtotal,
-            'total_iva' => $this->total_iva,
             'total' => $this->total,
             'balance' => $this->balance,
             'hour' => $this->hour,
             'date_sale' => $this->date_sale,
             'term' => $this->term,
             'expiration_date' => $this->expiration_date,
-            'type_sale' => $this->type_sale,
             'payment_form' => $this->payment_form,
-            'payment_method' => $this->payment_method,
+            'payment_method_id' => $this->payment_method_id,
+            'observation' => $this->observation,
+            'taxes' => $this->taxes,
             'customer_id' => $this->customer_id,
-            'user_id' => $this->user_id
+            'user_id' => $this->user_id,
+            'state' => $this->state
         ];
     }
 }

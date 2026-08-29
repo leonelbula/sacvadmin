@@ -1,7 +1,3 @@
-<!-- ==========================================================
-    PRODUCTOS DE LA FACTURA
-=========================================================== -->
-
 <div class="card border-0 shadow-sm rounded-4 mb-4">
 
     <div class="card-header bg-white border-0">
@@ -110,7 +106,7 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="tbodySaleProducts">
 
                     <!-- JavaScript -->
 

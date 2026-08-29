@@ -56,7 +56,7 @@
             <div class="submenu">
 
 
-                <a href="{{route('sale.index')}}">
+                <a href="{{ route('sale.index') }}">
                     <i class="bi bi-receipt"></i>
                     Facturas
                 </a>
@@ -68,7 +68,7 @@
                 </a>
 
 
-                <a href="#">
+                <a href="{{ route('pos.index') }}">
                     <i class="bi bi-shop"></i>
                     Punto de Venta
                 </a>
@@ -129,7 +129,7 @@
 
 
 
-        <a href="{{route('customer.index')}}" class="menu-item">
+        <a href="{{ route('customer.index') }}" class="menu-item">
 
             <i class="bi bi-people"></i>
 
@@ -150,6 +150,49 @@
             </span>
 
         </a>
+
+        <div class="menu-group">
+
+
+            <button class="menu-item menu-toggle-item">
+
+
+               <i class="bi bi-cash-stack me-2"></i>
+
+
+                <span>
+                    Gastos
+                </span>
+
+
+                <i class="bi bi-chevron-down arrow"></i>
+
+
+            </button>
+
+
+            <div class="submenu">
+
+
+                <a href="{{ route('spent.index') }}">
+                    Lista de Gastos
+                </a>
+
+
+                <a href="{{ route('category.index') }}">
+                    Categorías
+                </a>
+
+
+                <a href="{{ route('kardex.index') }}">
+                    Kardex
+                </a>
+
+
+            </div>
+
+
+        </div>
 
 
 

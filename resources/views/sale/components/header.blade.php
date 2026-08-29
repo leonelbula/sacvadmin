@@ -13,17 +13,17 @@
 
                 <div class="d-flex align-items-center">
 
-                    
+
 
                     <div>
 
                         <h4 class="fw-bold mb-1">
 
-                            FACTURA ELECTRÓNICA DE VENTA
+                            FACTURA DE VENTA
 
                         </h4>
 
-    
+
 
                     </div>
 
@@ -37,9 +37,15 @@
 
                     <i class="bi bi-pencil-square me-2"></i>
 
-                    Nueva Factura
+                    @if (Route::is('sale.create'))
+                        Nueva Factura
+                    @endif
+                     @if (Route::is('sale.edit'))
+                        Editar Factura
+                    @endif
 
                 </span>
+
 
             </div>
 
@@ -48,7 +54,7 @@
     </div>
 
     <!-- Información empresa -->
- 
+
 
 </div>
 

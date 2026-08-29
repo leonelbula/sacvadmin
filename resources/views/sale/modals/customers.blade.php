@@ -84,8 +84,8 @@
 
                                    <th>Teléfono</th>
 
+                                   <th>Direccion</th>
                                    <th>Ciudad</th>
-
 
                                    <th width="100">
 
@@ -97,7 +97,7 @@
 
                            </thead>
 
-                           <tbody>
+                           <tbody id="tbodyCustomers">
 
 
 

@@ -91,7 +91,6 @@ function cambiarIcono(open = null) {
         menuIcon.classList.add("bi-list");
     }
 }
-
 // =====================================================
 // SUBMENUS SIDEBAR
 // =====================================================
@@ -99,8 +98,26 @@ function cambiarIcono(open = null) {
 const submenuButtons = document.querySelectorAll(".menu-toggle-item");
 
 submenuButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", (event) => {
+        event.preventDefault();
+
         const parent = button.closest(".menu-group");
+
+        if (!parent) return;
+
+        // =============================================
+        // CERRAR OTROS SUBMENUS
+        // =============================================
+
+        document.querySelectorAll(".menu-group.active").forEach((group) => {
+            if (group !== parent) {
+                group.classList.remove("active");
+            }
+        });
+
+        // =============================================
+        // ABRIR / CERRAR ACTUAL
+        // =============================================
 
         parent.classList.toggle("active");
     });

@@ -48,17 +48,15 @@
 
                 </label>
 
-                <select
-                    class="form-select"
-                    id="paymentMethod">
+                <select class="form-select" id="typeSale" name="payment_form">
 
-                    <option value="1">
+                    <option value="counted">
 
                         Contado
 
                     </option>
 
-                    <option value="2">
+                    <option value="credit">
 
                         Crédito
 
@@ -78,34 +76,15 @@
 
                 </label>
 
-                <select
-                    class="form-select"
-                    id="paymentType">
+                <select class="form-select" id="paymentMethod" name="payment_method_id">
 
-                    <option value="cash">
+                    @foreach ($payments as $pay)
+                        <option value="{{ $pay->id }}">
 
-                        💵 Efectivo
+                            {{ $pay->name }}
 
-                    </option>
-
-                    <option value="transfer">
-
-                        🏦 Transferencia
-
-                    </option>
-
-                    <option value="debit">
-
-                        💳 Tarjeta Débito
-
-                    </option>
-
-                    <option value="credit">
-
-                        💳 Tarjeta Crédito
-
-                    </option>
-
+                        </option>
+                    @endforeach
 
 
                 </select>
@@ -122,31 +101,21 @@
 
                 </label>
 
-                <input
-                    type="text"
-                    class="form-control"
-                    value="Administrador"
-                    readonly>
+                <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
 
             </div>
 
             <!-- Fecha vencimiento -->
 
-            <div
-                class="col-lg-4"
-                id="creditDateContainer"
-                style="display:none;">
+            <div class="col-lg-4" id="creditDateContainer" style="display:none;">
 
                 <label class="form-label fw-semibold">
 
-                    Fecha de Vencimiento
+                    Plazo
 
                 </label>
 
-                <input
-                    type="date"
-                    class="form-control"
-                    id="dueDate">
+                <input type="number" class="form-control" id="dueDate" name="term" value="0">
 
             </div>
 
@@ -168,11 +137,7 @@
 
                     </span>
 
-                    <input
-                        type="number"
-                        id="receivedAmount"
-                        class="form-control text-end"
-                        value="0">
+                    <input type="number" id="receivedAmount" class="form-control text-end" value="0">
 
                 </div>
 
@@ -196,12 +161,8 @@
 
                     </span>
 
-                    <input
-                        type="text"
-                        id="changeAmount"
-                        class="form-control text-end bg-light fw-bold"
-                        value="0"
-                        readonly>
+                    <input type="text" id="changeAmount" class="form-control text-end bg-light fw-bold"
+                        value="0" readonly>
 
                 </div>
 
@@ -223,19 +184,16 @@
 
                 </label>
 
-                <textarea
-                    id="saleObservation"
-                    rows="4"
-                    class="form-control"
+                <textarea id="saleObservation" name="observation" rows="4" class="form-control"
                     placeholder="Observaciones de la factura..."></textarea>
 
             </div>
 
         </div>
 
-++
-        <hr class="my-4">
 
+        <hr class="my-4">
+        <!-- Acciones
         <div class="row text-center">
 
             <div class="col-md-3">
@@ -326,20 +284,31 @@
 
             </div>
 
-        </div>
+        </div>-->
 
     </div>
 
 </div>
 
 <script>
+    document.getElementById('typeSale').addEventListener('change', function() {
 
-document.getElementById('paymentMethod').addEventListener('change',function(){
+        document.getElementById('creditDateContainer').style.display =
 
-    document.getElementById('creditDateContainer').style.display=
+            this.value == 'credit' ? 'block' : 'none';
 
-        this.value==2?'block':'none';
+            let receivedAmount = document.getElementById('receivedAmount')
 
-});
+            if(this.value == 'credit'){
+                receivedAmount.value = 0;
+                receivedAmount.disabled  = true;
+            }else{
+                 receivedAmount.disabled  = false;
+            }
 
+             document.getElementById('changeAmount').style.display =
+
+            this.value == 'credit' ? 'none' : 'block';
+
+    });
 </script>

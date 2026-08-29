@@ -32,6 +32,10 @@ class ProductService
     {
         return $this->repository->searchProducts($search);
     }
+     public function searchProductSale(?string $search = null)
+    {
+        return $this->repository->searchProductSale($search);
+    }
 
     public function findOrFail(int $id)
     {

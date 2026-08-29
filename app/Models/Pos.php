@@ -21,13 +21,8 @@ class Pos extends Model
         'returns_sale',
         'delivered_value',
         'state',
-        'user_id',
-        'company_id'
+        'user_id'
     ];
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
-    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

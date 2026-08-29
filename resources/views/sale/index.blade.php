@@ -30,7 +30,7 @@
 
                     </div>
 
-                    <a href="{{route('sale.create')}}" class="btn btn-light">
+                    <a href="{{ route('sale.create') }}" class="btn btn-light">
 
                         <i class="bi bi-plus-circle"></i>
 
@@ -161,7 +161,7 @@
 
                                 <th>Pago</th>
 
-                                <th>Estado</th>
+                                <th>Tipo</th>
 
                                 <th>Usuario</th>
 
@@ -173,63 +173,86 @@
 
                         <tbody>
 
-                            <tr>
+                            @foreach ($dataSales as $sale)
+                                <tr>
 
-                                <td><strong>FV-000125</strong></td>
+                                    <td><strong>{{ $sale->sale_number }}</strong></td>
 
-                                <td>29/07/2026</td>
+                                    <td>{{ $sale->date_sale }}</td>
 
-                                <td>Juan Pérez</td>
+                                    <td>{{ $sale->customer->full_name }}</td>
 
-                                <td class="text-end">$520.000</td>
+                                    <td class="text-end">{{ $sale->total }}</td>
 
-                                <td>Efectivo</td>
+                                    <td>{{ $sale->payment_method->name }}</td>
 
-                                <td>
+                                    <td>
+                                        @if ($sale->payment_form == 'counted')
+                                            <span class="btn btn-sm bg-success text-white">
 
-                                    <span class="btn btn-sm bg-success text-white">
+                                                Contado
 
-                                        Pagada
+                                            </span>
+                                        @else
+                                            <span class="btn btn-sm bg-info text-white">
 
-                                    </span>
+                                                Credito
 
-                                </td>
+                                            </span>
+                                        @endif
 
-                                <td>Administrador</td>
 
-                                <td class="text-center">
 
-                                    <div class="btn-group">
+                                    </td>
 
-                                        <button class="btn btn-sm btn-outline-primary">
+                                    <td>{{ $sale->user->name }}</td>
 
-                                            <i class="bi bi-eye"></i>
+                                    <td class="text-center">
 
-                                        </button>
+                                        <div class="btn-group">
+                                            <a href="{{ route('sale.show', $sale) }}">
+                                                <button class="btn btn-sm btn-outline-primary">
 
-                                        <button class="btn btn-sm btn-outline-success">
+                                                    <i class="bi bi-eye"></i>
 
-                                            <i class="bi bi-printer"></i>
+                                                </button>
+                                            </a>
+                                            <a href="{{ route('sale.print', $sale->id) }}" target="_blank">
+                                                <button class="btn btn-sm btn-outline-success">
 
-                                        </button>
+                                                    <i class="bi bi-printer"></i>
 
-                                        <button class="btn btn-sm btn-outline-warning">
+                                                </button>
+                                            </a>
+                                            <a href="{{ route('sale.ticket', $sale->id) }}" target="_blank">
+                                                <button class="btn btn-sm btn-outline-success">
 
-                                            <i class="bi bi-pencil"></i>
+                                                    <i class="bi bi-receipt me-1"></i>
 
-                                        </button>
+                                                </button>
+                                            </a>
+                                            <a href="{{route('sale.edit',$sale)}}">
+                                            <button class="btn btn-sm btn-outline-warning">
 
-                                        <button class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-pencil"></i>
 
-                                            <i class="bi bi-x-circle"></i>
+                                            </button>
+                                            </a>
+                                            <a href="">
+                                            <button class="btn btn-sm btn-outline-danger">
 
-                                        </button>
+                                                <i class="bi bi-x-circle"></i>
 
-                                    </div>
+                                            </button>
+                                            </a>
+                                        </div>
 
-                                </td>
+                                    </td>
 
-                            </tr>
+                                </tr>
+                            @endforeach
+
+
 
                         </tbody>
 
@@ -239,47 +262,31 @@
 
             </div>
 
+
+
             <div class="card-footer bg-white">
 
                 <div class="d-flex justify-content-between align-items-center">
 
-                    <small class="text-muted">
+                    <div class="text-muted">
+                        Mostrando
+                        <strong>{{ $dataSales->firstItem() ?? 0 }}</strong>
+                        a
+                        <strong>{{ $dataSales->lastItem() ?? 0 }}</strong>
+                        de
+                        <strong>{{ number_format($dataSales->total()) }}</strong>
+                        ventas
+                    </div>
 
-                        Mostrando 1 a 20 de 2.350 ventas
-
-                    </small>
-
-                    <nav>
-
-                        <ul class="pagination pagination-sm mb-0">
-
-                            <li class="page-item disabled">
-                                <a class="page-link">Anterior</a>
-                            </li>
-
-                            <li class="page-item active">
-                                <a class="page-link">1</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link">2</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link">3</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link">Siguiente</a>
-                            </li>
-
-                        </ul>
-
-                    </nav>
+                    <div>
+                        {{ $dataSales->links() }}
+                    </div>
 
                 </div>
 
             </div>
+
+
 
         </div>
 

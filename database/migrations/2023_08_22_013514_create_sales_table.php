@@ -23,13 +23,12 @@ return new class extends Migration
             $table->date('date_sale');
             $table->string('term', 50);
             $table->date('expiration_date');
-            $table->integer('type_sale');
             $table->string('payment_form');
             $table->string('observation', 150);
             $table->integer('taxes');
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('payment_method_id')->constrained('payment_methods')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict')->unique();
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');
             $table->string('state');
             $table->timestamps();
         });

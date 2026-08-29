@@ -96,7 +96,7 @@
 
                                 </thead>
 
-                                <tbody>
+                                <tbody id="tbodyProducts">
 
                                     
 
@@ -108,73 +108,7 @@
 
                         <!-- Paginación -->
 
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-
-                            <small class="text-muted">
-
-                                Mostrando 1 a 10 de 320 productos
-
-                            </small>
-
-                            <nav>
-
-                                <ul class="pagination pagination-sm mb-0">
-
-                                    <li class="page-item disabled">
-
-                                        <a class="page-link">
-
-                                            Anterior
-
-                                        </a>
-
-                                    </li>
-
-                                    <li class="page-item active">
-
-                                        <a class="page-link">
-
-                                            1
-
-                                        </a>
-
-                                    </li>
-
-                                    <li class="page-item">
-
-                                        <a class="page-link">
-
-                                            2
-
-                                        </a>
-
-                                    </li>
-
-                                    <li class="page-item">
-
-                                        <a class="page-link">
-
-                                            3
-
-                                        </a>
-
-                                    </li>
-
-                                    <li class="page-item">
-
-                                        <a class="page-link">
-
-                                            Siguiente
-
-                                        </a>
-
-                                    </li>
-
-                                </ul>
-
-                            </nav>
-
-                        </div>
+                        
 
                     </div>
 

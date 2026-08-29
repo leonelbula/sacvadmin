@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tax extends Model
 {
@@ -12,4 +13,9 @@ class Tax extends Model
         'description',
         'value',
     ];
+
+    public function product(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
 }

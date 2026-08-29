@@ -5,7 +5,7 @@ namespace App\Interfaces;
 
 interface CategoryRepositoryInterface
 {
-    public function getAllCategories();
+    public function getAllCategories($paginate = null);
     public function searchCategories(?string $search = null, int $perPage = 10);
     public function getCategoryById(int $id);
     public function createCategory(array $data);
