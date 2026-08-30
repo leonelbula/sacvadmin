@@ -15,12 +15,12 @@ class SpentController extends Controller
     {
         $spents = spent::orderBy('id', 'DESC')->get();
         $title = "Gastos";
-        return view('spent.index', compact('title', 'spents'));
+        return view('Expence.index', compact('title', 'spents'));
     }
     public function create()
     {
         $title = "Nuevo gasto";
-        return view('spent.create', compact('title'));
+        return view('Expence.create', compact('title'));
     }
     public function store(Request $request)
     {
@@ -53,7 +53,7 @@ class SpentController extends Controller
     public function edit(spent $spent)
     {
         $title = "Editar gasto";
-        return view('spent.edit', compact('title', 'spent'));
+        return view('Expence.edit', compact('title', 'spent'));
     }
     public function update(Request $request, spent $spent)
     {

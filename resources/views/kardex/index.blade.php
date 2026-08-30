@@ -236,7 +236,7 @@
 
                                 <td>{{ $data->product->name }}</td>
 
-                                <td><span class="btn btn-sm bg-success">{{ $data->movement_type }}</span></td>
+                                <td><span class="badge bg-success">{{ $data->movement_type }}</span></td>
 
                                 <td>{{ $data->origin }}</td>
                                 <td>{{ $data->reference_id }}</td>

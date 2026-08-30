@@ -2,6 +2,443 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ReportService;
+use Illuminate\Contracts\View\View;
+use App\Services\ReportPdfService;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+
+class ReportController extends Controller
+{
+    public function __construct(
+        protected ReportService $reportService,
+        protected ReportPdfService $reportPdfService
+    ) {}
+
+    private function dates(): array
+    {
+        return request()->validate([
+            'fecha_desde' => ['nullable', 'date'],
+            'fecha_hasta' => ['nullable', 'date', 'after_or_equal:fecha_desde'],
+        ]);
+    }
+
+    /**
+     * Panel principal de reportes.
+     */
+
+    public function index()
+    {
+        $filters = $this->dates();
+
+        $data = $this->reportService->getDashboard(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
+
+        return view('reports.index', [
+
+            ...$data,
+
+            'fechaDesde' =>
+            $filters['fecha_desde'] ?? null,
+
+            'fechaHasta' =>
+            $filters['fecha_hasta'] ?? null,
+
+        ]);
+    }
+
+public function kardex(Request $request) {
+    $fechaDesde = $request->input('fecha_desde');
+    $fechaHasta = $request->input('fecha_hasta');
+    $data = $this->reportService->getKardexReport( $fechaDesde, $fechaHasta );
+     return view('reports.kardex', [
+        'kardex' => $data['kardex'],
+        'quantity' => $data['quantity'],
+         'fechaDesde' => $fechaDesde, 'fechaHasta' => $fechaHasta, ]);
+         }
+
+
+    /**
+     * Reporte de ventas.
+     */
+    public function sales(): View
+    {
+        $filters = $this->dates();
+        $data = $this->reportService->getSalesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+
+        return view('reports.sales', [
+            ...$data,
+            'fechaDesde' => $filters['fecha_desde'] ?? null,
+            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+        ]);
+    }
+
+
+    /**
+     * Productos vendidos.
+     */
+    public function salesProducts(): View
+    {
+        $data = $this->reportService->getSalesProductsReport();
+
+        return view('reports.sales-products', $data);
+    }
+
+
+    /**
+     * Ventas por método de pago.
+     */
+    public function salesPaymentMethods(): View
+    {
+        $data = $this->reportService->getSalesPaymentMethodsReport();
+
+        return view('reports.sales-payment-methods', $data);
+    }
+
+
+    /**
+     * Ventas por cliente.
+     */
+    public function salesCustomers(): View
+    {
+        $data = $this->reportService->getSalesCustomersReport();
+
+        return view('reports.sales-customers', $data);
+    }
+
+
+    /**
+     * Reporte de inventario.
+     */
+    public function inventory(): View
+    {
+        $data = $this->reportService->getInventoryReport();
+
+        return view('reports.inventory', $data);
+    }
+
+
+    /**
+     * Valorización del inventario.
+     */
+    public function inventoryValuation(): View
+    {
+        $data = $this->reportService->getInventoryValuationReport();
+
+        return view('reports.inventory-valuation', $data);
+    }
+
+
+    /**
+     * Productos con stock bajo.
+     */
+    public function inventoryLowStock(): View
+    {
+        $data = $this->reportService->getLowStockReport();
+
+        return view('reports.inventory-low-stock', $data);
+    }
+
+
+    /**
+     * Kardex.
+     */
+    public function inventoryKardex(): View
+    {
+        $data = $this->reportService->getKardexReport();
+
+        return view('reports.kardex', $data);
+    }
+
+
+    /**
+     * Reporte de compras.
+     */
+    public function purchases(): View
+    {
+        $data = $this->reportService->getPurchasesReport();
+
+        return view('reports.purchases', $data);
+    }
+
+
+    /**
+     * Productos comprados.
+     */
+    public function purchasesProducts(): View
+    {
+        $data = $this->reportService->getPurchasesProductsReport();
+
+        return view('reports.purchases-products', $data);
+    }
+
+
+    /**
+     * Compras por proveedor.
+     */
+    public function purchasesSuppliers(): View
+    {
+        $data = $this->reportService->getPurchasesSuppliersReport();
+
+        return view('reports.purchases-suppliers', $data);
+    }
+
+
+    /**
+     * Reporte de gastos.
+     */
+    public function expenses()
+    {
+        $filters = $this->dates();
+        $data = $this->reportService->getExpensesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        return view('reports.expenses', [
+            ...$data,
+            'fechaDesde' => $filters['fecha_desde'] ?? null,
+            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+        ]);
+    }
+
+
+    /**
+     * Gastos por tipo.
+     */
+    public function expensesTypes(): View
+    {
+        $data = $this->reportService->getExpensesTypesReport();
+
+        return view('reports.expenses-types', $data);
+    }
+
+
+    /**
+     * Gastos por método de pago.
+     */
+    public function expensesPaymentMethods(): View
+    {
+        $data = $this->reportService->getExpensesPaymentMethodsReport();
+
+        return view('reports.expenses-payment-methods', $data);
+    }
+
+
+    /**
+     * Reporte de utilidad.
+     */
+    public function profit(): View
+    {
+        $data = $this->reportService->getProfitReport();
+
+        return view('reports.profit', $data);
+    }
+
+
+    /**
+     * Flujo de caja.
+     */
+    public function cashFlow(): View
+    {
+        $data = $this->reportService->getCashFlowReport();
+
+        return view('reports.cash-flow', $data);
+    }
+
+
+    /**
+     * Reporte general de métodos de pago.
+     */
+    public function paymentMethods(): View
+    {
+        $data = $this->reportService->getPaymentMethodsReport();
+
+        return view('reports.payment-methods', $data);
+    }
+
+
+    /**
+     * Reporte de clientes.
+     */
+    public function customers(): View
+    {
+        $data = $this->reportService->getCustomersReport();
+
+        return view('reports.customers', $data);
+    }
+
+
+    /**
+     * Mejores clientes.
+     */
+    public function customersTop(): View
+    {
+        $data = $this->reportService->getTopCustomersReport();
+
+        return view('reports.customers-top', $data);
+    }
+
+
+    /**
+     * Clientes inactivos.
+     */
+    public function customersInactive(): View
+    {
+        $data = $this->reportService->getInactiveCustomersReport();
+
+        return view('reports.customers-inactive', $data);
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PDF - VENTAS
+|--------------------------------------------------------------------------
+*/
+
+public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
+{
+
+    return $this->reportPdfService->sales(
+        $fechaDesde,
+        $fechaHasta
+    );
+}
+
+
+
+    public function salesProductsPdf(): Response
+    {
+        return $this->reportPdfService->salesProducts();
+    }
+
+    public function salesPaymentMethodsPdf(): Response
+    {
+        return $this->reportPdfService->salesPaymentMethods();
+    }
+
+    public function salesCustomersPdf(): Response
+    {
+        return $this->reportPdfService->salesCustomers();
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PDF - INVENTARIO
+|--------------------------------------------------------------------------
+*/
+
+    public function inventoryPdf(): Response
+    {
+        return $this->reportPdfService->inventory();
+    }
+
+    public function inventoryValuationPdf(): Response
+    {
+        return $this->reportPdfService->inventoryValuation();
+    }
+
+    public function inventoryLowStockPdf(): Response
+    {
+        return $this->reportPdfService->inventoryLowStock();
+    }
+
+    public function kardexPdf(): Response
+    {
+        return $this->reportPdfService->kardex();
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PDF - COMPRAS
+|--------------------------------------------------------------------------
+*/
+
+    public function purchasesPdf(): Response
+    {
+        return $this->reportPdfService->purchases();
+    }
+
+    public function purchasesProductsPdf(): Response
+    {
+        return $this->reportPdfService->purchasesProducts();
+    }
+
+    public function purchasesSuppliersPdf(): Response
+    {
+        return $this->reportPdfService->purchasesSuppliers();
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PDF - GASTOS
+|--------------------------------------------------------------------------
+*/
+
+    public function expensesPdf(): Response
+    {
+        return $this->reportPdfService->expenses();
+    }
+
+    public function expensesTypesPdf(): Response
+    {
+        return $this->reportPdfService->expensesTypes();
+    }
+
+    public function expensesPaymentMethodsPdf(): Response
+    {
+        return $this->reportPdfService->expensesPaymentMethods();
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PDF - FINANCIERO
+|--------------------------------------------------------------------------
+*/
+
+    public function profitPdf(): Response
+    {
+        return $this->reportPdfService->profit();
+    }
+
+    public function cashFlowPdf(): Response
+    {
+        return $this->reportPdfService->cashFlow();
+    }
+
+    public function paymentMethodsPdf(): Response
+    {
+        return $this->reportPdfService->paymentMethods();
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PDF - CLIENTES
+|--------------------------------------------------------------------------
+*/
+
+    public function customersPdf(): Response
+    {
+        return $this->reportPdfService->customers();
+    }
+
+    public function topCustomersPdf(): Response
+    {
+        return $this->reportPdfService->topCustomers();
+    }
+
+    public function inactiveCustomersPdf(): Response
+    {
+        return $this->reportPdfService->inactiveCustomers();
+    }
+}
+/*
+namespace App\Http\Controllers;
+
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -451,3 +888,4 @@ class ReportController extends Controller
     }
 }
 
+*/

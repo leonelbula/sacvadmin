@@ -174,7 +174,7 @@
             <div class="submenu">
 
 
-                <a href="{{ route('spent.index') }}">
+                <a href="{{ route('expenses.index') }}">
                     Lista de Gastos
                 </a>
 
@@ -196,7 +196,7 @@
 
 
 
-        <a href="#" class="menu-item">
+        <a href="{{route('reports.index')}}" class="menu-item">
 
             <i class="bi bi-bar-chart"></i>
 

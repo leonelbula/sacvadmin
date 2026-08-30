@@ -13,11 +13,7 @@ class CategoryDTO
     ) {}
     public static function fromRequest($request): self
     {
-        /*if ($request->input('state') == 'on') {
-            $state = 1;
-        } else {
-            $state = 0;
-        }*/
+
         return new self(
             name: $request->input('name', ''),
             state: $request->input('state'),

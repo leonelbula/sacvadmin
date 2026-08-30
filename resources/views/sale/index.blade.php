@@ -184,17 +184,17 @@
 
                                     <td class="text-end">{{ $sale->total }}</td>
 
-                                    <td>{{ $sale->payment_method->name }}</td>
+                                    <td>{{ $sale->paymentMethod->name }}</td>
 
                                     <td>
                                         @if ($sale->payment_form == 'counted')
-                                            <span class="btn btn-sm bg-success text-white">
+                                            <span class="badge bg-success text-white">
 
                                                 Contado
 
                                             </span>
                                         @else
-                                            <span class="btn btn-sm bg-info text-white">
+                                            <span class="badge bg-info text-white">
 
                                                 Credito
 

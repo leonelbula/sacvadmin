@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Interfaces\ExpenseRepositoryInterface;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\ProductRepository;
@@ -11,10 +12,13 @@ use App\Interfaces\KardexRepositoryInterface;
 use App\Repositories\CustomerRepository;
 use App\Interfaces\CustomerRepositoryInterface;
 use App\Interfaces\PosRepositoryInterface;
+use App\Interfaces\ReportRepositoryInterface;
 use App\Interfaces\SaleRepositoryInterface;
 use App\Repositories\TaxRepository;
 use App\Interfaces\TaxRepositoryInterface;
+use App\Repositories\ExpenseRepository;
 use App\Repositories\PosRepository;
+use App\Repositories\ReportRepository;
 use App\Repositories\SaleRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TaxRepositoryInterface::class, TaxRepository::class);
         $this->app->bind(SaleRepositoryInterface::class, SaleRepository::class);
         $this->app->bind(PosRepositoryInterface::class, PosRepository::class);
+        $this->app->bind(ExpenseRepositoryInterface::class, ExpenseRepository::class);
+        $this->app->bind(ReportRepositoryInterface::class, ReportRepository::class);
     }
 
     /**

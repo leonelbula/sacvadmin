@@ -58,8 +58,8 @@
         <!-- Información del producto -->
 
         <div class="row mb-4">
-          
-            
+
+
                 <div class="col-lg-3">
 
                     <div class="card border-primary shadow-sm">
@@ -146,7 +146,7 @@
                     </div>
 
                 </div>
-           
+
         </div>
 
         <!-- Filtros -->
@@ -271,7 +271,7 @@
 
                                     <td>
 
-                                        <span class="btn  bg-success">
+                                        <span class="badge  bg-success">
 
                                             {{$reg->movement_type}}
 
@@ -307,7 +307,7 @@
                             @endforeach
 
 
-                          
+
                         </tbody>
 
                     </table>

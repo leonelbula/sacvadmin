@@ -91,7 +91,7 @@
 
                                 <h5>
 
-                                    <span class="btn bg-info">
+                                    <span class="badge bg-info">
 
                                         {{ $product->category->name }}
 

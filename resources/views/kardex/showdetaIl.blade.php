@@ -65,7 +65,7 @@
 
                         <h5>
 
-                            <span class="btn bg-info">
+                            <span class="badge bg-info">
 
                                 {{ $detail->product->category->name }}
 

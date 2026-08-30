@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountStatusCustomerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
@@ -14,7 +15,6 @@ use App\Http\Controllers\ReturnSaleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalePaymentController;
 use App\Http\Controllers\ShoppingController;
-use App\Http\Controllers\SpentController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\KardexController;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('sale', SaleController::class);
     Route::resource('returnsale', ReturnSaleController::class);
     Route::resource('pos', PosController::class);
-    Route::resource('spent', SpentController::class);
+    Route::resource('expenses', ExpenseController::class);
     Route::resource('accountstatecustomer', AccountStatusCustomerController::class);
     Route::resource('salepyment', SalePaymentController::class);
 });
@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::put('category/{category}', [CategoryController::class, 'update'])->name('category.update');
     Route::delete('category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/product/search/{query}', [ProductController::class, 'search'])->name('product.search');
-    Route::get('/sales/{sale}/print',[SaleController::class, 'print'])->name('sale.print');
+    Route::get('/sales/{sale}/print', [SaleController::class, 'print'])->name('sale.print');
     Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
     Route::post('/sale/store', [SaleController::class, 'store']);
     Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
@@ -87,6 +87,159 @@ Route::middleware('auth')->group(function () {
     Route::get('/reporte-inventario', [ProductController::class, 'reporteValorInventario'])
         ->name('inventario.reporte');
 
+    /* |--------------------------------------------------------------------------
+    | REPORTES |
+    -------------------------------------------------------------------------- */
+    Route::prefix('reports')->name('reports.')->controller(ReportController::class)->group(function () {
+        /* |--------------------------------------------------------------------------
+        | DASHBOARD |
+        -------------------------------------------------------------------------- */
+        Route::get('/', 'index')->name('index');
+        Route::get('/kardex', [ReportController::class, 'kardex'])->name('kardex');
+        /* |--------------------------------------------------------------------------
+        | VENTAS |
+        -------------------------------------------------------------------------- */
+        Route::get('/sales', 'sales')->name('sales');
+        Route::get('/sales/products', 'salesProducts')->name('sales.products');
+        Route::get('/sales/payment-methods', 'salesPaymentMethods')->name('sales.payment-methods');
+        Route::get('/sales/customers', 'salesCustomers')->name('sales.customers');
+        /* |--------------------------------------------------------------------------
+        | INVENTARIO |
+        -------------------------------------------------------------------------- */
+        Route::get('/inventory', 'inventory')->name('inventory');
+        Route::get('/inventory/valuation', 'inventoryValuation')->name('inventory.valuation');
+        Route::get('/inventory/low-stock', 'inventoryLowStock')->name('inventory.low-stock');
+        Route::get('/inventory/kardex', 'inventoryKardex')->name('inventory.kardex');
+        /* |--------------------------------------------------------------------------
+         | COMPRAS |
+         -------------------------------------------------------------------------- */
+        Route::get('/purchases', 'purchases')->name('purchases');
+        Route::get('/purchases/products', 'purchasesProducts')->name('purchases.products');
+        Route::get('/purchases/suppliers', 'purchasesSuppliers')->name('purchases.suppliers');
+        /* |--------------------------------------------------------------------------
+         | GASTOS |
+         -------------------------------------------------------------------------- */
+        Route::get('/expenses', 'expenses')->name('expenses');
+        Route::get('/expenses/types', 'expensesTypes')->name('expenses.types');
+        Route::get('/expenses/payment-methods', 'expensesPaymentMethods')->name('expenses.payment-methods');
+        /* |--------------------------------------------------------------------------
+        | FINANCIERO
+        |-------------------------------------------------------------------------- */
+        Route::get('/profit', 'profit')->name('profit');
+        Route::get('/cash-flow', 'cashFlow')->name('cash-flow');
+        Route::get('/payment-methods', 'paymentMethods')->name('payment-methods');
+        /* |--------------------------------------------------------------------------
+         | CLIENTES |
+         -------------------------------------------------------------------------- */
+        Route::get('/customers', 'customers')->name('customers');
+        Route::get('/customers/top', 'customersTop')->name('customers.top');
+        Route::get('/customers/inactive', 'customersInactive')->name('customers.inactive');
+
+        /*
+|--------------------------------------------------------------------------
+| PDF - VENTAS
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/sales/pdf', 'salesPdf')
+            ->name('sales.pdf');
+
+        Route::get('/sales/products/pdf', 'salesProductsPdf')
+            ->name('sales.products.pdf');
+
+        Route::get('/sales/payment-methods/pdf', 'salesPaymentMethodsPdf')
+            ->name('sales.payment-methods.pdf');
+
+        Route::get('/sales/customers/pdf', 'salesCustomersPdf')
+            ->name('sales.customers.pdf');
+
+
+        /*
+|--------------------------------------------------------------------------
+| PDF - INVENTARIO
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/inventory/pdf', 'inventoryPdf')
+            ->name('inventory.pdf');
+
+        Route::get('/inventory/valuation/pdf', 'inventoryValuationPdf')
+            ->name('inventory.valuation.pdf');
+
+        Route::get('/inventory/low-stock/pdf', 'inventoryLowStockPdf')
+            ->name('inventory.low-stock.pdf');
+
+        Route::get('/inventory/kardex/pdf', 'kardexPdf')
+            ->name('inventory.kardex.pdf');
+
+
+        /*
+|--------------------------------------------------------------------------
+| PDF - COMPRAS
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/purchases/pdf', 'purchasesPdf')
+            ->name('purchases.pdf');
+
+        Route::get('/purchases/products/pdf', 'purchasesProductsPdf')
+            ->name('purchases.products.pdf');
+
+        Route::get('/purchases/suppliers/pdf', 'purchasesSuppliersPdf')
+            ->name('purchases.suppliers.pdf');
+
+
+        /*
+|--------------------------------------------------------------------------
+| PDF - GASTOS
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/expenses/pdf', 'expensesPdf')
+            ->name('expenses.pdf');
+
+        Route::get('/expenses/types/pdf', 'expensesTypesPdf')
+            ->name('expenses.types.pdf');
+
+        Route::get('/expenses/payment-methods/pdf', 'expensesPaymentMethodsPdf')
+            ->name('expenses.payment-methods.pdf');
+
+
+        /*
+|--------------------------------------------------------------------------
+| PDF - FINANCIERO
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/profit/pdf', 'profitPdf')
+            ->name('profit.pdf');
+
+        Route::get('/cash-flow/pdf', 'cashFlowPdf')
+            ->name('cash-flow.pdf');
+
+        Route::get('/payment-methods/pdf', 'paymentMethodsPdf')
+            ->name('payment-methods.pdf');
+
+
+        /*
+|--------------------------------------------------------------------------
+| PDF - CLIENTES
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/customers/pdf', 'customersPdf')
+            ->name('customers.pdf');
+
+        Route::get('/customers/top/pdf', 'topCustomersPdf')
+            ->name('customers.top.pdf');
+
+        Route::get('/customers/inactive/pdf', 'inactiveCustomersPdf')
+            ->name('customers.inactive.pdf');
+    });
+
+
+
+    /*
     Route::get('/reporte-ganancias-perdidas', [ReportController::class, 'gananciasPerdidas'])
         ->name('reporte.ganancias_perdidas');
     Route::get('/reports/profit-loss', [App\Http\Controllers\ReportController::class, 'profitLoss'])
@@ -109,7 +262,7 @@ Route::middleware('auth')->group(function () {
     Route::get('accountsreceivable/', [AccountStatusCustomerController::class, 'accountsReceivable'])->name('accountstatecustomer.registro');
 
     Route::get('/reports/sales-by-user-pdf', [ReportController::class, 'salesByUserPdf'])
-        ->name('reports.salesByUserPdf');
+        ->name('reports.salesByUserPdf');*/
 });
 
 Route::middleware(['auth'])
