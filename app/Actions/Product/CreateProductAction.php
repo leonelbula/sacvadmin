@@ -4,16 +4,16 @@ namespace App\Actions\Product;
 
 use Exception;
 use App\DTOs\ProductDTO;
-use App\Repositories\ProductRepository;
-use App\Repositories\KardexRepository;
+use App\Interfaces\KardexRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CreateProductAction
 {
     public function __construct(
-        protected ProductRepository $repository,
-        protected KardexRepository $kardexRepository
+        protected ProductRepositoryInterface $repository,
+        protected KardexRepositoryInterface $kardexRepository
     ) {}
 
     public function execute(ProductDTO $dto)
@@ -31,7 +31,7 @@ class CreateProductAction
             }
 
             $product = $this->repository->create($data);
-            
+
 
             $kardexData = [
                 'product_id' => $product->id,

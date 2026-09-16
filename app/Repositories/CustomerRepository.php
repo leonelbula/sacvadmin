@@ -45,7 +45,8 @@ class CustomerRepository implements CustomerRepositoryInterface
                 $query->where('full_name', 'LIKE', "%{$search}%")
                     ->orWhere('identification', 'LIKE', "%{$search}%");
             })
-            ->distinct()
+            ->select('customers.*')
+            ->groupBy('customers.id')
             ->paginate(5);
 
         return $clientes;

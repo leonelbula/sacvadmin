@@ -262,7 +262,7 @@
                                 <option value="{{ $typeExpense->id }}"
                                     @selected(request('type_expense_id') == $typeExpense->id)>
 
-                                    {{ $typeExpense->name }}
+                                    {{ $typeExpense->description }}
 
                                 </option>
 
@@ -510,7 +510,7 @@
                                                  bg-primary bg-opacity-10
                                                  text-primary rounded-pill px-3">
 
-                                        {{ $expense->typeExpense->name }}
+                                        {{ $expense->typeExpense->description }}
 
                                     </span>
 
@@ -879,7 +879,7 @@
 {{-- ==============================================================
     JAVASCRIPT
 ================================================================ --}}
-@push('scripts')
+
 
 <script>
 
@@ -934,7 +934,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
-@endpush
+
 
 @endsection
 

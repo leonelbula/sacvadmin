@@ -59,4 +59,12 @@ interface ExpenseRepositoryInterface
         ?string $dateFrom = null,
         ?string $dateTo = null
     ): int;
+
+    public function totalExpensesByPeriod(
+        int $userId,
+        string $startDate,
+        string $startTime,
+        string $endDate,
+        string $endTime
+    ): int;
 }

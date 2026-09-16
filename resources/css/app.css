@@ -2,4 +2,49 @@
 @tailwind components;
 @tailwind utilities;*/
 
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+#toast-container {
+    z-index: 99999 !important;
+}
+
+#toast-container > .toast {
+    opacity: 1 !important;
+    width: 350px !important;
+    padding: 15px 15px 15px 50px !important;
+    color: #ffffff !important;
+    background-color: #51a351 !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+#toast-container > .toast-success {
+    color: #ffffff !important;
+    background-color: #51a351 !important;
+}
+
+#toast-container > .toast-error {
+    color: #ffffff !important;
+    background-color: #bd362f !important;
+}
+
+#toast-container > .toast-warning {
+    color: #ffffff !important;
+    background-color: #f89406 !important;
+}
+
+#toast-container > .toast-info {
+    color: #ffffff !important;
+    background-color: #2f96b4 !important;
+}
+
+#toast-container .toast-message {
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+
+#toast-container .toast-close-button {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}

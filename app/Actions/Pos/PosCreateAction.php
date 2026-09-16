@@ -3,15 +3,15 @@
 namespace App\Actions\Pos;
 
 use App\DTOs\PosDTO;
+use App\Interfaces\PosRepositoryInterface;
 use App\Models\Pos;
-use App\Repositories\PosRepository;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 class PosCreateAction
 {
     public function __construct(
-        protected PosRepository $pos_repository,
+        protected PosRepositoryInterface $pos_repository,
     ) {}
 
     public function execute(PosDTO $dto): Pos

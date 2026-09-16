@@ -32,6 +32,38 @@ const btnClearSale = document.getElementById("btnClear");
 // Productos de la venta
 let datosProducts = [];
 
+function editSale() {
+    //console.log(saleData.details[0]['product']);
+    console.log(saleData.details);
+    let data = saleData.details;
+    data.forEach((item) => {
+        const id = item.product_id;
+        const code = item.product.code;
+        const name = item.product.name;
+        const quantity = item.quantity;
+        const cost = item.cost;
+        const price = item.price;
+        const subtotal = item.subtotal;
+
+        const taxId = item.tax_id;
+        const taxCode = item.tax?.code;
+        const taxName = item.tax?.name;
+        const taxValue = item.tax?.value;
+
+        console.log({
+            id,
+            code,
+            name,
+            quantity,
+            stock,
+            cost,
+            price,
+            subtotal,
+            taxValue,
+        });
+    });
+}
+
 /*=========================================================
 =            INICIALIZACIÓN                              =
 =========================================================*/
@@ -43,6 +75,10 @@ function initSale() {
     loadSaleInformation();
     registerEvents();
     products.value = JSON.stringify(datosProducts);
+
+    if (saleData) {
+        editSale();
+    }
 }
 
 /*=========================================================
@@ -339,7 +375,7 @@ function renderSaleProducts() {
                         max="${product.stock}"
                         value="${quantity}"
                         onchange="changeQuantity(${product.id}, this.value)"
-                    >
+                    >   
 
                 </td>
 
@@ -356,7 +392,7 @@ function renderSaleProducts() {
 
                 </td>
 
-                
+
 
                 <td class="text-center">
                     ${product.tax}%
@@ -520,8 +556,6 @@ function updateSummary() {
          */
         const lineSubtotal = quantity * price;
 
-        
-
         /*
          * Valor después del descuento.
          */
@@ -549,7 +583,6 @@ function updateSummary() {
         totalTax += lineTax;
 
         totalQuantity += quantity;
-
     });
 
     /*
@@ -778,5 +811,3 @@ function formatCurrency(value) {
 function round(value) {
     return Number(Number(value).toFixed(2));
 }
-
-

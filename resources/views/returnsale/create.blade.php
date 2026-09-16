@@ -1,593 +1,689 @@
-@extends('layouts.master')
+```blade
+@extends('layouts.app')
+
+@section('title', 'Nueva devolución')
 
 @section('content')
-    <div class="container mt-2">
 
-        <h4>{{ $title }}</h4>
+    <div class="container-fluid py-4">
 
-        <form method="POST" action="{{ route('returnsale.store') }}">
+        {{-- ENCABEZADO --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h3 class="fw-bold mb-1">
+                    <i class="bi bi-arrow-return-left me-2"></i>
+                    Nueva devolución
+                </h3>
+
+                <p class="text-muted mb-0">
+                    Registra una nueva devolución de productos.
+                </p>
+            </div>
+
+            <a href="{{ route('salereturn.index') }}" class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+            </a>
+
+        </div>
+
+
+        {{-- FORMULARIO --}}
+        <form id="returnForm">
+
             @csrf
 
-            {{-- ================= CLIENTE ================= --}}
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between">
-                    <span>Datos del Cliente</span>
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#modalClientes">Buscar Cliente</button>
-                    <a href="{{ route('returnsale.index') }}" class="btn btn-sm btn-primary">
-                        Volver
-                    </a>
+            {{-- PRODUCTOS PARA ENVIAR AL BACKEND --}}
+           <input type="hidden" name="products" id="productsInputreturn">
 
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <input type="hidden" name="customer_id" id="customer_id">
-                        <div class="col-md-3">
-                            <label>Nombre:</label>
-                            <input type="text" class="form-control" id="customer_name" readonly>
+
+            <div class="row g-4">
+
+                {{-- =====================================================
+                COLUMNA PRINCIPAL
+            ====================================================== --}}
+                <div class="col-lg-8">
+
+                    {{-- INFORMACIÓN DE LA DEVOLUCIÓN --}}
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                        <div class="card-header bg-white border-0 p-4">
+
+                            <h5 class="fw-bold mb-0">
+                                <i class="bi bi-info-circle me-2 text-primary"></i>
+                                Información de la devolución
+                            </h5>
+
                         </div>
-                        <div class="col-md-3">
-                            <label>Identificación:</label>
-                            <input type="text" class="form-control" id="customer_document" readonly>
+
+                        <div class="card-body p-4">
+
+                            <div class="row g-3">
+
+                                {{-- FECHA --}}
+                                <div class="col-md-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Fecha
+                                    </label>
+
+                                    <input type="date" name="date" class="form-control"
+                                        value="{{ old('date', date('Y-m-d')) }}" required>
+
+                                </div>
+
+
+                                {{-- TIPO --}}
+                                <div class="col-md-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Tipo de devolución
+                                    </label>
+
+                                    <select name="refund_type"  class="form-select" required>
+
+                                        <option value="money">
+                                            Devolución de dinero
+                                        </option>
+
+                                        <option value="exchange">
+                                            Cambio de producto
+                                        </option>
+
+                                        <option value="credit">
+                                            Saldo a favor
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                {{-- MOTIVO --}}
+                                <div class="col-md-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Motivo
+                                    </label>
+
+                                    <select name="reason" class="form-select" required>
+
+                                        <option value="customer_request">
+                                            Solicitud del cliente
+                                        </option>
+
+                                        <option value="defective">
+                                            Producto defectuoso
+                                        </option>
+
+                                        <option value="wrong_product">
+                                            Producto equivocado
+                                        </option>
+
+                                        <option value="damaged">
+                                            Producto dañado
+                                        </option>
+
+                                        <option value="other">
+                                            Otro
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                {{-- CLIENTE --}}
+                                <div class="col-md-8">
+
+                                    <label class="form-label fw-semibold">
+                                        Cliente
+                                    </label>
+
+                                    <div class="input-group">
+
+                                        {{-- NOMBRE VISIBLE --}}
+                                        <input type="text" id="customerName" class="form-control"
+                                            placeholder="Cliente" readonly>
+
+                                        {{-- ID DEL CLIENTE --}}
+                                        <input type="hidden" name="customer_id" id="customerId">
+
+                                        {{-- BUSCAR --}}
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#customerModal">
+
+                                            <i class="bi bi-search"></i>
+
+                                        </button>
+
+                                        {{-- LIMPIAR --}}
+                                        <button type="button" class="btn btn-outline-danger" id="btnClearCustomer">
+
+                                            <i class="bi bi-x-lg"></i>
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                {{-- RESPONSABLE --}}
+                                <div class="col-md-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Responsable
+                                    </label>
+
+                                    <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
+
+                                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+
+                                </div>
+
+                            </div>
+
                         </div>
-                        <div class="col-md-3">
-                            <label>Ciudad:</label>
-                            <input type="text" class="form-control" id="customer_city" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label>Fecha:</label>
-                            <input type="date" class="form-control" id="date_sale" name="date_sale"
-                                value="{{ date('Y-m-d') }}" required>
-                        </div>
+
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>Direccion:</label>
-                            <input type="text" class="form-control" id="customer_address" readonly>
+
+                    {{-- =====================================================
+                    PRODUCTOS
+                ====================================================== --}}
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-header bg-white border-0 p-4">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <h5 class="fw-bold mb-1">
+                                        <i class="bi bi-box-seam me-2 text-primary"></i>
+                                        Productos
+                                    </h5>
+
+                                    <small class="text-muted">
+                                        Agrega los productos que serán devueltos.
+                                    </small>
+
+                                </div>
+
+
+                                {{-- BOTÓN AGREGAR --}}
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#productModal">
+
+                                    <i class="bi bi-plus-lg me-1"></i>
+                                    Agregar producto
+
+                                </button>
+
+                            </div>
+
                         </div>
 
-                        <div class="col-md-9">
-                            <label>Motivo</label>
-                            <input type="tex" name="reason" class="form-control" required>
+
+                        <div class="card-body p-0">
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover align-middle mb-0">
+
+                                    <thead class="table-light">
+
+                                        <tr>
+
+                                            <th class="ps-4">
+                                                Producto
+                                            </th>
+
+                                            <th width="130">
+                                                Cantidad
+                                            </th>
+
+                                            <th width="150">
+                                                Precio
+                                            </th>
+
+                                            <th width="130">
+                                                Costo
+                                            </th>
+
+                                            <th width="150">
+                                                Subtotal
+                                            </th>
+
+                                            <th width="70">
+                                                Acción
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody id="returnProducts">
+
+                                        <tr>
+
+                                            <td colspan="6" class="text-center py-5 text-muted">
+
+                                                <i class="bi bi-box2 fs-1 d-block mb-3"></i>
+
+                                                <h6 class="fw-semibold">
+                                                    No hay productos
+                                                </h6>
+
+                                                <p class="mb-0">
+                                                    Agrega productos para realizar la devolución.
+                                                </p>
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
                         </div>
+
                     </div>
-                </div>
 
-            </div>
 
-            {{-- ================= PRODUCTOS ================= --}}
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between">
-                    <span>Productos</span>
-                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                        data-bs-target="#modalProductos">Agregar Producto</button>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered" id="product-table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>IVA (%)</th>
-                                <th>Subtotal</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
+                    {{-- OBSERVACIÓN --}}
+                    <div class="card border-0 shadow-sm rounded-4 mt-4">
 
-            {{-- ================= TOTALES ================= --}}
-            <div class="card mb-4">
-                <div class="card-body row">
-                    <div class="col-md-4 offset-md-8">
-                        <label>Subtotal:</label>
-                        <input type="text" class="form-control" id="subtotal" name="subtotal" readonly>
-                        <label>IVA:</label>
-                        <input type="text" class="form-control" id="iva" name="iva" readonly>
-                        <label>Total:</label>
-                        <input type="hidden" name="costs" id="costs">
-                        <input type="text" class="form-control" id="total" name="total" readonly>
+                        <div class="card-body p-4">
+
+                            <label class="form-label fw-semibold">
+                                Observación
+                            </label>
+
+                            <textarea name="observation" class="form-control" rows="4" placeholder="Observaciones de la devolución...">{{ old('observation') }}</textarea>
+
+                        </div>
+
                     </div>
+
                 </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        </form>
-    </div>
-
-    @include('returnsale.modals.customers')
-    @include('returnsale.modals.products')
 
 
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
-        <div id="precioToast" class="toast align-items-center text-white bg-warning border-0" role="alert"
-            aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toastBody">
-                    <!-- contenido dinámico -->
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Cerrar"></button>
-            </div>
-        </div>
-    </div>
+                {{-- =====================================================
+                RESUMEN
+            ====================================================== --}}
+                <div class="col-lg-4">
+
+                    <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 20px; z-index: 1;">
+
+                        <div class="card-header bg-primary text-white border-0 rounded-top-4 p-4">
+
+                            <h5 class="mb-0 fw-bold">
+
+                                <i class="bi bi-calculator me-2"></i>
+
+                                Resumen
+
+                            </h5>
+
+                        </div>
 
 
+                        <div class="card-body p-4">
 
-    <script>
-        // ======================= BUSCAR CLIENTE =======================
-        document.getElementById('buscarCliente').addEventListener('input', function() {
-            const q = this.value;
+                            {{-- PRODUCTOS --}}
+                            <div class="d-flex justify-content-between mb-3">
 
-            fetch(`/customers/search/${q}`)
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.querySelector('#tablaClientes tbody');
-                    tbody.innerHTML = '';
+                                <span class="text-muted">
+                                    Productos
+                                </span>
 
-                    data.forEach(cliente => {
-                        tbody.innerHTML += `
-                    <tr>
-                        <td>${cliente.full_name}</td>
-                        <td>${cliente.identification_card}</td>
-                        <td>${cliente.city['name']}</td>
-                        <td>
-                            <button class="btn btn-sm btn-success" onclick="seleccionarCliente(${cliente.id}, '${cliente.full_name}','${cliente.identification_card}','${cliente.address}','${cliente.city['name']}')">Seleccionar</button>
-                        </td>
-                    </tr>`;
-                    });
-                });
-        });
+                                <span class="fw-semibold" id="totalProducts">
+                                    0
+                                </span>
 
-        function seleccionarCliente(id, full_name, identification_card, address, city) {
-            document.getElementById('customer_id').value = id;
-            document.getElementById('customer_name').value = full_name;
-            document.getElementById('customer_document').value = identification_card;
-            document.getElementById('customer_address').value = address;
-            document.getElementById('customer_city').value = city;
-            console.log(id);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modalClientes'));
-            modal.hide();
-        }
+                            </div>
 
-        // ======================= BUSCAR PRODUCTO =======================
-        document.getElementById('modalProductos').addEventListener('show.bs.modal', function() {
-            document.getElementById('buscarProducto').value = '';
-            document.querySelector('#tablaProductos tbody').innerHTML = '';
-        });
 
-        document.getElementById('buscarProducto').addEventListener('input', function() {
-            const q = this.value.trim();
-            const tbody = document.querySelector('#tablaProductos tbody');
+                            {{-- CANTIDAD --}}
+                            <div class="d-flex justify-content-between mb-3">
 
-            if (q.length < 2) {
-                tbody.innerHTML = '';
-                return;
-            }
+                                <span class="text-muted">
+                                    Cantidad
+                                </span>
 
-            fetch(`/products/search/${encodeURIComponent(q)}`)
-                .then(res => {
-                    if (!res.ok) throw new Error('Error en la búsqueda de productos');
-                    return res.json();
-                })
-                .then(data => {
-                    tbody.innerHTML = '';
+                                <span class="fw-semibold" id="totalQuantity">
+                                    0
+                                </span>
 
-                    data.forEach(producto => {
-                        // Guardamos el JSON codificado en data-product para evitar problemas de comillas
-                        const encoded = encodeURIComponent(JSON.stringify(producto));
-                        tbody.innerHTML += `
-                    <tr>
-                        <td>${producto.id}</td>
-                        <td>${producto.code ?? ''}</td>
-                        <td>${producto.name}</td>
-                        <td>${producto.price}</td>
-                        <td>${producto.amount }</td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-primary btn-add-product" data-product="${encoded}">
-                                Agregar
+                            </div>
+
+
+                            <hr>
+
+
+                            {{-- SUBTOTAL --}}
+                            <div class="d-flex justify-content-between mb-3">
+
+                                <span class="text-muted">
+                                    Subtotal
+                                </span>
+
+                                <span class="fw-semibold">
+
+                                    <span id="subtotalReturn">
+                                        0
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+
+                            {{-- DESCUENTO --}}
+                            <div class="d-flex justify-content-between mb-3">
+
+                                <span class="text-muted">
+                                    Descuento
+                                </span>
+
+                                <span class="fw-semibold">
+
+                                    <span id="discountReturn">
+                                        0
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+
+                            <hr>
+
+
+                            {{-- TOTAL --}}
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                                <span class="fs-5 fw-bold">
+                                    Total
+                                </span>
+
+                                <span class="fs-3 fw-bold text-primary">
+
+                                    <span id="totalReturn">
+                                        0
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+
+                            {{-- INPUTS OCULTOS --}}
+                            <input type="hidden" name="subtotal" id="subtotalInput" value="0">
+
+                            <input type="hidden" name="total" id="totalInput" value="0">
+
+
+                            {{-- GUARDAR --}}
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3" id="btnReturnSale">
+
+                                <i class="bi bi-check-circle me-2"></i>
+
+                                Registrar devolución
+
                             </button>
-                        </td>
-                    </tr>`;
-                    });
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.querySelector('#tablaProductos tbody').innerHTML =
-                        '<tr><td colspan="6">Error al buscar productos</td></tr>';
-                });
-        });
-
-        // Delegación de eventos para los botones "Agregar"
-        document.querySelector('#tablaProductos tbody').addEventListener('click', function(e) {
-            const btn = e.target.closest('.btn-add-product');
-            if (!btn) return;
-            try {
-                const producto = JSON.parse(decodeURIComponent(btn.dataset.product));
-                seleccionarProducto(producto);
-            } catch (err) {
-                console.error('No se pudo parsear el producto:', err);
-            }
-        });
-
-        function seleccionarProducto(producto) {
-            // console.log para depuración rápida
-            console.log('seleccionarProducto ->', producto);
-            agregarProducto(producto);
-
-            const modalEl = document.getElementById('modalProductos');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if (modalInstance) modalInstance.hide();
-
-            // limpiar búsqueda y resultados
-            document.getElementById('buscarProducto').value = '';
-            document.querySelector('#tablaProductos tbody').innerHTML = '';
-        }
-
-        // ======================= PRODUCTOS =======================
-        window.productos = window.productos || [];
-
-        function agregarProducto(producto) {
-            const id = Number(producto.id);
-
-            const parsed = {
-                id,
-                code: producto.code ?? '',
-                name: producto.name ?? 'Sin nombre',
-                quantity: 1,
-                price: Number(producto.price) || 0,
-                original_price: Number(producto.price) || 0,
-                cost: Number(producto.cost) || 0,
-                tax: Number(producto.tax) || 0,
-                stock: Number(producto.amount ?? producto.stock ?? 0) // 👈 más seguro
-            };
-
-            const existe = productos.find(p => Number(p.id) === parsed.id);
-            if (existe) {
-                mostrarToast('Este producto ya fue agregado');
-                return;
-            }
-
-            productos.push(parsed);
-            console.log("Productos en memoria:", productos); // 👈 debug
-            renderProductos();
-        }
-
-
-        function eliminarProducto(id) {
-            productos = productos.filter(p => Number(p.id) !== Number(id));
-            renderProductos();
-        }
-
-        function renderProductos() {
-            const tbody = document.querySelector('#product-table tbody');
-            if (!tbody) {
-                console.error("No existe #product-table tbody en el DOM");
-                return;
-            }
-
-            let html = '';
-
-            productos.forEach((p, index) => {
-                const rowSubtotal = (p.price * p.quantity).toFixed(0);
-
-                html += `
-            <tr>
-                <td>
-                    ${p.name}
-                    <input type="hidden" name="products[]" value="${p.id}">
-                    <input type="hidden" name="tax[]" value="${p.tax}">
-                    <input type="hidden" name="cost_product[]" value="${p.cost}">
-                </td>
-                <td>
-                    <input type="number" class="form-control cantidad-input"
-                           data-index="${index}" name="quantities[]"
-                           value="${p.quantity}" min="1">
-                </td>
-                <td>
-                    <input type="number" class="form-control precio-input"
-                           data-index="${index}" name="prices[]"
-                           value="${p.price}">
-                </td>
-                <td>${p.tax}%</td>
-                <td class="row-subtotal">${rowSubtotal}</td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm"
-                            onclick="eliminarProducto(${p.id})">X</button>
-                </td>
-            </tr>`;
-            });
-
-            tbody.innerHTML = html; // 👈 actualizamos de una sola vez
-            calcularTotales();
-        }
-
-
-        function calcularTotales() {
-            let subtotal = 0;
-            let ivaTotal = 0;
-            let costs = 0;
-
-            productos.forEach(p => {
-                const sub = p.price * p.quantity;
-                const iva = sub * (p.tax / 100);
-                const cost_t = p.cost * p.quantity;
-                subtotal += sub;
-                ivaTotal += iva;
-                costs += cost_t;
-            });
-
-            document.getElementById('subtotal').value = subtotal.toFixed(0);
-            document.getElementById('iva').value = ivaTotal.toFixed(0);
-            document.getElementById('total').value = (subtotal + ivaTotal).toFixed(0);
-            document.getElementById('costs').value = costs.toFixed(0);
-        }
-
-        // ======================= INPUT EN CANTIDAD Y PRECIO (delegado) =======================
-        document.querySelector('#product-table tbody').addEventListener('input', function(e) {
-            const target = e.target;
-            const index = parseInt(target.dataset.index);
-            if (isNaN(index)) return;
-
-            const isCantidad = target.classList.contains('cantidad-input');
-            const isPrecio = target.classList.contains('precio-input');
-            if (!isCantidad && !isPrecio) return;
-
-            let cantidadInput = document.querySelector(`.cantidad-input[data-index="${index}"]`);
-            let precioInput = document.querySelector(`.precio-input[data-index="${index}"]`);
-
-            let cantidad = parseInt(cantidadInput.value) || 1;
-            let precio = parseFloat(precioInput.value) || 0;
-
-            const stock = productos[index].stock;
-            if (cantidad > stock) {
-                cantidad = stock;
-                cantidadInput.value = stock;
-                mostrarToast(
-                    `La cantidad solicitada supera el stock disponible (${stock}). Se ha ajustado automáticamente.`
-                );
-            }
-
-            productos[index].quantity = cantidad;
-            productos[index].price = precio;
-
-            // actualizar subtotal de la fila
-            const fila = precioInput.closest('tr');
-            const subtotalCell = fila.querySelector('.row-subtotal');
-            subtotalCell.textContent = (precio * cantidad).toFixed(0);
-
-            calcularTotales();
-        });
-
-        // ======================= VALIDACIÓN DE PRECIO AL SALIR (delegado blur) =======================
-        document.querySelector('#product-table tbody').addEventListener('focusout', function(e) {
-            const target = e.target;
-            if (!target.classList.contains('precio-input')) return;
-
-            const index = parseInt(target.dataset.index);
-            if (isNaN(index)) return;
-
-            let precioIngresado = Number(target.value) || 0;
-            const costo = Number(productos[index].cost) || 0;
-            const sugerido = Number(productos[index].original_price) || 0;
-            const cantidad = Number(productos[index].quantity) || 1;
-
-            if (precioIngresado < costo) {
-                mostrarToast(
-                    `El precio ingresado es menor al costo ($${costo}). Se ha restablecido el precio sugerido.`);
-                precioIngresado = sugerido;
-                target.value = sugerido;
-            }
-
-            productos[index].price = precioIngresado;
-
-            const fila = target.closest('tr');
-            const subtotalCell = fila.querySelector('.row-subtotal');
-            subtotalCell.textContent = (precioIngresado * cantidad).toFixed(0);
-
-            calcularTotales();
-        }, true);
-
-        /*
-
-                // ======================= BUSCAR PRODUCTO =======================
-                document.getElementById('modalProductos').addEventListener('show.bs.modal', function() {
-                    document.getElementById('buscarProducto').value = '';
-                    document.querySelector('#tablaProductos tbody').innerHTML = '';
-                });
-
-                document.getElementById('buscarProducto').addEventListener('input', function() {
-                    const q = this.value;
-                    if (q.length < 2) {
-                        document.querySelector('#tablaProductos tbody').innerHTML = '';
-                        return;
-                    }
-
-                    fetch(`/products/search/${q}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            const tbody = document.querySelector('#tablaProductos tbody');
-                            tbody.innerHTML = '';
-
-                            data.forEach(producto => {
-                                tbody.innerHTML += `
-            <tr>
-                <td>${producto.id}</td>
-                <td>${producto.code}</td>
-                <td>${producto.name}</td>
-                <td>${producto.price}</td>
-                <td>${producto.tax}%</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick='seleccionarProducto(${JSON.stringify(producto)})'>Agregar</button>
-                </td>
-            </tr>`;
-                            });
-                        });
-                });
-                */
-        /*
-               function seleccionarProducto(producto) {
-                   agregarProducto(producto);
-                   const modal = bootstrap.Modal.getInstance(document.getElementById('modalProductos'));
-                   modal.hide();
-                   document.getElementById('buscarProducto').value = '';
-                   document.querySelector('#tablaProductos tbody').innerHTML = '';
-               }
-
-               // ======================= PRODUCTOS =======================
-               window.productos = window.productos || [];
-
-               function agregarProducto(producto) {
-                   const existe = productos.find(p => p.id === producto.id);
-                   if (existe) return alert('Este producto ya fue agregado');
-
-
-                   productos.push({
-                       ...producto,
-                       quantity: 1,
-                       price: parseInt(producto.price),
-                       original_price: parseInt(producto.price),
-                       cost: parseInt(producto.cost),
-                       iva: parseInt(producto.tax),
-                       stock: parseInt(producto.amount) || 0
-                   });
-
-                   renderProductos();
-               }
-
-               function eliminarProducto(id) {
-                   productos = productos.filter(p => p.id !== id);
-                   renderProductos();
-               }
-
-               function renderProductos() {
-                   const tbody = document.querySelector('#product-table tbody');
-                   tbody.innerHTML = '';
-
-                   productos.forEach((p, index) => {
-                       tbody.innerHTML += `
-       <tr>
-           <td>
-               ${p.name}
-               <input type="hidden" name="products[]" value="${p.id}">
-               <input type="hidden" name="tax[]" value="${p.tax}">
-               <input type="hidden" name="cost_product[]" value="${p.cost}">
-           </td>
-           <td>
-               <input type="number" class="form-control cantidad-input" data-index="${index}" name="quantities[]" value="${p.quantity}" min="1">
-           </td>
-           <td>
-               <input type="number" class="form-control precio-input" data-index="${index}" name="prices[]" value="${p.price}">
-           </td>
-           <td>${p.tax}%</td>
-           <td>${(p.price * p.quantity).toFixed(0)}</td>
-           <td>
-               <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(${p.id})">X</button>
-           </td>
-       </tr>`;
-                   });
-
-                   calcularTotales();
-               }
-
-               function calcularTotales() {
-                   let subtotal = 0;
-                   let ivaTotal = 0;
-                   let costs = 0;
-
-                   productos.forEach(p => {
-                       const sub = p.price * p.quantity;
-                       const iva = sub * (p.iva / 100);
-                       const cost_t = p.cost * p.quantity;
-                       subtotal += sub;
-                       ivaTotal += iva;
-                       costs += cost_t;
-                   });
-
-
-
-                   document.getElementById('subtotal').value = subtotal.toFixed(0);
-                   document.getElementById('iva').value = ivaTotal.toFixed(0);
-                   document.getElementById('total').value = (subtotal + ivaTotal).toFixed(0);
-                   document.getElementById('costs').value = (costs).toFixed(0);
-               }
-
-
-
-               // ======================= TOAST =======================
-               function mostrarToast(mensaje) {
-                   const toastBody = document.getElementById('toastBody');
-                   toastBody.textContent = mensaje;
-
-                   const toastElement = document.getElementById('precioToast');
-                   const toast = new bootstrap.Toast(toastElement);
-                   toast.show();
-               }
-
-               // ======================= INPUT EN CANTIDAD Y PRECIO =======================
-               document.addEventListener('input', function(e) {
-                   const index = parseInt(e.target.dataset.index);
-                   const isCantidad = e.target.classList.contains('cantidad-input');
-                   const isPrecio = e.target.classList.contains('precio-input');
-
-                   if (isCantidad || isPrecio) {
-                       let cantidadInput = document.querySelector(`.cantidad-input[data-index="${index}"]`);
-                       let precioInput = document.querySelector(`.precio-input[data-index="${index}"]`);
-
-                       let cantidad = parseInt(cantidadInput.value) || 1;
-                       let precio = parseInt(precioInput.value) || 0;
-
-                       const stock = productos[index].stock;
-                       if (cantidad > stock) {
-                           cantidad = stock;
-                           cantidadInput.value = stock;
-                           mostrarToast(
-                               `La cantidad solicitada supera el stock disponible (${stock}). Se ha ajustado automáticamente.`
-                           );
-                       }
-
-                       productos[index].quantity = cantidad;
-                       productos[index].price = precio;
-
-                       const fila = e.target.closest('tr');
-                       const subtotalCell = fila.querySelector('td:nth-child(5)');
-                       subtotalCell.textContent = (precio * cantidad).toFixed(0);
-
-                       calcularTotales();
-                   }
-               });
-
-               // ======================= VALIDACIÓN DE PRECIO AL SALIR =======================
-               document.addEventListener('blur', function(e) {
-                   if (e.target.classList.contains('precio-input')) {
-                       const index = parseInt(e.target.dataset.index);
-                       const precioInput = e.target;
-                       let precioIngresado = parseInt(precioInput.value) || 0;
-
-                       const costo = productos[index].cost;
-                       const sugerido = productos[index].original_price;
-                       const cantidad = productos[index].quantity;
-
-                       if (precioIngresado < costo) {
-                           mostrarToast(
-                               `El precio ingresado es menor al costo ($${costo}). Se ha restablecido el precio sugerido.`
-                           );
-                           precioIngresado = sugerido;
-                           precioInput.value = sugerido;
-                       }
-
-                       productos[index].price = precioIngresado;
-
-                       const fila = e.target.closest('tr');
-                       const subtotalCell = fila.querySelector('td:nth-child(5)');
-                       subtotalCell.textContent = (precioIngresado * cantidad).toFixed(0);
-
-                       calcularTotales();
-                   }
-               }, true); // importante: captura true para que funcione blur correctamente*/
-    </script>
+
+
+                            {{-- CANCELAR --}}
+                            <a href="{{ route('salereturn.index') }}" class="btn btn-outline-secondary w-100 mt-2">
+
+                                Cancelar
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    {{-- ============================================================
+    MODAL PRODUCTOS
+============================================================= --}}
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+
+            <div class="modal-content border-0 rounded-4 shadow">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title fw-bold">
+
+                        <i class="bi bi-box-seam me-2 text-primary"></i>
+
+                        Buscar producto
+
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    {{-- BUSCADOR --}}
+                    <div class="input-group mb-4">
+
+                        <span class="input-group-text bg-white">
+
+                            <i class="bi bi-search"></i>
+
+                        </span>
+
+                        <input type="text" id="searchProduct" class="form-control"
+                            placeholder="Buscar por nombre o código...">
+
+                    </div>
+
+
+                    {{-- RESULTADOS --}}
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>
+                                        Producto
+                                    </th>
+
+                                    <th>
+                                        Precio
+                                    </th>
+
+                                    <th>
+                                        Stock
+                                    </th>
+
+                                    <th width="100">
+                                        Acción
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="tableProductsSearch">
+
+                                <tr>
+
+                                    <td colspan="4" class="text-center text-muted py-4">
+
+                                        Escribe para buscar productos.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- ============================================================
+    MODAL CLIENTES
+============================================================= --}}
+    <div class="modal fade" id="customerModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content border-0 rounded-4 shadow">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title fw-bold">
+
+                        <i class="bi bi-person-search me-2 text-primary"></i>
+
+                        Buscar cliente
+
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    {{-- BUSCADOR --}}
+                    <div class="input-group mb-4">
+
+                        <span class="input-group-text bg-white">
+
+                            <i class="bi bi-search"></i>
+
+                        </span>
+
+                        <input type="text" id="searchCustomer" class="form-control"
+                            placeholder="Buscar por nombre, documento o teléfono...">
+
+                    </div>
+
+
+                    {{-- RESULTADOS --}}
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>
+                                        Cliente
+                                    </th>
+
+                                    <th>
+                                        Documento
+                                    </th>
+
+                                    <th>
+                                        Teléfono
+                                    </th>
+
+                                    <th width="100">
+                                        Acción
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="tableCustomersSearch">
+
+                                <tr>
+
+                                    <td colspan="4" class="text-center text-muted py-4">
+
+                                        Escribe para buscar clientes.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
 @endsection
+
+
+
+
+<script>
+    /*
+    |--------------------------------------------------------------------------
+    | URL PARA BUSCAR PRODUCTOS
+    |--------------------------------------------------------------------------
+    */
+
+    window.productSearchUrl = "{{ url('/product/search') }}";
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | URL PARA BUSCAR CLIENTES
+    |--------------------------------------------------------------------------
+    */
+
+    window.customerSearchUrl = "{{ url('/customers/search') }}";
+</script>
+
+
+<script src="{{ asset('js/returnsale.js') }}"></script>
+<script src="{{asset('js/proceReturnSale.js')}}"></script>

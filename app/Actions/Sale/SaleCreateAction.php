@@ -3,11 +3,11 @@
 namespace App\Actions\Sale;
 
 use App\DTOs\SaleDTO;
+use App\Interfaces\KardexRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
+use App\Interfaces\SaleRepositoryInterface;
 use App\Models\Parameter;
 use App\Models\Sale;
-use App\Repositories\KardexRepository;
-use App\Repositories\ProductRepository;
-use App\Repositories\SaleRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -15,14 +15,14 @@ use Exception;
 class SaleCreateAction
 {
     public function __construct(
-        protected SaleRepository $saleRepository,
-        protected KardexRepository $kardexRepository,
-        protected ProductRepository $productRepository
+        protected SaleRepositoryInterface $saleRepository,
+        protected KardexRepositoryInterface $kardexRepository,
+        protected ProductRepositoryInterface $productRepository
     ) {}
 
     /**
      * Ejecuta la creación de la venta
-     * 
+     *
      * @param SaleDTO $dto
      * @param array $products Estructura esperada: [['id' => 1, 'quantity' => 2, 'price' => 100, 'cost' => 70, 'tax' => 19], ...]
      * @return Sale

@@ -23,7 +23,7 @@
                     @csrf
                     @method('put')
 
-                    @include('product._form')
+                    @include('inventory.product._form')
 
 
 

@@ -19,9 +19,19 @@ class PosService
         protected SaleRepositoryInterface $sale_repository
     ) {}
 
-    public function All(): LengthAwarePaginator
+    public function All(): array
     {
         return $this->pos_repository->All();
+    }
+
+    public function search($filters)
+    {
+        return $this->pos_repository->search(
+            $filters['userId'],
+            $filters['startDate'],
+            $filters['endDate'],
+            $filters['difference']
+        );
     }
 
     public function findById(int $id): Pos
@@ -34,7 +44,7 @@ class PosService
         return $this->pos_create_action->execute($data);
     }
 
-    public function update(int $id, PosDTO $data): Pos
+    public function update(int $id, array $data): Pos
     {
         return $this->pos_update_action->execute($id, $data);
     }
@@ -53,6 +63,4 @@ class PosService
     {
         return $this->pos_repository->posActive($idUser);
     }
-
-   
 }

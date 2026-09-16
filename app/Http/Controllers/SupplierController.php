@@ -14,11 +14,8 @@ class SupplierController extends Controller
     public function index()
     {
         $title = "Proveedores";
-        $company = Company::findOrFail(Auth::user()->company_id);
 
-        $suppliers = $company->suppliers()
-            ->orderBy('full_name', 'asc')
-            ->paginate(10);
+        $suppliers = Supplier::paginate(5);
         return view('supplier.index', compact('title', 'suppliers'));
     }
     public function search(Request $request)
@@ -49,7 +46,7 @@ class SupplierController extends Controller
         if ($data['credit_amount'] == '') {
             $data['credit_amount'] = 0;
         }
-        $data['company_id'] = Auth::user()->company_id;
+    
         Supplier::create($data);
         toastr()->success('Registro guardado');
         return back();

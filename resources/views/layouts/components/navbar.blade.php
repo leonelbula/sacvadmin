@@ -1,17 +1,10 @@
 <nav class="top-navbar">
 
-
-
-
-
     <button class="icon-btn menu-toggle" id="menuToggle">
         <i class="bi bi-list" id="menuIcon"></i>
     </button>
 
     <div class="search-box">
-
-
-
 
     </div>
 
@@ -31,7 +24,7 @@
                 <button class="user-box dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
 
-                    
+
 
 
                     <div class="user-info">
@@ -60,7 +53,7 @@
 
                         <div class="user-header">
 
-                           
+
 
 
                             <div>

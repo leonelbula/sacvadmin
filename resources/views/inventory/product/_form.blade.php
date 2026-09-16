@@ -11,7 +11,7 @@
                 <i class="bi bi-upc-scan"></i>
             </span>
 
-            <input type="text" class="form-control" placeholder="Código del producto"
+            <input type="text" class="form-control" placeholder="Código del producto" name="code"
                 value="{{ old('code', $product->code ?? '') }}" @if ($automatic_product != 0) disabled @endif>
         </div>
     </div>
@@ -85,7 +85,7 @@
 
         <select class="form-select seleccionarCategoria " name="category_id" required>
             <option selected>
-                Seleccione una categoría 
+                Seleccione una categoría
             </option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id ?? '') == $category->id)>

@@ -166,4 +166,60 @@ class SaleRepository implements SaleRepositoryInterface
 
             ->get();
     }
+    public function searchSales(array $filters): LengthAwarePaginator
+    {
+        return Sale::query()
+            ->with(['customer', 'paymentMethod'])
+
+            // Cliente
+            ->when($filters['customer_name'] ?? null, function ($query, $customerName) {
+                $query->whereHas('customer', function ($customerQuery) use ($customerName) {
+                    $customerQuery->where(
+                        'full_name',
+                        'LIKE',
+                        "%{$customerName}%"
+                    );
+                });
+            })
+
+            // Número de factura
+            ->when($filters['sale_number'] ?? null, function ($query, $saleNumber) {
+                $query->where('sale_number', $saleNumber);
+            })
+
+            // Forma de pago
+            ->when(
+                isset($filters['payment_form']) &&
+                    $filters['payment_form'] !== 'all',
+                function ($query) use ($filters) {
+                    $query->where(
+                        'payment_form',
+                        $filters['payment_form']
+                    );
+                }
+            )
+
+            // Fecha inicial
+            ->when($filters['date_from'] ?? null, function ($query, $dateFrom) {
+                $query->whereDate('date_sale', '>=', $dateFrom);
+            })
+
+            // Fecha final
+            ->when($filters['date_to'] ?? null, function ($query, $dateTo) {
+                $query->whereDate('date_sale', '<=', $dateTo);
+            })
+
+            ->orderByDesc('date_sale')
+            ->orderByDesc('hour')
+            ->paginate(10);
+    }
+    public function findBySaleNumber(int $saleNumber)
+    {
+        return Sale::with([
+            'customer',
+            'details.product'
+        ])
+            ->where('sale_number', $saleNumber)
+            ->first();
+    }
 }

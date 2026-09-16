@@ -555,7 +555,7 @@
 
                     <td class="right">
 
-                        ${{ number_format($detail->tax ?? 0, 0, ',', '.') }}
+                        ${{ number_format($detail->tax->value ?? 0, 0, ',', '.') }}
 
                     </td>
 

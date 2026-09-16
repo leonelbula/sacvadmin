@@ -6,7 +6,9 @@ use App\Actions\Expense\ExpenseCreateAction;
 use App\DTOs\ExpenseDTO;
 use App\Interfaces\ExpenseRepositoryInterface;
 use App\Models\Expense;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Ramsey\Uuid\Type\Integer;
 
 class ExpenseService
 {
@@ -105,6 +107,16 @@ class ExpenseService
         return $this->expenseRepository->getCount(
             dateFrom: $dateFrom,
             dateTo: $dateTo
+        );
+    }
+    public function getTotalExpensesForClosing($pos): int
+    {
+        return $this->expenseRepository->totalExpensesByPeriod(
+            $pos->user_id,
+            $pos->start_date,
+            $pos->start_time,
+            Carbon::now()->format('Y-m-d'),
+            Carbon::now()->toTimeString()
         );
     }
 }

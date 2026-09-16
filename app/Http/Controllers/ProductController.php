@@ -33,12 +33,11 @@ class ProductController extends Controller
         }
 
         $title = 'Lista de Productos';
-        return view('product.index', compact('products', 'title', 'search'));
+        return view('inventory.product.index', compact('products', 'title', 'search'));
     }
-    public function search(Request $request)
+    public function search($search)
     {
-        //dd($request->all());
-        $search = $request->input('search');
+
         $products = $this->productService->searchProductSale($search);
 
         return $products;
@@ -56,7 +55,7 @@ class ProductController extends Controller
             $automatic_product = 0;
         }
 
-        return view('product.create', compact(
+        return view('inventory.product.create', compact(
             'title',
             'categories',
             'automatic_product',
@@ -81,21 +80,21 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $title = 'Producto detalles';
-        return view('product.show', compact('product', 'title'));
+        return view('inventory.product.show', compact('product', 'title'));
     }
     public function edit(Product $product)
     {
 
         $title = 'Editar Producto';
         $parameter = Parameter::first();
-         $texes = $this->taxService->getAllTaxes();
+        $texes = $this->taxService->getAllTaxes();
         if ($parameter) {
             $automatic_product = $parameter->automatic_product;
         } else {
             $automatic_product = 0;
         }
         $categories = $this->categoryService->getAllCategories();
-        return view('product.edit', compact(
+        return view('inventory.product.edit', compact(
             'product',
             'title',
             'categories',

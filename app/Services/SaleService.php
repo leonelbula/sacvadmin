@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Actions\Sale\SaleCreateAction;
+use App\Actions\Sale\SaleDeleteAction;
+use App\Actions\Sale\SaleUpdateAction;
 use App\DTOs\SaleDTO;
 use App\Interfaces\SaleRepositoryInterface;
 use App\Models\Sale;
@@ -12,7 +14,9 @@ class SaleService
 {
     public function __construct(
         protected SaleRepositoryInterface $saleRepository,
-        protected SaleCreateAction $saleCreateAction
+        protected SaleCreateAction $saleCreateAction,
+        protected SaleUpdateAction $sale_update_action,
+        protected SaleDeleteAction $sale_delete
     ) {}
 
     public function getPaginatedSales(): LengthAwarePaginator
@@ -31,9 +35,17 @@ class SaleService
         return $this->saleCreateAction->execute($dto, $products);
     }
 
+    public function updateSale(
+        int $id,
+        SaleDTO $dto,
+        array $products
+    ) {
+        return $this->sale_update_action->execute($id, $dto, $products);
+    }
+
     public function deleteSale(int $id): bool
     {
-        return $this->saleRepository->delete($id);
+        return $this->sale_delete->execute($id);
     }
     public function getSalesByBox($box): array
     {
@@ -52,5 +64,15 @@ class SaleService
 
             'total_sales' => $sales->sum('total'),
         ];
+    }
+
+    public function searchSales(array $filters): LengthAwarePaginator
+    {
+        return $this->saleRepository->searchSales($filters);
+    }
+
+    public function findBySaleNumber(int $saleNumber)
+    {
+        return $this->saleRepository->findBySaleNumber($saleNumber);
     }
 }

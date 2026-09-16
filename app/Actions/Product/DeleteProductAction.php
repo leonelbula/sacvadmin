@@ -2,17 +2,18 @@
 
 namespace App\Actions\Product;
 
+use App\Interfaces\KardexRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
 use Exception;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\ProductRepository;
-use App\Repositories\KardexRepository;
+
 
 class DeleteProductAction
 {
     public function __construct(
-        protected ProductRepository $repository,
-        protected KardexRepository $kardexRepository
+        protected ProductRepositoryInterface $repository,
+        protected KardexRepositoryInterface $kardexRepository
     ) {}
 
     public function execute(Product $product): bool

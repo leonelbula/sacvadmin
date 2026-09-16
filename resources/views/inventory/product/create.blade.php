@@ -20,7 +20,7 @@
                     @csrf
 
 
-                    @include('product._form')
+                    @include('inventory.product._form')
 
 
 

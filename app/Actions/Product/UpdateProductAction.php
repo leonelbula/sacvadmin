@@ -4,17 +4,17 @@ namespace App\Actions\Product;
 
 use Exception;
 use App\DTOs\ProductDTO;
+use App\Interfaces\KardexRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
-use App\Repositories\ProductRepository;
-use App\Repositories\KardexRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UpdateProductAction
 {
     public function __construct(
-        protected ProductRepository $repository,
-        protected KardexRepository $kardexRepository
+        protected ProductRepositoryInterface $repository,
+        protected KardexRepositoryInterface $kardexRepository
     ) {}
 
     public function execute(Product $product, ProductDTO $dto): Product

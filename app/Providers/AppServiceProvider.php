@@ -11,14 +11,18 @@ use App\Repositories\KardexRepository;
 use App\Interfaces\KardexRepositoryInterface;
 use App\Repositories\CustomerRepository;
 use App\Interfaces\CustomerRepositoryInterface;
+use App\Interfaces\InventoryAdjustmentRepositoryInterface;
 use App\Interfaces\PosRepositoryInterface;
 use App\Interfaces\ReportRepositoryInterface;
+use App\Interfaces\SaleReturnRepositoryInterface;
 use App\Interfaces\SaleRepositoryInterface;
 use App\Repositories\TaxRepository;
 use App\Interfaces\TaxRepositoryInterface;
 use App\Repositories\ExpenseRepository;
+use App\Repositories\InventoryAdjustmentRepository;
 use App\Repositories\PosRepository;
 use App\Repositories\ReportRepository;
+use App\Repositories\SaleReturnRepository;
 use App\Repositories\SaleRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PosRepositoryInterface::class, PosRepository::class);
         $this->app->bind(ExpenseRepositoryInterface::class, ExpenseRepository::class);
         $this->app->bind(ReportRepositoryInterface::class, ReportRepository::class);
+        $this->app->bind(SaleReturnRepositoryInterface::class, SaleReturnRepository::class);
+        $this->app->bind(InventoryAdjustmentRepositoryInterface::class, InventoryAdjustmentRepository::class);
+
     }
 
     /**

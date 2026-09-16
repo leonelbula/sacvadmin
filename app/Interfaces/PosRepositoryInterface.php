@@ -7,7 +7,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface PosRepositoryInterface
 {
-    public function All(): LengthAwarePaginator;
+    public function All(): array;
+
+    public function search(?int $userId = null, ?string $startDate = null, ?string $endDate = null, ?string $difference = null): array;
 
     public function findById(int $id): Pos;
 

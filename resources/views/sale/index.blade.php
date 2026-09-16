@@ -56,7 +56,7 @@
 
                     </h5>
 
-                    <a href="#" class="btn btn-outline-secondary">
+                    <a href="{{ route('sale.index') }}" class="btn btn-outline-secondary">
 
                         <i class="bi bi-arrow-clockwise"></i>
 
@@ -68,7 +68,7 @@
 
                 <!-- Formulario -->
 
-                <form class="row g-3 mb-4">
+                <form class="row g-3 mb-4" action="{{ route('sale.index') }}" method="get">
 
                     <div class="col-lg-3">
 
@@ -76,7 +76,7 @@
                             Cliente
                         </label>
 
-                        <input type="text" class="form-control" placeholder="Nombre del cliente">
+                        <input type="text" class="form-control" name="customer_name" placeholder="Nombre del cliente">
 
                     </div>
 
@@ -86,7 +86,7 @@
                             Factura
                         </label>
 
-                        <input type="text" class="form-control" placeholder="FV-0001">
+                        <input type="text" class="form-control" name="sale_number" placeholder="1000">
 
                     </div>
 
@@ -96,12 +96,11 @@
                             Estado
                         </label>
 
-                        <select class="form-select">
+                        <select class="form-select" name="payment_form">
 
-                            <option>Todos</option>
-                            <option>Pagada</option>
-                            <option>Pendiente</option>
-                            <option>Anulada</option>
+                            <option value="all">Todos</option>
+                            <option value="counted">Contado</option>
+                            <option value="credit">Credito</option>
 
                         </select>
 
@@ -113,7 +112,7 @@
                             Desde
                         </label>
 
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" name="date_from">
 
                     </div>
 
@@ -123,7 +122,7 @@
                             Hasta
                         </label>
 
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" name="date_to">
 
                     </div>
 
@@ -131,7 +130,7 @@
 
                         <label class="form-label">&nbsp;</label>
 
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" type="submit">
 
                             <i class="bi bi-search"></i>
 
@@ -231,19 +230,24 @@
 
                                                 </button>
                                             </a>
-                                            <a href="{{route('sale.edit',$sale)}}">
-                                            <button class="btn btn-sm btn-outline-warning">
+                                            <a href="{{ route('sale.edit', $sale) }}">
+                                                <button class="btn btn-sm btn-outline-warning">
 
-                                                <i class="bi bi-pencil"></i>
+                                                    <i class="bi bi-pencil"></i>
 
-                                            </button>
+                                                </button>
                                             </a>
-                                            <a href="">
-                                            <button class="btn btn-sm btn-outline-danger">
 
-                                                <i class="bi bi-x-circle"></i>
+                                            <a>
+                                                <form action="{{ route('sale.destroy', $sale) }}" method="post">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-outline-danger">
 
-                                            </button>
+                                                        <i class="bi bi-x-circle"></i>
+
+                                                    </button>
+                                                </form>
                                             </a>
                                         </div>
 

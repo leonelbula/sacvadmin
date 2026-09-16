@@ -21,17 +21,17 @@ class CategoryController extends Controller
     public function index(Category $category = null,Request $request)
     {
         $search = $request->input('search');
-    
+
         if ($search) {
             $categories = $this->categoryService->searchCategory($request->input('search'));
         } else {
            $categories = $this->categoryService->getAllCategories(10);
         }
 
-        
+
         $title = 'Categorias';
         return view(
-            'category.index',
+            'inventory.category.index',
             compact(
                 'categories',
                 'title',
@@ -39,18 +39,18 @@ class CategoryController extends Controller
             )
         );
     }
-   
+
     public function store(CategoryStoreRequest $request)
     {
-       
+
         $categoryDTO = CategoryDTO::fromRequest($request);
         $this->categoryService->createCategory($categoryDTO);
 
         toastr()->success('Registro guardado');
         return back();
         // return redirect()->route('categoria.index');
-    } 
-   
+    }
+
 
     public function update(CategoryStoreRequest $request, int $id)
     {

@@ -3,20 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\Kardex;
-use App\Models\Parameter;
 use App\Models\PaymentMethod;
-use App\Models\Product;
 use App\Models\ReturnSale;
 use App\Models\Sale;
-use App\Models\SaleDetail;
 use App\Models\spent;
 use App\Models\Term;
-use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Browsershot\Browsershot;
 use Carbon\Carbon;
@@ -35,13 +29,30 @@ class SaleController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search = $request->all();
+
+
+
+        if (isset($search['customer_name']) || isset($search['sale_number']) || isset($search['payment_form']) || isset($search['date_from']) || isset($search['date_to'])) {
+            $dataSales = $this->saleService->searchSales($search);
+        } else {
+            $dataSales = $this->saleService->getPaginatedSales();
+        }
 
         $title = "Lista de ventas";
-        $sales = Sale::orderBy('id', 'DESC')
-            ->paginate(10);
-        $dataSales = $this->saleService->getPaginatedSales();
-        return view('sale.index', compact('title', 'sales', 'search', 'dataSales'));
+        return view('sale.index', compact('title', 'dataSales'));
+    }
+    public function searchSale(int $saleNumber): JsonResponse
+    {
+        $sale = $this->saleService->findBySaleNumber($saleNumber);
+
+        if (!$sale) {
+            return response()->json([
+                'message' => 'Venta no encontrada.'
+            ], 404);
+        }
+
+        return response()->json($sale);
     }
     public function create()
     {
@@ -133,31 +144,82 @@ class SaleController extends Controller
         ]);
         return view('sale.edit', compact('sale', 'payments'));
     }
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
+        /*
+    |--------------------------------------------------------------------------
+    | Decodificar productos
+    |--------------------------------------------------------------------------
+    */
+
         if (is_string($request->products)) {
+            $products = json_decode($request->products, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Los productos enviados no tienen un formato válido.',
+                ], 422);
+            }
+
             $request->merge([
-                'products' => json_decode($request->products, true)
+                'products' => $products
             ]);
         }
-    dd($request->all());
-        // 2. Validación estricta adaptada a tus campos
+
+        /*
+    |--------------------------------------------------------------------------
+    | Validación
+    |--------------------------------------------------------------------------
+    */
+
         $validator = Validator::make($request->all(), [
-            'customer_id'       => 'required|integer|exists:customers,id',
-            'payment_method_id' => 'required|integer|exists:payment_methods,id',
-            'payment_form'      => 'required|string|in:counted,credit', // counted = Contado, credit = Crédito
-            'term'              => 'required_if:payment_form,credit|integer|min:0',
-            'date_sale'         => 'required|date',
-            'observation'       => 'nullable|string|max:150',
-            'tax'               => 'integer',
-            // Validación crucial para el array de productos (Carrito de compras)
-            'products'          => 'required|array|min:1',
-            'products.*.id'       => 'required|integer|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-            'products.*.price'    => 'required|numeric|min:0',
-            'products.*.cost'     => 'required|numeric|min:0',
-            'products.*.tax'      => 'required|numeric', // Ej: 19, 16, 0 (el porcentaje)
+
+            'customer_id' =>
+            'required|integer|exists:customers,id',
+
+            'payment_method_id' =>
+            'required|integer|exists:payment_methods,id',
+
+            'payment_form' =>
+            'required|string|in:counted,credit',
+
+            'term' =>
+            'required_if:payment_form,credit|integer|min:0',
+
+            'date_sale' =>
+            'required|date',
+
+            'observation' =>
+            'nullable|string|max:150',
+
+            'tax' =>
+            'nullable|integer',
+
+            'products' =>
+            'required|array|min:1',
+
+            'products.*.id' =>
+            'required|integer|exists:products,id',
+
+            'products.*.quantity' =>
+            'required|integer|min:1',
+
+            'products.*.price' =>
+            'required|numeric|min:0',
+
+            'products.*.cost' =>
+            'required|numeric|min:0',
+
+            'products.*.tax' =>
+            'required|numeric|min:0',
         ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | Errores
+    |--------------------------------------------------------------------------
+    */
 
         if ($validator->fails()) {
             return response()->json([
@@ -166,6 +228,60 @@ class SaleController extends Controller
                 'errors'  => $validator->errors()
             ], 422);
         }
+
+        try {
+
+            /*
+        |--------------------------------------------------------------------------
+        | DTO
+        |--------------------------------------------------------------------------
+        */
+
+            $saleDto = SaleDTO::fromRequest($request);
+
+            /*
+        |--------------------------------------------------------------------------
+        | Productos validados
+        |--------------------------------------------------------------------------
+        */
+
+            $products = $request->input('products');
+
+            /*
+        |--------------------------------------------------------------------------
+        | Actualizar venta existente
+        |--------------------------------------------------------------------------
+        */
+
+            $sale = $this->saleService->updateSale(
+                $id,
+                $saleDto,
+                $products
+            );
+
+            /*
+        |--------------------------------------------------------------------------
+        | Respuesta
+        |--------------------------------------------------------------------------
+        */
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Venta actualizada exitosamente.',
+                'data'    => [
+                    'sale_id'     => $sale->id,
+                    'sale_number' => $sale->sale_number,
+                    'total'       => $sale->total,
+                ]
+            ], 200);
+        } catch (Exception $e) {
+
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'No se pudo actualizar la venta.',
+                'errors'   => $e->getMessage()
+            ], 400);
+        }
     }
     public function show(Sale $sale)
     {
@@ -173,25 +289,15 @@ class SaleController extends Controller
     }
     public function destroy($id)
     {
-        DB::beginTransaction();
 
         try {
 
-            $sale = Sale::with('details.product')->findOrFail($id);
+            $this->saleService->deleteSale($id);
 
-            // 1️⃣ Restaurar stock previo
-            foreach ($sale->details as $detail) {
-                $detail->product->amount += $detail->quantity;
-                $detail->product->save();
-            }
-            // 2️⃣ Eliminar detalles anteriores
-            $sale->details()->delete();
-            $sale->delete();
-            DB::commit();
             toastr()->success('Factura eliminada correctamente.');
             return redirect()->route('sale.index');
         } catch (\Exception $e) {
-            DB::rollBack();
+
             toastr()->error('Error al eliminar la factura' . $e->getMessage());
             return back();
         }
@@ -354,7 +460,7 @@ class SaleController extends Controller
     }
 }
 /**
- * 
+ *
  * public function store(Request $request)
     {
         // 1. Validar los datos del JSON
@@ -376,7 +482,7 @@ class SaleController extends Controller
         // 2. Iniciar transacción para asegurar la integridad de los datos
         try {
             $resultado = DB::transaction(function () use ($request) {
-                
+
                 // Calcular el total de la factura sumando los subtotales
                 $total = collect($request->articulos)->sum(function ($articulo) {
                     return $articulo['cantidad'] * $articulo['precio'];
@@ -399,7 +505,7 @@ class SaleController extends Controller
                         'precio_unitario' => $articulo['precio'],
                         'subtotal' => $articulo['cantidad'] * $articulo['precio']
                     ]);
-                    
+
                     // (Opcional) Aquí podrías restar el stock del producto si lo necesitas
                     // $producto = Producto::find($articulo['id']);
                     // $producto->decrement('stock', $articulo['cantidad']);

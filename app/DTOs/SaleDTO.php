@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 class SaleDTO
 {
     public function __construct(
-        public readonly int $sale_number,
         public readonly int $cost,
         public readonly int $utility,
         public readonly int $subtotal,
@@ -29,7 +28,6 @@ class SaleDTO
     public static function fromRequest($request): self
     {
         return new self(
-            sale_number: (int)$request->input('sale_number'),
             cost: (int)$request->input('cost',),
             utility: (int)$request->input('utility'),
             subtotal: (int)$request->input('subtotal'),
@@ -51,7 +49,6 @@ class SaleDTO
     public function toArray(): array
     {
         return [
-            'sale_number' => $this->sale_number,
             'cost' => $this->cost,
             'utility' => $this->utility,
             'subtotal' => $this->subtotal,

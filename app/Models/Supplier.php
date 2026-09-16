@@ -13,15 +13,14 @@ class Supplier extends Model
 
     protected $fillable = [
         'full_name',
-        'identification_card',
+        'identification',
         'address',
         'departament',
         'city',
         'phone',
         'email',
         'description',
-        'credit_amount',
-        'company_id',
+        'credit_amount'
     ];
 
     public function companydata(): BelongsTo

@@ -22,6 +22,7 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'code'=>'max:250',
             'name' => 'required|max:150',
             'cost' => 'required',
             'price' => 'required|numeric|min:0|integer',
@@ -29,7 +30,7 @@ class ProductRequest extends FormRequest
             'stock_min' => 'required',
             'stock' => 'required',
             'tax_id' => 'required|integer',
-            'category_id' => 'required',           
+            'category_id' => 'required',
         ];
     }
 }

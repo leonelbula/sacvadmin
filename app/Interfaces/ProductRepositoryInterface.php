@@ -19,4 +19,7 @@ interface ProductRepositoryInterface
     public function delete(int $id): bool;
     public function getNextCode(): string;
     public function countProduct(): int;
+    public function findById(int $id);
+    public function updateStock(int $productId, int $stock);
+
 }

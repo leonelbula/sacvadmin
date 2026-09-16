@@ -15,6 +15,7 @@ const searchCustomer = document.getElementById("searchCustomer");
 const tbody = document.querySelector("#tablaCustomer tbody");
 
 const STORAGE_KEY = "datosCustomer";
+const saleData = window.saleData ?? null;
 
 // =========================
 // CARGAR CLIENTE AL INICIAR
@@ -59,12 +60,11 @@ searchCustomer.addEventListener("input", async function () {
     //if(q.length <= 2) return;
 
     try {
-        
         const response = await fetch(
             `/customers/search/${encodeURIComponent(q)}`,
         );
 
-        console.log(response);
+        //console.log(response);
 
         if (!response.ok) {
             throw new Error("Error en la búsqueda");
@@ -84,7 +84,7 @@ searchCustomer.addEventListener("input", async function () {
             ).values(),
         ];
 
-        console.log("Clientes:", clientesUnicos);
+        //console.log("Clientes:", clientesUnicos);
 
         // ==========================================
         // MOSTRAR CLIENTES
@@ -172,7 +172,6 @@ window.addCustomer = function (
 // =========================
 function loadCustomerData() {
     const customer = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
     if (!customer) return;
 
     customerInput(customer);
@@ -194,7 +193,7 @@ function customerInput(customer) {
 //===========================
 //borrar todos loc campos
 //===========================
-btnClear.addEventListener("click", function () {
+/*btnClear.addEventListener("click", function () {
     customerIdInput.value = "";
     customerNameInput.value = "";
     customerIdentificationInput.value = "";
@@ -204,7 +203,7 @@ btnClear.addEventListener("click", function () {
     customerCityInput.value = "";
     localStorage.clear();
     location.reload();
-});
+});*/
 
 /*
 window.addEventListener("keydown", (event) => {

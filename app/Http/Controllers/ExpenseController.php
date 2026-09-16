@@ -30,8 +30,16 @@ class ExpenseController extends Controller
             dateTo: $request->input('date_to'),
             perPage: 10
         );
+        $typeExpenses = typeExpense::orderBy('description')->get();
 
-        return view('expenses.index', compact('expenses'));
+        $paymentMethods = PaymentMethod::orderBy('name')->get();
+
+
+        return view('expenses.index', compact(
+            'expenses',
+            'typeExpenses',
+            'paymentMethods'
+        ));
     }
 
     /**
@@ -58,10 +66,9 @@ class ExpenseController extends Controller
         $dto = ExpenseDTO::fromRequest($request);
 
         $this->expenseService->create($dto);
-
+        toastr()->success('Gasto registrado correctamente.');
         return redirect()
-            ->route('expenses.index')
-            ->with('success', 'Gasto registrado correctamente.');
+            ->route('expenses.index');
     }
     /**
      * Mostrar detalle del gasto.
@@ -109,10 +116,9 @@ class ExpenseController extends Controller
             id: $id,
             data: $data
         );
-
+        toastr()->success('Gasto actualizado correctamente.');
         return redirect()
-            ->route('expenses.index')
-            ->with('success', 'Gasto actualizado correctamente.');
+            ->route('expenses.index');
     }
 
     /**
@@ -122,8 +128,9 @@ class ExpenseController extends Controller
     {
         $this->expenseService->delete($id);
 
+        toastr()->success('Gasto eliminado correctamente.');
+
         return redirect()
-            ->route('expenses.index')
-            ->with('success', 'Gasto eliminado correctamente.');
+            ->route('expenses.index');
     }
 }

@@ -1,1059 +1,503 @@
-/* ==========================================================
-   SACVADMIN
-   EDITAR VENTA
-=========================================================== */
+// =========================
+// ELEMENTOS DEL DOM
+// =========================
+const customerIdInput = document.getElementById("customer_id");
+const customerNameInput = document.getElementById("full_name");
+const customerIdentificationInput = document.getElementById("identification");
+const customerPhoneInput = document.getElementById("phone");
+const customerEmailInput = document.getElementById("email");
+const customerAddressInput = document.getElementById("address");
+const customerCityInput = document.getElementById("city");
+const btnSearchCustomer = document.getElementById("btnSearchCustomer");
 
-const STORAGE_KEY = "editSale";
+const btnClear = document.getElementById("btn-clear-customer");
+const searchCustomer = document.getElementById("searchCustomer");
+const tbody = document.querySelector("#tablaCustomer tbody");
 
-/* ==========================================================
-   DATOS DE LARAVEL
-=========================================================== */
-
+const STORAGE_KEY_EDIT = "datosCustomerEdit";
 const saleData = window.saleData ?? null;
 
-/* ==========================================================
-   ELEMENTOS
-=========================================================== */
-
-const customerId = document.getElementById("customer_id");
-
-const identification = document.getElementById("identification");
-
-const documentType = document.getElementById("document_type");
-
-const fullName = document.getElementById("full_name");
-
-const dateSale = document.getElementById("date_sale");
-
-const city = document.getElementById("city");
-
-const address = document.getElementById("address");
-
-const email = document.getElementById("email");
-
-const phone = document.getElementById("phone");
-
-const typeSale = document.getElementById("typeSale");
-
-const paymentMethod = document.getElementById("paymentMethod");
-
-const dueDate = document.getElementById("dueDate");
-
-const receivedAmount = document.getElementById("receivedAmount");
-
-const changeAmount = document.getElementById("changeAmount");
-
-const saleObservation = document.getElementById("saleObservation");
-
-const tbodySaleProducts = document.getElementById("tbodySaleProducts");
-
-const productsInput = document.getElementById("products");
-
-const subTotal = document.getElementById("subTotal");
-
-const taxInput = document.getElementById("tax");
-
-const totalInput = document.getElementById("total");
-
-const subtotalInvoice = document.getElementById("subtotalInvoice");
-
-const iva19Invoice = document.getElementById("iva19Invoice");
-
-const totalInvoice = document.getElementById("totalInvoice");
-
-const productsInvoice = document.getElementById("productsInvoice");
-
-const quantityInvoice = document.getElementById("quantityInvoice");
-
-const creditDateContainer = document.getElementById("creditDateContainer");
-
-const btnClear = document.getElementById("btnClear");
-
-/* ==========================================================
-   MONEDA
-=========================================================== */
-
-function money(value) {
-    return new Intl.NumberFormat("es-CO", {
-        style: "currency",
-        currency: "COP",
-        maximumFractionDigits: 0,
-    }).format(Number(value) || 0);
-}
-
-/* ==========================================================
-   LEER LOCAL STORAGE
-=========================================================== */
-
-function getSale() {
-    const data = localStorage.getItem(STORAGE_KEY);
-
-    if (!data) {
-        return null;
-    }
-
-    try {
-        return JSON.parse(data);
-    } catch (error) {
-        console.error("Error leyendo localStorage:", error);
-
-        return null;
-    }
-}
-
-/* ==========================================================
-   GUARDAR LOCAL STORAGE
-=========================================================== */
-
-function saveSale(sale) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sale));
-}
-
-/* ==========================================================
-   CREAR OBJETO DE EDICIÓN
-=========================================================== */
-
-function buildSaleData() {
-    return {
-        sale: {
-            id: saleData.id,
-
-            sale_number: saleData.sale_number,
-
-            subtotal: Number(saleData.subtotal ?? 0),
-
-            taxes: Number(saleData.taxes ?? 0),
-
-            total: Number(saleData.total ?? 0),
-
-            payment_form: saleData.payment_form ?? "counted",
-
-            payment_method_id: saleData.payment_method_id ?? "",
-
-            term: Number(saleData.term ?? 0),
-
-            observation: saleData.observation ?? "",
-
-            date_sale: saleData.date_sale ?? "",
-        },
-
-        customer: saleData.customer
-            ? {
-                  id: saleData.customer.id,
-
-                  identification: saleData.customer.identification ?? "",
-
-                  full_name: saleData.customer.full_name ?? "",
-
-                  document_type: saleData.customer.identityDocument?.name ?? "",
-
-                  city: saleData.customer.city?.name ?? "",
-
-                  address: saleData.customer.address ?? "",
-
-                  email: saleData.customer.email ?? "",
-
-                  phone: saleData.customer.phone ?? "",
-              }
-            : null,
-
-        products: (saleData.details ?? []).map((detail) => {
-            const product = detail.product ?? {};
-
-            return {
-                id: product.id ?? detail.product_id,
-
-                product_id: detail.product_id ?? product.id,
-
-                code: product.code ?? "",
-
-                name: product.name ?? "",
-
-                quantity: Number(detail.quantity ?? 1),
-
-                price: Number(detail.price ?? 0),
-
-                cost: Number(detail.cost ?? 0),
-
-                tax_rate: Number(detail.tax?.value ?? 0),
-
-                //tax: Number(detail.tax ?? 0),
-                tax_id: detail.tax_id ?? null,
-
-                subtotal: Number(detail.subtotal ?? 0),
-            };
-        }),
-    };
-}
-
-/* ==========================================================
-   INICIALIZAR
-=========================================================== */
-
-function initialize() {
-    if (!saleData) {
-        console.error("No se recibió saleData desde Laravel.");
-
-        return;
-    }
-
-    const current = getSale();
-
-    /*
-     * Solo reemplazamos el localStorage
-     * cuando pertenece a otra venta.
-     */
-
-    if (!current || Number(current.sale?.id) !== Number(saleData.id)) {
-        saveSale(buildSaleData());
-    }
-
-    loadCustomer();
-
-    loadPayment();
-
-    loadProducts();
-
-    calculateTotals();
-}
-
-/* ==========================================================
-   CARGAR CLIENTE
-=========================================================== */
-
-function loadCustomer() {
-    const data = getSale();
-
-    if (!data?.customer) {
-        return;
-    }
-
-    const customer = data.customer;
-
-    customerId.value = customer.id ?? "";
-
-    identification.value = customer.identification ?? "";
-
-    documentType.value = customer.document_type ?? "";
-
-    fullName.value = customer.full_name ?? "";
-
-    city.value = customer.city ?? "";
-
-    address.value = customer.address ?? "";
-
-    email.value = customer.email ?? "";
-
-    phone.value = customer.phone ?? "";
-
-    if (dateSale) {
-        dateSale.value = data.sale.date_sale ?? "";
-    }
-}
-
-/* ==========================================================
-   CARGAR PAGO
-=========================================================== */
-
-function loadPayment() {
-    const data = getSale();
-
-    if (!data?.sale) {
-        return;
-    }
-
-    const sale = data.sale;
-
-    typeSale.value = sale.payment_form ?? "counted";
-
-    paymentMethod.value = sale.payment_method_id ?? "";
-
-    dueDate.value = sale.term ?? 0;
-
-    saleObservation.value = sale.observation ?? "";
-
-    updatePaymentUI();
-}
-
-/* ==========================================================
-   ACTUALIZAR INTERFAZ PAGO
-=========================================================== */
-
-function updatePaymentUI() {
-    if (typeSale.value === "credit") {
-        creditDateContainer.style.display = "block";
-
-        dueDate.disabled = false;
-
-        receivedAmount.value = 0;
-
-        receivedAmount.disabled = true;
-
-        changeAmount.value = 0;
-
-        changeAmount.style.display = "none";
-    } else {
-        creditDateContainer.style.display = "none";
-
-        dueDate.value = 0;
-
-        dueDate.disabled = true;
-
-        receivedAmount.disabled = false;
-
-        changeAmount.style.display = "block";
-
-        calculateChange();
-    }
-}
-
-/* ==========================================================
-   GUARDAR PAGO
-=========================================================== */
-
-function savePayment() {
-    const data = getSale();
-
-    if (!data) {
-        return;
-    }
-
-    data.sale.payment_form = typeSale.value;
-
-    data.sale.payment_method_id = paymentMethod.value;
-
-    data.sale.term = Number(dueDate.value || 0);
-
-    data.sale.observation = saleObservation.value ?? "";
-
-    saveSale(data);
-}
-
-/* ==========================================================
-   CARGAR PRODUCTOS
-=========================================================== */
-
-function loadProducts() {
-    const data = getSale();
-
-    if (!data || !tbodySaleProducts) {
-        return;
-    }
-
-    tbodySaleProducts.innerHTML = "";
-
-    data.products.forEach((product, index) => {
-        renderProduct(product, index);
-    });
-
-    updateProductsInput();
-}
-
-/* ==========================================================
-   RENDER PRODUCTO
-=========================================================== */
-
-function renderProduct(product, index) {
-    const row = document.createElement("tr");
-
-    const productId = product.product_id ?? product.id;
-    const taxRate = Number(product.tax ?? 0);
-    row.dataset.id = productId;
-
-    row.innerHTML = `
-
-        <td class="text-center">
-            ${index + 1}
-        </td>
-
-
-        <td>
-            ${escapeHtml(product.code)}
-        </td>
-
-
-        <td>
-
-            <div class="fw-semibold">
-                ${escapeHtml(product.name)}
-            </div>
-
-        </td>
-
-
-        <td>
-
-            <input
-                type="number"
-                min="1"
-                step="1"
-                class="form-control product-quantity"
-                value="${product.quantity}"
-                data-id="${productId}"
-            >
-
-        </td>
-
-
-        <td>
-
-            <input
-                type="number"
-                min="${product.cost}"
-                step="1"
-                class="form-control product-price"
-                value="${product.price}"
-                data-id="${productId}"
-            >
-
-        </td>
-
-
-        <td class="text-center">
-    ${taxRate > 0 ? `${taxRate}%` : "Exento"}
-</td>
-
-
-        <td class="text-end fw-bold product-subtotal">
-
-            ${money(product.subtotal)}
-
-        </td>
-
-
-        <td class="text-center">
-
-            <button
-                type="button"
-                class="btn btn-outline-danger btn-sm btn-remove-product"
-                data-id="${productId}"
-            >
-
-                <i class="bi bi-trash"></i>
-
-            </button>
-
-        </td>
-
-    `;
-
-    tbodySaleProducts.appendChild(row);
-}
-
-/* ==========================================================
-   ESCAPAR HTML
-=========================================================== */
-
-function escapeHtml(value) {
-    const div = document.createElement("div");
-
-    div.textContent = value ?? "";
-
-    return div.innerHTML;
-}
-
-/* ==========================================================
-   ACTUALIZAR PRODUCTO
-=========================================================== */
-
-function updateProduct(productId, row) {
-    const data = getSale();
-
-    if (!data) {
-        return;
-    }
-
-    const product = data.products.find(
-        (item) => Number(item.product_id ?? item.id) === Number(productId),
-    );
-
-    if (!product) {
-        return;
-    }
-
-    const quantity = Number(row.querySelector(".product-quantity")?.value || 1);
-
-    const price = Number(row.querySelector(".product-price")?.value || 0);
-
-    const taxRate = Number(row.querySelector(".product-tax")?.value || 0);
-
-    product.quantity = quantity;
-
-     if (price < product.cost) {
-        //alert("El precio no puede ser menor al costo.");
-        Swal.fire("El precio no puede ser menor al costo.");
-
-        price = product.cost;
-    }
-
-    product.price = price;
-    product.price = price;
-
-    product.tax_rate = taxRate;
-
-    /*
-     * Valor de la línea.
-     */
-
-    const value = quantity * price;
-
-    /*
-     * IVA incluido.
-     */
-
-    if (taxRate > 0) {
-        const base = value / (1 + taxRate / 100);
-
-        product.tax = Math.round(value - base);
-    } else {
-        product.tax = 0;
-    }
-
-    product.subtotal = Math.round(value);
-
-    saveSale(data);
-
-    updateRowSubtotal(row, product.subtotal);
-
-    calculateTotals();
-}
-
-/* ==========================================================
-   ACTUALIZAR SUBTOTAL FILA
-=========================================================== */
-
-function updateRowSubtotal(row, value) {
-    const element = row.querySelector(".product-subtotal");
-
-    if (element) {
-        element.textContent = money(value);
-    }
-}
-
-/* ==========================================================
-   ELIMINAR PRODUCTO
-=========================================================== */
-
-function removeProduct(productId) {
-    const data = getSale();
-
-    if (!data) {
-        return;
-    }
-
-    data.products = data.products.filter(
-        (product) =>
-            Number(product.product_id ?? product.id) !== Number(productId),
-    );
-
-    saveSale(data);
-
-    loadProducts();
-
-    calculateTotals();
-}
-
-/* ==========================================================
-   EVENTOS TABLA
-=========================================================== */
-
-if (tbodySaleProducts) {
-    tbodySaleProducts.addEventListener("input", (event) => {
-        const target = event.target;
-
-        if (
-            !target.classList.contains("product-quantity") &&
-            !target.classList.contains("product-price") &&
-            !target.classList.contains("product-tax")
-        ) {
-            return;
-        }
-
-        const row = target.closest("tr");
-
-        if (!row) {
-            return;
-        }
-
-        updateProduct(row.dataset.id, row);
-    });
-
-    tbodySaleProducts.addEventListener("click", (event) => {
-        const button = event.target.closest(".btn-remove-product");
-
-        if (!button) {
-            return;
-        }
-
-        removeProduct(button.dataset.id);
-    });
-}
-
-/* ==========================================================
-   CALCULAR TOTALES
-=========================================================== */
-
-function calculateTotals() {
-    const data = getSale();
-
-    if (!data) {
-        return;
-    }
-
-    let subtotalBruto = 0;
-
-    let taxes = 0;
-
-    let quantity = 0;
-
-    data.products.forEach((product) => {
-        const value = Number(product.quantity) * Number(product.price);
-
-        subtotalBruto += value;
-
-        taxes += Number(product.tax ?? 0);
-
-        quantity += Number(product.quantity);
-    });
-
-    /*
-     * Base sin IVA.
-     */
-
-    const subtotal = Math.round(subtotalBruto - taxes);
-
-    const total = Math.round(subtotalBruto);
-
-    data.sale.subtotal = subtotal;
-
-    data.sale.taxes = Math.round(taxes);
-
-    data.sale.total = total;
-
-    saveSale(data);
-
-    /*
-     * Valores hidden.
-     */
-
-    subTotal.value = subtotal;
-
-    taxInput.value = Math.round(taxes);
-
-    totalInput.value = total;
-
-    /*
-     * Valores visuales.
-     */
-
-    subtotalInvoice.textContent = money(subtotal);
-
-    iva19Invoice.textContent = money(taxes);
-
-    totalInvoice.textContent = money(total);
-
-    productsInvoice.textContent = data.products.length;
-
-    quantityInvoice.textContent = quantity;
-
-    updateProductsInput();
-
-    calculateChange();
-}
-
-/* ==========================================================
-   GUARDAR PRODUCTOS EN INPUT HIDDEN
-=========================================================== */
-
-function updateProductsInput() {
-    const data = getSale();
-
-    if (!data || !productsInput) {
-        return;
-    }
-
-    /*
-     * Laravel recibirá el JSON.
-     */
-
-    productsInput.value = JSON.stringify(data.products);
-}
-
-/* ==========================================================
-   CALCULAR CAMBIO
-=========================================================== */
-
-function calculateChange() {
-    if (!receivedAmount || !changeAmount) {
-        return;
-    }
-
-    if (typeSale.value === "credit") {
-        changeAmount.value = 0;
-
-        return;
-    }
-
-    const data = getSale();
-
-    if (!data) {
-        return;
-    }
-
-    const total = Number(data.sale.total) || 0;
-
-    const received = Number(receivedAmount.value) || 0;
-
-    const change = received - total;
-
-    changeAmount.value = Math.max(Math.round(change), 0);
-}
-
-/* ==========================================================
-   EVENTO FORMA DE PAGO
-=========================================================== */
-
-if (typeSale) {
-    typeSale.addEventListener("change", () => {
-        updatePaymentUI();
-
-        savePayment();
-    });
-}
-
-/* ==========================================================
-   EVENTO MÉTODO DE PAGO
-=========================================================== */
-
-if (paymentMethod) {
-    paymentMethod.addEventListener("change", () => {
-        savePayment();
-    });
-}
-
-/* ==========================================================
-   EVENTO PLAZO
-=========================================================== */
-
-if (dueDate) {
-    dueDate.addEventListener("input", () => {
-        savePayment();
-    });
-}
-
-/* ==========================================================
-   EVENTO OBSERVACIÓN
-=========================================================== */
-
-if (saleObservation) {
-    saleObservation.addEventListener("input", () => {
-        savePayment();
-    });
-}
-
-/* ==========================================================
-   EVENTO RECIBIDO
-=========================================================== */
-
-if (receivedAmount) {
-    receivedAmount.addEventListener("input", calculateChange);
-}
-
-/* ==========================================================
-   BORRAR CLIENTE
-=========================================================== */
-
-const btnClearCustomer = document.getElementById("btn-clear-customer");
-
-if (btnClearCustomer) {
-    btnClearCustomer.addEventListener("click", () => {
-        customerId.value = "";
-
-        identification.value = "";
-
-        documentType.value = "";
-
-        fullName.value = "";
-
-        city.value = "";
-
-        address.value = "";
-
-        email.value = "";
-
-        phone.value = "";
-
-        const data = getSale();
-
-        if (data) {
-            data.customer = null;
-
-            saveSale(data);
-        }
-    });
-}
-
-/* ==========================================================
-   NUEVA FACTURA
-=========================================================== */
-
-if (btnClear) {
-    btnClear.addEventListener("click", () => {
-        localStorage.removeItem(STORAGE_KEY);
-
-        window.location.href = btnClear.dataset.url ?? "/sales/create";
-    });
-}
-
-/* ==========================================================
-   ANTES DE ENVIAR
-=========================================================== */
-
-const editSaleForm = document.getElementById("editSaleForm");
-
-if (editSaleForm) {
-    editSaleForm.addEventListener("submit", () => {
-        const data = getSale();
-
-        if (!data) {
-            return;
-        }
-
-        /*
-         * Actualizar cliente.
-         */
-
-        data.customer = {
-            id: customerId.value,
-
-            identification: identification.value,
-
-            full_name: fullName.value,
-
-            document_type: documentType.value,
-
-            city: city.value,
-
-            address: address.value,
-
-            email: email.value,
-
-            phone: phone.value,
-        };
-
-        /*
-         * Actualizar fecha.
-         */
-
-        data.sale.date_sale = dateSale.value;
-
-        /*
-         * Actualizar pago.
-         */
-
-        data.sale.payment_form = typeSale.value;
-
-        data.sale.payment_method_id = paymentMethod.value;
-
-        data.sale.term = Number(dueDate.value || 0);
-
-        data.sale.observation = saleObservation.value;
-
-        /*
-         * Asegurarnos de que los
-         * totales estén actualizados.
-         */
-
-        calculateTotals();
-
-        /*
-         * Enviar productos.
-         */
-
-        updateProductsInput();
-
-        saveSale(data);
-    });
-}
-
-/* ==========================================================
-   INICIAR
-=========================================================== */
-
+// =========================
+// CARGAR CLIENTE AL INICIAR
+// =========================
 document.addEventListener("DOMContentLoaded", () => {
-    initialize();
+    clearSaleData();
+    loadCustomerDataEdit();
+
+    const elementmodalCustomer = document.getElementById("customerModal");
+    const elementmodalProduct = document.getElementById("productModal");
+
+    // Ahora 'bootstrap' ya estará definido con seguridad
+    const modalCustomer = new bootstrap.Modal(elementmodalCustomer);
+    const modalProduct = new bootstrap.Modal(elementmodalProduct);
+
+    const shortcuts = {
+        F2: () => modalCustomer.show(),
+        F3: () => modalProduct.show(),
+        F4: () => {
+            localStorage.clear();
+            location.reload();
+        },
+    };
+
+    window.addEventListener("keydown", (event) => {
+        if (shortcuts[event.key]) {
+            event.preventDefault();
+            shortcuts[event.key]();
+        }
+    });
 });
 
 // =========================
 // BUSCAR CLIENTES
 // =========================
-/* ==========================================================
-   BÚSQUEDA DE CLIENTES
-=========================================================== */
+searchCustomer.addEventListener("input", async function () {
+    const q = this.value.trim();
 
-const searchCustomer = document.getElementById("searchCustomer");
+    // Limpiar resultados anteriores
+    tbody.innerHTML = "";
 
-const tbodyCustomers = document.getElementById("tbodyCustomers");
+    if (q.length === 0 && q.length <= 2) return;
+    //if(q.length <= 2) return;
 
-if (searchCustomer) {
-    searchCustomer.addEventListener("input", async function () {
-        const q = this.value.trim();
+    try {
+        const response = await fetch(
+            `/customers/search/${encodeURIComponent(q)}`,
+        );
 
-        tbodyCustomers.innerHTML = "";
+        //console.log(response);
 
-        /*
-         * No buscar con menos de 2 caracteres.
-         */
-
-        if (q.length < 2) {
-            return;
+        if (!response.ok) {
+            throw new Error("Error en la búsqueda");
         }
 
-        try {
-            const response = await fetch(
-                `/customers/search/${encodeURIComponent(q)}`,
-            );
+        const result = await response.json();
 
-            if (!response.ok) {
-                throw new Error("Error buscando clientes");
-            }
+        const customers = result.data ?? [];
 
-            const result = await response.json();
+        // ==========================================
+        // ELIMINAR CLIENTES DUPLICADOS
+        // ==========================================
 
-            const customers = result.data ?? [];
+        const clientesUnicos = [
+            ...new Map(
+                customers.map((cliente) => [cliente.id, cliente]),
+            ).values(),
+        ];
 
-            /*
-             * Evitar duplicados.
-             */
+        //console.log("Clientes:", clientesUnicos);
 
-            const uniqueCustomers = Array.from(
-                new Map(
-                    customers.map((customer) => [customer.id, customer]),
-                ).values(),
-            );
+        // ==========================================
+        // MOSTRAR CLIENTES
+        // ==========================================
 
-            uniqueCustomers.forEach((cliente) => {
-                const row = document.createElement("tr");
+        clientesUnicos.forEach((cliente) => {
+            tbody.innerHTML += `
+                <tr>
 
-                row.innerHTML = `
+                    <td>${cliente.identification ?? ""}</td>
 
-                            <td>
-                                ${escapeHtml(cliente.identification ?? "")}
-                            </td>
+                    <td>${cliente.full_name ?? ""}</td>
 
-                            <td>
-                                ${escapeHtml(cliente.full_name ?? "")}
-                            </td>
+                    <td>${cliente.phone ?? ""}</td>
 
-                            <td>
-                                ${escapeHtml(cliente.phone ?? "")}
-                            </td>
+                    <td>${cliente.address ?? ""}</td>
 
-                            <td>
-                                ${escapeHtml(cliente.address ?? "")}
-                            </td>
+                    <td>${cliente.city?.name ?? ""}</td>
 
-                            <td>
-                                ${escapeHtml(cliente.city?.name ?? "")}
-                            </td>
+                    <td class="text-center">
 
-                            <td class="text-center">
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            onclick="addCustomer(
+                                ${cliente.id},
+                                '${cliente.full_name ?? ""}',
+                                '${cliente.identification ?? ""}',
+                                '${cliente.phone ?? ""}',
+                                '${cliente.address ?? ""}',
+                                '${cliente.email ?? ""}',
+                                '${cliente.city?.name ?? ""}'
+                            )">
 
-                                <button
-                                    type="button"
-                                    class="btn btn-primary btn-sm btn-select-customer"
-                                >
+                            <i class="bi bi-check-circle"></i>
 
-                                    <i class="bi bi-check-circle"></i>
+                        </button>
 
-                                </button>
+                    </td>
 
-                            </td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        console.error("Error buscando clientes:", error);
+    }
+});
 
-                        `;
+// =========================
+// AGREGAR CLIENTE
+// =========================
+window.addCustomer = function (
+    id,
+    name,
+    identification,
+    phone,
+    email,
+    address,
+    city,
+) {
+    const customer = {
+        id,
+        name,
+        identification,
+        phone,
+        address,
+        email,
+        city,
+    };
 
-                /*
-                 * Guardamos el cliente en
-                 * el botón para evitar onclick
-                 * con problemas de comillas.
-                 */
+    //Guardar LocalStorage
+    localStorage.setItem(STORAGE_KEY_EDIT, JSON.stringify(customer));
 
-                const button = row.querySelector(".btn-select-customer");
+    //Mostrar datos
+    customerInput(customer);
 
-                button.addEventListener("click", () => {
-                    selectCustomer(cliente);
-                });
+    //Cerrar modal
+    bootstrap.Modal.getOrCreateInstance(
+        document.getElementById("customerModal"),
+    ).hide();
+};
 
-                tbodyCustomers.appendChild(row);
-            });
-        } catch (error) {
-            console.error("Error buscando cliente:", error);
-        }
-    });
+// =========================
+// CARGAR CLIENTE
+// =========================
+function loadCustomerDataEdit() {
+    if (saleData) {
+        // console.log(saleData.customer);
+
+        const oldcustomer = {
+            id: saleData.customer.id,
+            name: saleData.customer.full_name,
+            identification: saleData.customer.identification,
+            phone: saleData.customer.phone,
+            address: saleData.customer.address,
+            email: saleData.customer.email,
+            city: saleData.customer.city.name,
+        };
+        localStorage.setItem(STORAGE_KEY_EDIT, JSON.stringify(oldcustomer));
+        const customerEdit = JSON.parse(localStorage.getItem(STORAGE_KEY_EDIT));
+        //console.log(customer);
+        if (!customerEdit) return;
+        //localStorage.clear();
+
+        customerInput(customerEdit);
+    } else {
+        const customerEdit = JSON.parse(localStorage.getItem(STORAGE_KEY_EDIT));
+        if (!customerEdit) return;
+
+        customerInput(customerEdit);
+    }
 }
 
-/* ==========================================================
-   SELECCIONAR CLIENTE
-=========================================================== */
+// =========================
+// LLENAR INPUTS
+// =========================
+function customerInput(customer) {
+    customerIdInput.value = customer.id;
+    customerNameInput.value = customer.name;
+    customerIdentificationInput.value = customer.identification;
+    customerPhoneInput.value = customer.phone;
+    customerAddressInput.value = customer.address;
+    customerEmailInput.value = customer.email;
+    customerCityInput.value = customer.city;
+}
 
-function selectCustomer(cliente) {
-    /*
-     * Campos de la vista
-     */
+/*=========================================================
+=            CONFIGURACIÓN DE PRODUCTO                   =
+=========================================================*/
 
-    customerId.value = cliente.id ?? "";
+const STORAGE_KEY_PRODUCTS_EDIT = "datosProductsEdit";
+const STORAGE_SALE_EDIT = "saleInformationEdit";
 
-    identification.value = cliente.identification ?? "";
+/*=========================================================
+=            ELEMENTOS DEL DOM                            =
+=========================================================*/
 
-    documentType.value =
-        cliente.identity_document?.name ?? cliente.identityDocument?.name ?? "";
+// Buscar productos
+const searchProduct = document.getElementById("searchProduct");
+const btnSearchProduct = document.getElementById("btnSearchProduct");
 
-    fullName.value = cliente.full_name ?? "";
+// Tablas
+const tbodyProducts = document.querySelector("#tableProducts tbody");
+const tbodySaleProducts = document.querySelector("#tableSaleProducts tbody");
 
-    city.value = cliente.city?.name ?? "";
+const products = document.getElementById("products");
 
-    address.value = cliente.address ?? "";
+// Información adicional
+const typeSale = document.getElementById("typeSale");
+const paymentMethod = document.getElementById("paymentMethod");
+const receivedAmount = document.getElementById("receivedAmount");
+const changeAmount = document.getElementById("changeAmount");
+const observation = document.getElementById("saleObservation");
 
-    email.value = cliente.email ?? "";
+// Botón limpiar
+const btnClearSale = document.getElementById("btnClear");
 
-    phone.value = cliente.phone ?? "";
+// Productos de la venta
+let datosProductsEdit = [];
 
-    /*
-     * Actualizar localStorage
-     */
+function editSale() {
+    //console.log("Detalles de la venta:", saleData.details);
 
-    const data = getSale();
+    // IMPORTANTE:
+    // Limpiar primero los productos anteriores
+    datosProductsEdit = [];
 
-    if (data) {
-        data.customer = {
-            id: cliente.id ?? "",
+    saleData.details.forEach((item) => {
+        const product = {
+            id: Number(item.product_id),
 
-            identification: cliente.identification ?? "",
+            code: item.product.code,
 
-            full_name: cliente.full_name ?? "",
+            name: item.product.name,
 
-            document_type:
-                cliente.identity_document?.name ??
-                cliente.identityDocument?.name ??
-                "",
+            stock: Number(item.product.stock),
 
-            city: cliente.city?.name ?? "",
+            // El costo también debe venir del detalle de la venta
+            cost: Number(item.cost),
 
-            address: cliente.address ?? "",
+            // IMPORTANTE:
+            // Usar el precio guardado en sale_details
+            // NO item.product.price
+            price: Number(item.price),
 
-            email: cliente.email ?? "",
+            // Impuesto de la venta
+            tax: Number(item.tax?.value?.value ?? item.tax?.value ?? 0),
 
-            phone: cliente.phone ?? "",
+            // Cantidad guardada en la factura
+            quantity: Number(item.quantity),
         };
 
-        saveSale(data);
+        datosProductsEdit.push(product);
+    });
+
+    // Guardar TODO el estado actual de la factura
+    saveProducts();
+
+    //console.log("Datos de productos cargados para edición:", datosProductsEdit);
+}
+/*=========================================================
+=            INICIALIZACIÓN                              =
+=========================================================*/
+
+document.addEventListener("DOMContentLoaded", initSale);
+
+function initSale() {
+    if (!saleData) {
+        return;
+    }
+    if (paymentMethod) {
+        paymentMethod.value = String(saleData.payment_method_id);
+    }
+    editSale();
+
+    loadSaleInformation();
+
+    registerEvents();
+
+    products.value = JSON.stringify(datosProductsEdit);
+}
+/*=========================================================
+=            REGISTRO DE EVENTOS                          =
+=========================================================*/
+
+function registerEvents() {
+    // Buscar mientras escribe
+    if (searchProduct) {
+        searchProduct.addEventListener("input", handleSearchInput);
     }
 
-    /*
-     * Cerrar modal
-     */
+    // Buscar con botón
+    if (btnSearchProduct) {
+        btnSearchProduct.addEventListener("click", handleSearchButton);
+    }
 
-    const modalElement = document.getElementById("customerModal");
+    // Forma de pago
+    if (paymentMethod) {
+        paymentMethod.addEventListener("change", updatePayment);
+    }
+
+    // Dinero recibido
+    if (receivedAmount) {
+        receivedAmount.addEventListener("input", calculateChange);
+    }
+
+    // Observaciones
+    if (observation) {
+        observation.addEventListener("input", saveSaleInformation);
+    }
+
+    // Limpiar venta
+    if (btnClearSale) {
+        btnClearSale.addEventListener("click", () => {
+            if (confirm("¿Desea limpiar la venta actual?")) {
+                clearSaleData();
+            }
+        });
+    }
+}
+
+/*=========================================================
+=            BÚSQUEDA DE PRODUCTOS                       =
+=========================================================*/
+
+function handleSearchInput() {
+    const search = searchProduct.value.trim();
+
+    if (search.length < 3) {
+        clearSearchTable();
+        return;
+    }
+
+    searchProducts(search);
+}
+
+function handleSearchButton() {
+    const search = searchProduct.value.trim();
+
+    if (!search) {
+        return;
+    }
+
+    searchProducts(search);
+}
+
+async function searchProducts(search) {
+    clearSearchTable();
+
+    try {
+        const response = await fetch(
+            `/product/search/${encodeURIComponent(search)}`,
+        );
+
+        if (!response.ok) {
+            throw new Error("Error al consultar productos.");
+        }
+
+        const products = await response.json();
+
+        renderSearchProducts(products);
+    } catch (error) {
+        console.error("Error buscando productos:", error);
+    }
+}
+
+/*=========================================================
+=            TABLA DE RESULTADOS                          =
+=========================================================*/
+
+function renderSearchProducts(products) {
+    let html = "";
+
+    if (!Array.isArray(products) || products.length === 0) {
+        html = `
+            <tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    No se encontraron productos.
+                </td>
+            </tr>
+        `;
+
+        tbodyProducts.innerHTML = html;
+
+        return;
+    }
+
+    products.forEach((product) => {
+        html += `
+            <tr>
+
+                <td>${product.code}</td>
+
+                <td>${product.name}</td>
+
+                <td class="text-center">
+                    ${product.stock}
+                </td>
+
+                <td class="text-end">
+                    $ ${Number(product.price).toLocaleString("es-CO")}
+                </td>
+
+                <td class="text-center">
+                    ${
+                        product.state
+                            ? '<span class="badge bg-success">Activo</span>'
+                            : '<span class="badge bg-danger">Inactivo</span>'
+                    }
+                </td>
+
+                <td class="text-center">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        onclick='selectProduct(${JSON.stringify(product)})'>
+
+                        <i class="bi bi-plus-circle"></i>
+
+                    </button>
+
+                </td>
+
+            </tr>
+        `;
+    });
+
+    tbodyProducts.innerHTML = html;
+}
+
+function clearSearchTable() {
+    if (tbodyProducts) {
+        tbodyProducts.innerHTML = "";
+    }
+}
+
+/*=========================================================
+=            LOCAL STORAGE - PRODUCTOS                    =
+=========================================================*/
+
+function loadProductData() {
+    try {
+        datosProductsEdit =
+            JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS_EDIT)) || [];
+    } catch (error) {
+        console.error("Error leyendo productos:", error);
+
+        datosProductsEdit = [];
+    }
+
+    renderSaleProducts();
+}
+
+function saveProducts() {
+    localStorage.setItem(
+        STORAGE_KEY_PRODUCTS_EDIT,
+        JSON.stringify(datosProductsEdit),
+    );
+
+    products.value = JSON.stringify(datosProductsEdit);
+    renderSaleProducts();
+}
+
+/*=========================================================
+=            SELECCIONAR PRODUCTO                         =
+=========================================================*/
+
+function selectProduct(product) {
+    addProductToSale(product);
+
+    const modalElement = document.getElementById("productModal");
 
     if (modalElement) {
         const modal = bootstrap.Modal.getInstance(modalElement);
@@ -1062,297 +506,782 @@ function selectCustomer(cliente) {
             modal.hide();
         }
     }
+
+    searchProduct.value = "";
+
+    clearSearchTable();
 }
 
-function closeProductModal() {
-    const modalElement = document.getElementById("productModal");
+/*=========================================================
+=            AGREGAR PRODUCTO A LA VENTA                  =
+=========================================================*/
 
-    if (!modalElement) {
+function addProductToSale(product) {
+    const productId = Number(product.id);
+
+    const index = datosProductsEdit.findIndex(
+        (item) => Number(item.id) === productId,
+    );
+
+    if (index >= 0) {
+        // El producto ya existe
+        const existingProduct = datosProductsEdit[index];
+
+        if (existingProduct.quantity < existingProduct.stock) {
+            existingProduct.quantity++;
+        } else {
+            alert("La cantidad supera el stock disponible.");
+        }
+    } else {
+        datosProductsEdit.push({
+            id: productId,
+
+            code: product.code,
+
+            name: product.name,
+
+            stock: Number(product.stock),
+
+            cost: Number(product.cost),
+
+            price: Number(product.price),
+
+            /*
+             * Puede venir:
+             *
+             * tax = 19
+             *
+             * o:
+             *
+             * tax = {
+             *     value: 19
+             * }
+             */
+            tax: Number(product.tax?.value ?? product.tax ?? 0),
+
+            quantity: 1,
+        });
+    }
+
+    saveProducts();
+}
+
+/*=========================================================
+=            TABLA DE LA VENTA                            =
+=========================================================*/
+
+function renderSaleProducts() {
+    let html = "";
+
+    datosProductsEdit.forEach((product, index) => {
+        const quantity = Number(product.quantity);
+        const price = Number(product.price);
+        //const discount = Number(product.discount);
+
+        const subtotal = quantity * price;
+
+        html += `
+            <tr>
+
+                <td class="text-center">
+                    ${index + 1}
+                </td>
+
+                <td>
+                    ${product.code}
+                </td>
+
+                <td>
+                    ${product.name}
+                </td>
+
+                <td width="80">
+
+                    <input
+                        type="number"
+                        class="form-control form-control-sm text-center"
+                        min="1"
+                        max="${product.stock}"
+                        value="${quantity}"
+                        onchange="changeQuantity(${product.id}, this.value)"
+                    >
+
+                </td>
+
+                <td width="120">
+
+                    <input
+                        type="number"
+                        class="form-control form-control-sm text-end"
+                        min="${product.cost}"
+
+                        value="${price}"
+                        onchange="changePrice(${product.id}, this.value)"
+                    >
+
+                </td>
+
+
+
+                <td class="text-center">
+                    ${product.tax}%
+                </td>
+
+                <td class="text-end fw-bold">
+
+                    $
+                    ${subtotal.toLocaleString("es-CO")}
+
+                </td>
+
+                <td class="text-center">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        onclick="removeProduct(${product.id})">
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </td>
+
+            </tr>
+        `;
+    });
+
+    tbodySaleProducts.innerHTML = html;
+
+    updateSummary();
+}
+
+/*=========================================================
+=            CAMBIAR CANTIDAD                             =
+=========================================================*/
+
+function changeQuantity(id, quantity) {
+    const product = datosProductsEdit.find((p) => Number(p.id) === Number(id));
+
+    if (!product) {
         return;
     }
 
-    const modal =
-        bootstrap.Modal.getInstance(modalElement) ||
-        new bootstrap.Modal(modalElement);
+    quantity = Number(quantity);
 
-    modal.hide();
+    if (quantity <= 0) {
+        quantity = 1;
+    }
+
+    if (quantity > product.stock) {
+        // alert("La cantidad supera el stock disponible.");
+        Swal.fire("La cantidad supera el stock disponible.");
+
+        quantity = product.stock;
+    }
+
+    product.quantity = quantity;
+
+    saveProducts();
 }
-/* ==========================================================
-   BÚSQUEDA DE PRODUCTOS
-=========================================================== */
 
-const searchProduct = document.getElementById("searchProduct");
+/*=========================================================
+=            CAMBIAR PRECIO                               =
+=========================================================*/
 
-const tbodyProducts = document.getElementById("tbodyProducts");
+function changePrice(id, price) {
+    const product = datosProductsEdit.find((p) => Number(p.id) === Number(id));
 
-if (searchProduct) {
-    searchProduct.addEventListener("input", async function () {
-        const q = this.value.trim();
+    if (!product) {
+        return;
+    }
 
-        tbodyProducts.innerHTML = "";
+    price = Number(price);
+
+    if (price < product.cost) {
+        //alert("El precio no puede ser menor al costo.");
+        Swal.fire("El precio no puede ser menor al costo.");
+
+        price = product.cost;
+    }
+
+    product.price = price;
+
+    saveProducts();
+}
+
+/*=========================================================
+=            CAMBIAR DESCUENTO                            =
+=========================================================*/
+
+function changeDiscount(id, discount) {
+    const product = datosProductsEdit.find((p) => Number(p.id) === Number(id));
+
+    if (!product) {
+        return;
+    }
+
+    discount = Number(discount);
+
+    if (discount < 0) {
+        discount = 0;
+    }
+
+    const subtotal = product.quantity * product.price;
+
+    if (discount > subtotal) {
+        alert("El descuento no puede ser mayor al subtotal.");
+
+        discount = subtotal;
+    }
+
+    product.discount = discount;
+
+    saveProducts();
+}
+
+/*=========================================================
+=            ELIMINAR PRODUCTO                            =
+=========================================================*/
+
+function removeProduct(id) {
+    if (!confirm("¿Eliminar este producto de la venta?")) {
+        return;
+    }
+
+    datosProductsEdit = datosProductsEdit.filter(
+        (product) => Number(product.id) !== Number(id),
+    );
+
+    saveProducts();
+}
+
+/*=========================================================
+=            RESUMEN DE LA FACTURA                        =
+=========================================================*/
+
+function updateSummary() {
+    let subtotal = 0;
+
+    let totalDiscount = 0;
+
+    let totalTax = 0;
+
+    let totalQuantity = 0;
+
+    let valtotal = 0;
+
+    datosProductsEdit.forEach((product) => {
+        const quantity = Number(product.quantity);
+
+        const price = Number(product.price);
+
+        // const discount = Number(product.discount);
+
+        const tax = Number(product.tax ?? 0);
 
         /*
-         * Mínimo 2 caracteres.
+         * El precio YA INCLUYE IVA.
          */
+        const lineSubtotal = quantity * price;
 
-        if (q.length < 2) {
+        /*
+         * Valor después del descuento.
+         */
+        const valor = lineSubtotal;
+
+        /*
+         * Extraer la base sin IVA.
+         *
+         * Ejemplo:
+         *
+         * $119.000 / 1.19 = $100.000
+         */
+        const base =
+            tax > 0 ? Math.round(valor / (1 + tax / 100)) : Math.round(valor);
+
+        /*
+         * IVA incluido.
+         */
+        const lineTax = tax > 0 ? Math.round(valor - base) : 0;
+
+        subtotal += base;
+
+        valtotal += lineSubtotal;
+
+        totalTax += lineTax;
+
+        totalQuantity += quantity;
+    });
+
+    /*
+     * IMPORTANTE:
+     *
+     * Como el precio ya incluye IVA,
+     * NO debemos sumar nuevamente el IVA.
+     */
+    //const total = subtotal - totalDiscount;
+
+    document.getElementById("subTotal").value = subtotal;
+
+    document.getElementById("subtotalInvoice").textContent =
+        "$ " + subtotal.toLocaleString("es-CO");
+
+    document.getElementById("tax").value = totalTax;
+    document.getElementById("iva19Invoice").textContent =
+        "$ " + totalTax.toLocaleString("es-CO");
+
+    document.getElementById("total").value = total;
+    document.getElementById("totalInvoice").textContent =
+        "$ " + valtotal.toLocaleString("es-CO");
+
+    document.getElementById("productsInvoice").textContent =
+        datosProductsEdit.length;
+
+    document.getElementById("quantityInvoice").textContent = totalQuantity;
+
+    /*
+     * Actualizamos forma de pago.
+     */
+    updatePayment();
+}
+
+/*=========================================================
+=            TOTAL DE LA FACTURA                          =
+=========================================================*/
+
+function getInvoiceTotal() {
+    let total = 0;
+
+    datosProductsEdit.forEach((product) => {
+        const quantity = Number(product.quantity);
+
+        const price = Number(product.price);
+
+        /*
+         * El precio ya incluye IVA.
+         */
+        const lineTotal = quantity * price;
+
+        total += lineTotal;
+    });
+
+    return total;
+}
+
+/*=========================================================
+=            INFORMACIÓN DE LA VENTA                      =
+=========================================================*/
+
+function loadSaleInformation() {
+    try {
+        const sale = JSON.parse(localStorage.getItem(STORAGE_SALE_EDIT));
+
+        /*
+        |--------------------------------------------------------------------------
+        | Método de pago
+        |--------------------------------------------------------------------------
+        |
+        | Primero usamos el método de la factura.
+        | Si existe en LocalStorage, usamos ese valor.
+        |
+        */
+
+        if (sale?.paymentMethod) {
+            paymentMethod.value = String(sale.paymentMethod);
+        } else if (saleData?.payment_method_id) {
+            paymentMethod.value = String(saleData.payment_method_id);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dinero recibido
+        |--------------------------------------------------------------------------
+        */
+
+        if (sale?.receivedAmount !== undefined) {
+            receivedAmount.value = sale.receivedAmount;
+        } else {
+            receivedAmount.value =
+                saleData?.payment_form === "counted" ? saleData.total : 0;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Observación
+        |--------------------------------------------------------------------------
+        */
+
+        if (sale?.observation !== undefined) {
+            observation.value = sale.observation;
+        } else {
+            observation.value = saleData?.observation ?? "";
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Actualizar forma de pago
+        |--------------------------------------------------------------------------
+        */
+
+        updatePayment();
+    } catch (error) {
+        console.error("Error cargando información de venta:", error);
+
+        /*
+        | Si falla LocalStorage,
+        | usamos directamente la información
+        | de la factura.
+        */
+
+        paymentMethod.value = String(saleData?.payment_method_id ?? "1");
+
+        receivedAmount.value = saleData?.total ?? 0;
+
+        observation.value = saleData?.observation ?? "";
+
+        updatePayment();
+    }
+}
+
+function saveSaleInformation() {
+    const sale = {
+        paymentMethod: paymentMethod.value,
+
+        receivedAmount: Number(receivedAmount.value),
+
+        observation: observation.value,
+    };
+
+    localStorage.setItem(STORAGE_SALE_EDIT, JSON.stringify(sale));
+}
+
+/*=========================================================
+=            FORMA DE PAGO                                =
+=========================================================*/
+
+function updatePayment() {
+    const total = getInvoiceTotal();
+
+    /*
+     * EFECTIVO
+     */
+    if (paymentMethod.value === "1") {
+        receivedAmount.disabled = false;
+
+        /*
+         * Si estaba en cero, dejamos que
+         * el usuario escriba libremente.
+         */
+        if (!receivedAmount.value) {
+            receivedAmount.value = 0;
+        }
+    } else {
+        /*
+         * OTROS MÉTODOS DE PAGO
+         */
+        receivedAmount.value = total;
+
+        receivedAmount.disabled = true;
+    }
+
+    /*
+     * Calcular cambio.
+     */
+    calculateChange(false);
+
+    /*
+     * Guardar solamente una vez.
+     */
+    saveSaleInformation();
+}
+
+/*=========================================================
+=            CALCULAR CAMBIO                              =
+=========================================================*/
+
+function calculateChange(save = true) {
+    const total = getInvoiceTotal();
+
+    const received = Number(receivedAmount.value) || 0;
+
+    let change = received - total;
+
+    if (change < 0) {
+        change = 0;
+    }
+
+    changeAmount.value = change.toLocaleString("es-CO");
+
+    /*
+     * Cuando se escribe dinero recibido,
+     * guardamos la información.
+     */
+    if (save) {
+        saveSaleInformation();
+    }
+}
+
+/*=========================================================
+=            LIMPIAR VENTA                                =
+=========================================================*/
+
+function clearSaleData() {
+    /*
+     * NO usar localStorage.clear()
+     *
+     * porque eliminaría todos los datos
+     * almacenados por tu aplicación.
+     */
+
+    localStorage.removeItem(STORAGE_KEY_PRODUCTS_EDIT);
+
+    localStorage.removeItem(STORAGE_SALE_EDIT);
+
+    localStorage.removeItem("datosCustomer");
+
+    datosProductsEdit = [];
+
+    tbodyProducts.innerHTML = "";
+
+    tbodySaleProducts.innerHTML = "";
+
+    searchProduct.value = "";
+
+    paymentMethod.value = "cash";
+
+    receivedAmount.value = 0;
+
+    receivedAmount.disabled = false;
+
+    changeAmount.value = 0;
+
+    observation.value = "";
+
+    /*
+     * Actualizar resumen.
+     */
+    updateSummary();
+}
+
+/*=========================================================
+=            UTILIDADES                                   =
+=========================================================*/
+
+function formatCurrency(value) {
+    return "$ " + Number(value).toLocaleString("es-CO");
+}
+
+function round(value) {
+    return Number(Number(value).toFixed(2));
+}
+
+const btnSaleEdit = document.getElementById("btnSaleEdit");
+
+if (btnSaleEdit) {
+    btnSaleEdit.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        if (datosProductsEdit.length === 0) {
+            Swal.fire("Debe agregar al menos un producto a la venta.");
             return;
         }
 
+        const total = getInvoiceTotal();
+
+        if (total <= 0) {
+            Swal.fire("El total de la venta debe ser mayor a cero.");
+            return;
+        }
+
+        this.closest("form").submit();
+    });
+}
+
+const btnSubmitSave = document.getElementById("btnSaveSale");
+const formSale = document.querySelector("#formSaleUpdate");
+
+if (btnSubmitSave && formSale) {
+    btnSubmitSave.addEventListener("click", async function (event) {
+        event.preventDefault();
+
+        const productsInput = document.getElementById("products");
+
+        const customer = document.getElementById("customer_id");
+
+        /*
+        |--------------------------------------------------------------------------
+        | Productos actuales
+        |--------------------------------------------------------------------------
+        */
+
+        productsInput.value = JSON.stringify(datosProductsEdit);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validar productos
+        |--------------------------------------------------------------------------
+        */
+
+        if (!datosProductsEdit.length) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "No puedes actualizar la venta sin productos",
+            });
+
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validar cliente
+        |--------------------------------------------------------------------------
+        */
+
+        if (!customer.value) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "No puedes actualizar la venta sin cliente",
+            });
+
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | FormData
+        |--------------------------------------------------------------------------
+        */
+
+        const formData = new FormData(formSale);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Productos
+        |--------------------------------------------------------------------------
+        */
+
+        formData.set("products", JSON.stringify(datosProductsEdit));
+
+        /*
+        |--------------------------------------------------------------------------
+        | Forma de pago
+        |--------------------------------------------------------------------------
+        */
+
+        formData.set("payment_method_id", paymentMethod.value);
+
+        /*
+        |--------------------------------------------------------------------------
+        | PUT Laravel
+        |--------------------------------------------------------------------------
+        */
+
+        formData.set("_method", "PUT");
+
+        /*
+        |--------------------------------------------------------------------------
+        | CSRF
+        |--------------------------------------------------------------------------
+        */
+
+        const token = document.querySelector('input[name="_token"]').value;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Debug
+        |--------------------------------------------------------------------------
+        */
+
+        console.log("URL:", formSale.action);
+
+        console.log("Venta:", saleData.id);
+
+        console.log("Productos:", datosProductsEdit);
+
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX
+        |--------------------------------------------------------------------------
+        */
+
         try {
-            const response = await fetch(
-                `/products/search/${encodeURIComponent(q)}`,
-            );
+            const response = await fetch(formSale.action, {
+                method: "POST",
 
-            if (!response.ok) {
-                throw new Error("Error buscando productos");
-            }
+                headers: {
+                    "X-CSRF-TOKEN": token,
+                    Accept: "application/json",
+                },
 
-            const result = await response.json();
+                body: formData,
+            });
 
-            /*
-             * Dependiendo de tu controlador,
-             * puede venir:
-             *
-             * { data: [...] }
-             *
-             * o directamente [...]
-             */
-
-            const products = Array.isArray(result)
-                ? result
-                : (result.data ?? []);
+            const data = await response.json();
 
             /*
-             * Eliminar productos duplicados
-             */
+            |--------------------------------------------------------------------------
+            | Éxito
+            |--------------------------------------------------------------------------
+            */
 
-            const uniqueProducts = Array.from(
-                new Map(
-                    products.map((product) => [product.id, product]),
-                ).values(),
-            );
+            if (response.ok) {
+                localStorage.removeItem(STORAGE_KEY_PRODUCTS_EDIT);
 
-            uniqueProducts.forEach((product) => {
-                const row = document.createElement("tr");
+                localStorage.removeItem(STORAGE_SALE_EDIT);
 
-                row.innerHTML = `
+                await Swal.fire({
+                    position: "top-end",
 
-                            <td>
-                                ${escapeHtml(product.code ?? "")}
-                            </td>
+                    icon: "success",
 
-                            <td>
-                                ${escapeHtml(product.name ?? "")}
-                            </td>
+                    title: "Venta actualizada con éxito",
 
-                            <td>
-                                ${money(product.price ?? 0)}
-                            </td>
+                    showConfirmButton: false,
 
-                            <td>
-                                ${product.stock ?? product.amount ?? 0}
-                            </td>
-                           <td class="text-center">
-                                ${
-                                    product.state
-                                        ? '<span class="badge bg-success">Activo</span>'
-                                        : '<span class="badge bg-danger">Inactivo</span>'
-                                }
-                            </td>
-                            <td class="text-center">
-
-                                <button
-                                    type="button"
-                                    class="btn btn-success btn-sm btn-select-product"
-                                >
-
-                                    <i class="bi bi-plus-circle"></i>
-
-                                </button>
-
-                            </td>
-
-                        `;
-
-                const button = row.querySelector(".btn-select-product");
-
-                button.addEventListener("click", function () {
-                    addProductToSale(product);
+                    timer: 1500,
                 });
 
-                tbodyProducts.appendChild(row);
+                location.reload();
+
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Error
+            |--------------------------------------------------------------------------
+            */
+
+            let errorText = data.message || "Error desconocido";
+
+            if (data.errors) {
+                const firstErrorKey = Object.keys(data.errors)[0];
+
+                errorText = data.errors[firstErrorKey][0];
+            }
+
+            Swal.fire({
+                icon: "error",
+
+                title: "Error",
+
+                text: errorText,
             });
+
+            console.error("Errores Laravel:", data.errors);
         } catch (error) {
-            console.error("Error buscando producto:", error);
+            console.error("Error AJAX:", error);
+
+            Swal.fire({
+                icon: "error",
+
+                title: "Error",
+
+                text: "No se pudo conectar con el servidor.",
+            });
         }
-    });
-}
-
-/* ==========================================================
-   AGREGAR PRODUCTO A LA FACTURA
-=========================================================== */
-
-function addProductToSale(product) {
-    const data = getSale();
-
-    if (!data) {
-        return;
-    }
-
-    if (!Array.isArray(data.products)) {
-        data.products = [];
-    }
-
-    /*
-     * Buscar si el producto ya existe
-     */
-    const existingProduct = data.products.find(
-        (item) => Number(item.product_id ?? item.id) === Number(product.id),
-    );
-
-    /*
-     * =====================================================
-     * PRODUCTO YA EXISTE
-     * =====================================================
-     */
-
-    if (existingProduct) {
-        /*
-         * Aumentar cantidad
-         */
-        existingProduct.quantity = Number(existingProduct.quantity ?? 0) + 1;
-
-        /*
-         * Mantener precio
-         */
-        existingProduct.price = Number(
-            existingProduct.price ?? product.price ?? 0,
-        );
-
-        /*
-         * Mantener impuesto
-         */
-        existingProduct.tax_id =
-            existingProduct.tax_id ?? product.tax_id ?? null;
-
-        existingProduct.tax_rate = Number(
-            existingProduct.tax_rate ?? product.tax_rate ?? 0,
-        );
-
-        /*
-         * ================================================
-         * RECALCULAR SUBTOTAL
-         * ================================================
-         */
-
-        const value = existingProduct.quantity * existingProduct.price;
-
-        existingProduct.subtotal = Math.round(value);
-
-        /*
-         * ================================================
-         * RECALCULAR IVA INCLUIDO
-         * ================================================
-         */
-
-        const taxRate = Number(existingProduct.tax_rate ?? 0);
-
-        if (taxRate > 0) {
-            const base = value / (1 + taxRate / 100);
-
-            existingProduct.tax = Math.round(value - base);
-        } else {
-            existingProduct.tax = 0;
-        }
-
-        /*
-         * Guardar
-         */
-        saveSale(data);
-
-        /*
-         * Actualizar tabla
-         */
-        loadProducts();
-
-        /*
-         * Actualizar totales
-         */
-        calculateTotals();
-
-        closeProductModal();
-
-        return;
-    }
-
-    /*
-     * =====================================================
-     * PRODUCTO NUEVO
-     * =====================================================
-     */
-
-    const quantity = 1;
-
-    const price = Number(product.price ?? 0);
-
-    const taxRate = Number(product.tax_rate ?? product.tax?.value ?? 0);
-
-    const value = quantity * price;
-
-    let tax = 0;
-
-    if (taxRate > 0) {
-        const base = value / (1 + taxRate / 100);
-
-        tax = Math.round(value - base);
-    }
-
-    data.products.push({
-        id: product.id,
-
-        product_id: product.id,
-
-        code: product.code ?? "",
-
-        name: product.name ?? "",
-
-        quantity: quantity,
-
-        price: price,
-
-        cost: product.cost,
-
-        tax_id: product.tax_id ?? null,
-
-        tax_rate: taxRate,
-
-        tax: tax,
-
-        subtotal: Math.round(value),
-    });
-
-    /*
-     * Guardar
-     */
-    saveSale(data);
-
-    /*
-     * Actualizar
-     */
-    loadProducts();
-
-    calculateTotals();
-}
-/* ==========================================================
-   BOTÓN VOLVER
-=========================================================== */
-
-const btnBackSale = document.getElementById("btnBackSale");
-
-if (btnBackSale) {
-    btnBackSale.addEventListener("click", function () {
-        localStorage.removeItem("editSale");
-        localStorage.removeItem("datosProducts");
     });
 }

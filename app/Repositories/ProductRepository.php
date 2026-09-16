@@ -23,34 +23,33 @@ class ProductRepository implements ProductRepositoryInterface
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('code', 'like', '%' . $search . '%');
+                        ->orWhere('code', 'like', '%' . $search . '%');
                 });
             })
             ->orderBy('id', 'desc')
             ->paginate($perPage); // Ahora respeta la paginación dinámica configurada
     }
 
-    /**
-     * Busca productos activos orientados al módulo de ventas.
-     * Corregido para Blade: Retorna una Colección limpia para que puedas iterarla 
-     * en un datalist, un select HTML dinámico o enviarlo a un componente.
-     */
+
     public function searchProductSale(?string $search = null): Collection
     {
+        $escapedSearch = $search ? addcslashes($search, '%_') : null;
+
         return Product::query()
             ->with([
-                'tax', // Asegúrate de que la relación se llame 'tax' o 'taxes' en tu modelo
-                'category'
+                'category',
+                'tax',
             ])
             ->where('state', 1)
-            ->when($search, function ($query) use ($search) {
+            ->when($escapedSearch, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%")
-                      ->orWhere('code', 'LIKE', "%{$search}%");
+                    $q->where('name', 'like', "{$search}%")
+                        ->orWhere('code', 'like', "{$search}%");
                 });
             })
+            ->orderByDesc('id')
             ->limit(10)
-            ->get(); // Retorna Colección de Eloquent pura
+            ->get();
     }
 
     /**
@@ -115,7 +114,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function getNextCode(): string
     {
         $parameter = Parameter::first();
-        
+
         if ($parameter && $parameter->automatic_product) {
             $lastProduct = Product::withoutGlobalScopes()
                 ->latest('id')
@@ -140,5 +139,18 @@ class ProductRepository implements ProductRepositoryInterface
     public function countProduct(): int
     {
         return Product::count();
+    }
+
+    public function findById(int $id)
+    {
+        return Product::find($id);
+    }
+
+    public function updateStock(int $productId, int $stock)
+    {
+        return Product::where('id', $productId)
+            ->update([
+                'stock' => $stock,
+            ]);
     }
 }

@@ -3,9 +3,9 @@
 @section('title', 'Factura Electrónica')
 
 @section('content')
-    <form id="formSale" method="POST" action="{{route('sale.update', $sale)}}">
+    <form id="formSaleUpdate" method="POST" action="{{route('sale.update', $sale->id)}}">
         <div class="container-fluid py-4 mt-4">
-            
+
 
             @csrf
             @method('put')
@@ -43,7 +43,8 @@
     </script>
 @endsection
 
-@section('script')    
+@section('script')
     <script src="{{ asset('js/saleEdit.js') }}"></script>
+
 
 @endsection

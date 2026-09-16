@@ -29,7 +29,7 @@ class Customer extends Model
         'state',
     ];
 
-    public function sale(): HasMany
+    public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
     }

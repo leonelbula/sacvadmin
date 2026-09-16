@@ -35,7 +35,7 @@
 
 
 
-        <!-- Ventas -->
+        <!-- ventas -->
 
         <div class="menu-group">
 
@@ -62,7 +62,7 @@
                 </a>
 
 
-                <a href="#">
+                <a href="{{ route('salereturn.index') }}">
                     <i class="bi bi-arrow-return-left"></i>
                     Devoluciones
                 </a>
@@ -78,6 +78,7 @@
 
 
         </div>
+
 
 
 
@@ -115,7 +116,9 @@
                 <a href="{{ route('category.index') }}">
                     Categorías
                 </a>
-
+                <a href="{{ route('inventory.adjustments.index') }}">
+                    Ajustes Inventario
+                </a>
 
                 <a href="{{ route('kardex.index') }}">
                     Kardex
@@ -141,7 +144,7 @@
 
 
 
-        <a href="#" class="menu-item">
+        <a href="{{route('supplier.index')}}" class="menu-item">
 
             <i class="bi bi-truck"></i>
 
@@ -157,7 +160,7 @@
             <button class="menu-item menu-toggle-item">
 
 
-               <i class="bi bi-cash-stack me-2"></i>
+                <i class="bi bi-cash-stack me-2"></i>
 
 
                 <span>
@@ -196,7 +199,7 @@
 
 
 
-        <a href="{{route('reports.index')}}" class="menu-item">
+        <a href="{{ route('reports.index') }}" class="menu-item">
 
             <i class="bi bi-bar-chart"></i>
 

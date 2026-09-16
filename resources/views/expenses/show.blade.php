@@ -198,7 +198,7 @@
                                              text-primary
                                              rounded-pill px-3 py-2">
 
-                                        {{ $expense->typeExpense->name }}
+                                        {{ $expense->typeExpense->description }}
 
                                     </span>
                                 @else
@@ -474,7 +474,7 @@
 
                             <span class="fw-semibold text-end">
 
-                                {{ $expense->typeExpense->name ?? '-' }}
+                                {{ $expense->typeExpense->description ?? '-' }}
 
                             </span>
 

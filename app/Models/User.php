@@ -47,12 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-     public function pos(): HasMany
+    public function pos(): HasMany
     {
         return $this->hasMany(Pos::class);
     }
-    public function company()
+    public function inventoryAdjustments(): HasMany
     {
-        return $this->belongsTo(Company::class);
+        return $this->hasMany(InventoryAdjustment::class);
     }
 }

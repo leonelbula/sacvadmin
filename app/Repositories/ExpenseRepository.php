@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\ExpenseRepositoryInterface;
 use App\Models\Expense;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ExpenseRepository implements ExpenseRepositoryInterface
@@ -126,5 +127,26 @@ class ExpenseRepository implements ExpenseRepositoryInterface
                 $query->whereDate('expense_date', '<=', $dateTo);
             })
             ->count();
+    }
+
+
+    public function totalExpensesByPeriod(
+        int $userId,
+        string $startDate,
+        string $startTime,
+        string $endDate,
+        string $endTime
+    ): int {
+
+        $startDateTime = "{$startDate} {$startTime}";
+        $endDateTime   = "{$endDate} {$endTime}";
+
+        return Expense::query()
+            ->where('user_id', $userId)
+            ->whereBetween(
+                DB::raw('TIMESTAMP(date, hour)'),
+                [$startDateTime, $endDateTime]
+            )
+            ->sum('total');
     }
 }

@@ -268,7 +268,7 @@
                                         @foreach ($typeExpenses ?? [] as $typeExpense)
                                             <option value="{{ $typeExpense->id }}" @selected(old('type_expense_id', $expense->type_expense_id) == $typeExpense->id)>
 
-                                                {{ $typeExpense->name }}
+                                                {{ $typeExpense->description }}
 
                                             </option>
                                         @endforeach
