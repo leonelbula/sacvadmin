@@ -56,7 +56,7 @@ searchCustomer.addEventListener("input", async function () {
     // Limpiar resultados anteriores
     tbody.innerHTML = "";
 
-    if (q.length === 0 && q.length <= 2) return;
+    if (q.length === 0 || q.length <= 2) return;
     //if(q.length <= 2) return;
 
     try {

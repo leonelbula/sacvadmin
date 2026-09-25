@@ -1,9 +1,6 @@
-/*=========================================================
-=            CONFIGURACIÓN                                =
-=========================================================*/
 
-const STORAGE_KEY_PRODUCTS = "datosProducts";
-const STORAGE_SHOPPING = "saleInformation";
+const STORAGE_KEY_PRODUCTS_SHOPPING = "datosProducts";
+const STORAGE_SHOPPING_INFO = "shoppingInformation";
 
 /*=========================================================
 =            ELEMENTOS DEL DOM                            =
@@ -15,54 +12,24 @@ const btnSearchProduct = document.getElementById("btnSearchProduct");
 
 // Tablas
 const tbodyProducts = document.querySelector("#tableProducts tbody");
-const tbodySaleProducts = document.querySelector("#tableSaleProducts tbody");
+const tbodyShoppingProducts = document.querySelector(
+    "#tableShoppingProducts tbody",
+);
 
 const products = document.getElementById("products");
 
 // Información adicional
-const typeSale = document.getElementById("typeSale");
+const typeShopping = document.getElementById("typeShopping");
 const paymentMethod = document.getElementById("paymentMethod");
 const receivedAmount = document.getElementById("receivedAmount");
 const changeAmount = document.getElementById("changeAmount");
 const observation = document.getElementById("saleObservation");
 
 // Botón limpiar
-const btnClearSale = document.getElementById("btnClear");
+const btnClearShopping = document.getElementById("btn-clear-supplier");
 
 // Productos de la venta
 let datosProducts = [];
-
-function editSale() {
-    //console.log(saleData.details[0]['product']);
-    console.log(saleData.details);
-    let data = saleData.details;
-    data.forEach((item) => {
-        const id = item.product_id;
-        const code = item.product.code;
-        const name = item.product.name;
-        const quantity = item.quantity;
-        const cost = item.cost;
-        const price = item.price;
-        const subtotal = item.subtotal;
-
-        const taxId = item.tax_id;
-        const taxCode = item.tax?.code;
-        const taxName = item.tax?.name;
-        const taxValue = item.tax?.value;
-
-        console.log({
-            id,
-            code,
-            name,
-            quantity,
-            stock,
-            cost,
-            price,
-            subtotal,
-            taxValue,
-        });
-    });
-}
 
 /*=========================================================
 =            INICIALIZACIÓN                              =
@@ -75,10 +42,6 @@ function initShopping() {
     loadShoppingInformation();
     registerEvents();
     products.value = JSON.stringify(datosProducts);
-
-    if (saleData) {
-        editSale();
-    }
 }
 
 /*=========================================================
@@ -112,10 +75,10 @@ function registerEvents() {
     }
 
     // Limpiar venta
-    if (btnClearSale) {
-        btnClearSale.addEventListener("click", () => {
-            if (confirm("¿Desea limpiar la venta actual?")) {
-                clearSaleData();
+    if (btnClearShopping) {
+        btnClearShopping.addEventListener("click", () => {
+            if (confirm("¿Desea borrar los datos agregados?")) {
+                clearShoppingData();
             }
         });
     }
@@ -200,7 +163,7 @@ function renderSearchProducts(products) {
                 </td>
 
                 <td class="text-end">
-                    $ ${Number(product.price).toLocaleString("es-CO")}
+                    $ ${Number(product.cost).toLocaleString("es-CO")}
                 </td>
 
                 <td class="text-center">
@@ -244,7 +207,8 @@ function clearSearchTable() {
 function loadProductData() {
     try {
         datosProducts =
-            JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS)) || [];
+            JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS_SHOPPING)) ||
+            [];
     } catch (error) {
         console.error("Error leyendo productos:", error);
 
@@ -255,7 +219,10 @@ function loadProductData() {
 }
 
 function saveProducts() {
-    localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(datosProducts));
+    localStorage.setItem(
+        STORAGE_KEY_PRODUCTS_SHOPPING,
+        JSON.stringify(datosProducts),
+    );
 
     products.value = JSON.stringify(datosProducts);
     renderShoppingProducts();
@@ -297,12 +264,6 @@ function addProductToSale(product) {
     if (index >= 0) {
         // El producto ya existe
         const existingProduct = datosProducts[index];
-
-        if (existingProduct.quantity < existingProduct.stock) {
-            existingProduct.quantity++;
-        } else {
-            alert("La cantidad supera el stock disponible.");
-        }
     } else {
         datosProducts.push({
             id: productId,
@@ -346,10 +307,10 @@ function renderShoppingProducts() {
 
     datosProducts.forEach((product, index) => {
         const quantity = Number(product.quantity);
-        const price = Number(product.price);
+        const cost = Number(product.cost);
         //const discount = Number(product.discount);
 
-        const subtotal = quantity * price;
+        const subtotal = quantity * cost;
 
         html += `
             <tr>
@@ -384,9 +345,9 @@ function renderShoppingProducts() {
                     <input
                         type="number"
                         class="form-control form-control-sm text-end"
-                        min="${product.cost}"
+                        min="0"
                         step="100"
-                        value="${price}"
+                        value="${cost}"
                         onchange="changePrice(${product.id}, this.value)"
                     >
 
@@ -422,7 +383,7 @@ function renderShoppingProducts() {
         `;
     });
 
-    tbodySaleProducts.innerHTML = html;
+    tbodyShoppingProducts.innerHTML = html;
 
     updateSummary();
 }
@@ -444,13 +405,6 @@ function changeQuantity(id, quantity) {
         quantity = 1;
     }
 
-    if (quantity > product.stock) {
-        // alert("La cantidad supera el stock disponible.");
-        Swal.fire("La cantidad supera el stock disponible.");
-
-        quantity = product.stock;
-    }
-
     product.quantity = quantity;
 
     saveProducts();
@@ -460,23 +414,23 @@ function changeQuantity(id, quantity) {
 =            CAMBIAR PRECIO                               =
 =========================================================*/
 
-function changePrice(id, price) {
+function changePrice(id, cost) {
     const product = datosProducts.find((p) => Number(p.id) === Number(id));
 
     if (!product) {
         return;
     }
 
-    price = Number(price);
+    cost = Number(cost);
 
-    if (price < product.cost) {
+    if (cost < 0) {
         //alert("El precio no puede ser menor al costo.");
-        Swal.fire("El precio no puede ser menor al costo.");
+        Swal.fire("El precio no puede ser menor al cero.");
 
-        price = product.cost;
+        cost = product.cost;
     }
 
-    product.price = price;
+    product.cost = cost;
 
     saveProducts();
 }
@@ -498,7 +452,7 @@ function changeDiscount(id, discount) {
         discount = 0;
     }
 
-    const subtotal = product.quantity * product.price;
+    const subtotal = product.quantity * product.cost;
 
     if (discount > subtotal) {
         alert("El descuento no puede ser mayor al subtotal.");
@@ -528,7 +482,7 @@ function removeProduct(id) {
 }
 
 /*=========================================================
-=            RESUMEN DE LA FACTURA                        =
+=            RESUMEN DE LA FACTURA                  =
 =========================================================*/
 
 function updateSummary() {
@@ -545,7 +499,7 @@ function updateSummary() {
     datosProducts.forEach((product) => {
         const quantity = Number(product.quantity);
 
-        const price = Number(product.price);
+        const cost = Number(product.cost);
 
         // const discount = Number(product.discount);
 
@@ -554,7 +508,7 @@ function updateSummary() {
         /*
          * El precio YA INCLUYE IVA.
          */
-        const lineSubtotal = quantity * price;
+        const lineSubtotal = quantity * cost;
 
         /*
          * Valor después del descuento.
@@ -627,12 +581,12 @@ function getInvoiceTotal() {
     datosProducts.forEach((product) => {
         const quantity = Number(product.quantity);
 
-        const price = Number(product.price);
+        const cost = Number(product.cost);
 
         /*
          * El precio ya incluye IVA.
          */
-        const lineTotal = quantity * price;
+        const lineTotal = quantity * cost;
 
         total += lineTotal;
     });
@@ -646,50 +600,35 @@ function getInvoiceTotal() {
 
 function loadShoppingInformation() {
     try {
-        const sale = JSON.parse(localStorage.getItem(STORAGE_SHOPPING));
+        const shopping = JSON.parse(localStorage.getItem(STORAGE_SHOPPING_INFO));
 
-        if (!sale) {
+        if (!shopping) {
             /*
              * Por defecto:
              * efectivo
              */
-            paymentMethod.value = "1";
-
-            receivedAmount.value = 0;
 
             updatePayment();
 
             return;
         }
 
-        paymentMethod.value = sale.paymentMethod ?? "1";
-
-        receivedAmount.value = sale.receivedAmount ?? 0;
-
-        observation.value = sale.observation ?? "";
+        observation.value = shopping.observation ?? "";
 
         updatePayment();
     } catch (error) {
         console.error("Error cargando información de venta:", error);
-
-        paymentMethod.value = "cash";
-
-        receivedAmount.value = 0;
 
         updatePayment();
     }
 }
 
 function saveShoppingInformation() {
-    const sale = {
-        paymentMethod: paymentMethod.value,
-
-        receivedAmount: Number(receivedAmount.value),
-
+    const shopping = {
         observation: observation.value,
     };
 
-    localStorage.setItem(STORAGE_SHOPPING, JSON.stringify(sale));
+    localStorage.setItem(STORAGE_SHOPPING_INFO, JSON.stringify(shopping));
 }
 
 /*=========================================================
@@ -698,28 +637,6 @@ function saveShoppingInformation() {
 
 function updatePayment() {
     const total = getInvoiceTotal();
-
-    /*
-     * EFECTIVO
-     */
-    if (paymentMethod.value === "1") {
-        receivedAmount.disabled = false;
-
-        /*
-         * Si estaba en cero, dejamos que
-         * el usuario escriba libremente.
-         */
-        if (!receivedAmount.value) {
-            receivedAmount.value = 0;
-        }
-    } else {
-        /*
-         * OTROS MÉTODOS DE PAGO
-         */
-        receivedAmount.value = total;
-
-        receivedAmount.disabled = true;
-    }
 
     /*
      * Calcular cambio.
@@ -739,16 +656,6 @@ function updatePayment() {
 function calculateChange(save = true) {
     const total = getInvoiceTotal();
 
-    const received = Number(receivedAmount.value) || 0;
-
-    let change = received - total;
-
-    if (change < 0) {
-        change = 0;
-    }
-
-    changeAmount.value = change.toLocaleString("es-CO");
-
     /*
      * Cuando se escribe dinero recibido,
      * guardamos la información.
@@ -762,7 +669,7 @@ function calculateChange(save = true) {
 =            LIMPIAR VENTA                                =
 =========================================================*/
 
-function clearSaleData() {
+function clearShoppingData() {
     /*
      * NO usar localStorage.clear()
      *
@@ -770,17 +677,19 @@ function clearSaleData() {
      * almacenados por tu aplicación.
      */
 
-    localStorage.removeItem(STORAGE_KEY_PRODUCTS);
+    localStorage.removeItem(STORAGE_KEY_PRODUCTS_SHOPPING);
 
-    localStorage.removeItem(STORAGE_SHOPPING);
+    localStorage.removeItem(STORAGE_KEY_SUPPLIER);
 
-    localStorage.removeItem("datosCustomer");
+    localStorage.removeItem("datosSupplier");
+
+    localStorage.clear();
 
     datosProducts = [];
 
     tbodyProducts.innerHTML = "";
 
-    tbodySaleProducts.innerHTML = "";
+    tbodyShoppingProducts.innerHTML = "";
 
     searchProduct.value = "";
 

@@ -2,53 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\SupplierDTO;
 use App\Http\Requests\SupplierRequest;
-use App\Models\Company;
 use App\Models\Supplier;
+use App\Services\SupplierService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 class SupplierController extends Controller
 {
+    public function __construct(
+        protected SupplierService $supplier_service
+    ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $title = "Proveedores";
+        $search = $request->input('search');
+        if ($search) {
+            $suppliers = $this->supplier_service->search($search);
+        } else {
+            $suppliers = $this->supplier_service->All();
+        }
 
-        $suppliers = Supplier::paginate(5);
-        return view('supplier.index', compact('title', 'suppliers'));
+
+        return view('supplier.index', compact('suppliers'));
     }
-    public function search(Request $request)
+    public function search(string $query)
     {
-        $query = $request['q'];
 
-        $suppliers =  Supplier::where('company_id', Auth::user()->company_id)
-            ->where('full_name', 'LIKE', "%{$query}%")
-            ->orWhere('identification_card', 'LIKE', "%{$query}%")
-            ->limit(5)
-            ->get();
+        $suppliers =  $this->supplier_service->search($query);
 
         return response()->json($suppliers);
     }
     public function create()
     {
-        $title = "Nuevo proveedor";
-        return view('supplier.create', compact('title'));
+        return view('supplier.create');
     }
 
     public function store(Request $request)
     {
         $data = $request->all();
-        if ($data['description'] == '') {
-            $data['description']  = 'N/N';
-        }
 
-        if ($data['credit_amount'] == '') {
-            $data['credit_amount'] = 0;
+        $data = SupplierDTO::fromRequest($request);
+        $supplier = $this->supplier_service->create($data);
+        if ($supplier) {
+            toastr()->success('Proveedor registro corectamente');
+            return back();
         }
-    
-        Supplier::create($data);
-        toastr()->success('Registro guardado');
+        toastr()->error('Registro no guardado');
         return back();
     }
 
@@ -57,48 +58,35 @@ class SupplierController extends Controller
         return view('supplier.show', compact('supplier'));
     }
 
-    public function edit(Supplier $supplier)
+    public function edit(int $id)
     {
-        $title = "Editar Cliente";
-        return view('supplier.edit', compact('supplier', 'title'));
+        $supplier = $this->supplier_service->find($id);
+        return view('supplier.edit', compact('supplier'));
     }
 
-    public function update(Request $request, Supplier $supplier)
+    public function update(Request $request, int $id)
     {
-        $request->validate([
+
+         $request->validate([
             'full_name' => 'required|string',
-            'identification_card' => 'required',
+            'identification' => 'required',
             'address' => 'required|string',
-            'Departament' => 'required|string',
+            'department' => 'required|string',
             'city' => 'required|string',
             'phone' => 'required',
             'email' => 'required|email',
         ]);
 
-        if ($request->description == '') {
-            $description = 'N/N';
-        } else {
-            $description = $request->description;
+
+
+        $data = SupplierDTO::fromRequest($request);
+
+        $supplier = $this->supplier_service->update($id, $data);
+        if ($supplier) {
+            toastr()->success('Proveedor Actulizado corectamente');
+            return back();
         }
 
-        if ($request->credit_amount == '') {
-            $credit_amount = 0;
-        } else {
-            $credit_amount = $request->credit_amount;
-        }
-
-        $supplier->full_name = $request->full_name;
-        $supplier->identification_card = $request->identification_card;
-        $supplier->address = $request->address;
-        $supplier->Departament = $request->Departament;
-        $supplier->city = $request->city;
-        $supplier->phone = $request->phone;
-        $supplier->email = $request->email;
-        $supplier->credit_amount = $credit_amount;
-        $supplier->description = $description;
-
-
-        $supplier->save();
         toastr()->success('Registro Guardado');
         return back();
     }

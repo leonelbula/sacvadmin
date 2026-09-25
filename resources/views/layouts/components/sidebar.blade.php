@@ -144,7 +144,7 @@
 
 
 
-        <a href="{{route('supplier.index')}}" class="menu-item">
+        <a href="{{ route('supplier.index') }}" class="menu-item">
 
             <i class="bi bi-truck"></i>
 
@@ -153,6 +153,35 @@
             </span>
 
         </a>
+        <div class="menu-group">
+
+
+            <button class="menu-item menu-toggle-item">
+
+
+                <i class="bi bi-box-seam"></i>
+
+
+                <span>
+                    Compras
+                </span>
+
+
+                <i class="bi bi-chevron-down arrow"></i>
+
+
+            </button>
+
+
+            <div class="submenu">
+                <a href="{{ route('shopping.index') }}">
+                    listas de compras
+                </a>
+
+            </div>
+
+
+        </div>
 
         <div class="menu-group">
 
@@ -176,21 +205,9 @@
 
             <div class="submenu">
 
-
                 <a href="{{ route('expenses.index') }}">
                     Lista de Gastos
                 </a>
-
-
-                <a href="{{ route('category.index') }}">
-                    Categorías
-                </a>
-
-
-                <a href="{{ route('kardex.index') }}">
-                    Kardex
-                </a>
-
 
             </div>
 
@@ -208,7 +225,15 @@
             </span>
 
         </a>
+        <a href="{{ route('customer.index') }}" class="menu-item">
 
+            <i class="bi bi-people"></i>
+
+            <span>
+                Clientes
+            </span>
+
+        </a>
 
 
         <a href="#" class="menu-item">

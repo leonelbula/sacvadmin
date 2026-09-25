@@ -1,157 +1,78 @@
-@extends('layouts.master')
-@section('subtitle')
-    Editar Proveedor
-@endsection
+@extends('layouts.app')
 @section('content')
-    <div class="row">
 
-        <div class="col-12">
-            <div class="card">
+    <div class="container-fluid px-4 py-4 mt-4">
 
-                <div class="card-header">
-                    <a href="{{ route('supplier.index') }}">
-                        <button type="button" class="btn btn-primary">Volver</button>
-                    </a>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
+        {{-- Encabezado --}}
+        <div class="d-flex flex-column flex-md-row justify-content-between
+                align-items-md-center gap-3 mb-4">
 
-                    <form action="{{ route('supplier.update', $supplier) }}" method="POST">
-                        @method('put')
-                        @csrf
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="col-md-6">
+            <div>
 
-                                    <div class="form-group">
-                                        <label>Nombre:</label>
+                <div class="d-flex align-items-center gap-2 mb-1">
 
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="full_name"
-                                                value="{{ $supplier->full_name }}" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Nit - CC:</label>
-                                        <div class="input-group">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2">
+                        <i class="bi bi-truck fs-4"></i>
+                    </div>
 
-                                            <input type="text" class="form-control"name="identification_card"
-                                                value="{{ $supplier->identification_card }}" required>
-                                        </div>
+                    <div>
+                        <h4 class="fw-bold mb-0">Editar proveedor</h4>
 
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Direccion:</label>
-
-                                        <div class="input-group">
-
-                                            <input type="text" class="form-control" name="address"
-                                                value="{{ $supplier->address }}" required>
-                                        </div>
-                                        <!-- /.input group -->
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-
-                                    <div class="form-group">
-                                        <label>Departamento:</label>
-
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="Departament"
-                                                value="{{ $supplier->Departament }}">
-                                        </div>
-                                        <!-- /.input group -->
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Ciudad:</label>
-
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="city"
-                                                value="{{ $supplier->city }}" required>
-                                        </div>
-                                        <!-- /.input group -->
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Telefono:</label>
-
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="phone"
-                                                data-inputmask='"mask": "(999) 999-9999"' value="{{ $supplier->phone }}"
-                                                data-mask>
-                                        </div>
-                                        <!-- /.input group -->
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-
-                                <div class="col-md-6">
-
-                                    <div class="form-group">
-                                        <label>Email:</label>
-
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="email"
-                                                value="{{ $supplier->email }}">
-                                        </div>
-                                        <!-- /.input group -->
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Cupo de credito:</label>
-
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" name="credit_amount"
-                                                value="{{ $supplier->credit_amount }}">
-                                        </div>
-                                        <!-- /.input group -->
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Descripcion:</label>
-
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-bookmark-o"></i>
-                                    </div>
-                                    <textarea class="form-control" rows="3" name="description" placeholder="Descripcion ..." required>{{ $supplier->description }}</textarea>
-                                </div>
-                                <!-- /.input group -->
-                            </div>
-
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit">
-
-                                Guardar
-
-                            </button>
-                        </div>
+                        <small class="text-muted">
+                            Actuliza la información del proveedor
+                        </small>
+                    </div>
 
                 </div>
 
-
-                </form>
             </div>
-            <!-- /.card-body -->
+
+            <a href="{{ route('supplier.index') }}" class="btn btn-light border">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+            </a>
+
         </div>
+
+
+        {{-- Errores --}}
+        @if ($errors->any())
+            <div class="alert alert-danger border-0 shadow-sm">
+
+                <div class="d-flex">
+
+                    <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+
+                    <div>
+
+                        <strong>Revisa los siguientes campos:</strong>
+
+                        <ul class="mb-0 mt-2">
+
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+        @endif
+
+
+        <form action="{{ route('supplier.update', $supplier->id) }}" method="POST">
+
+            @csrf
+            @method('put')
+
+            @include('supplier._form')
+
+        </form>
+
     </div>
+
 @endsection

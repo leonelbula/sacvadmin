@@ -15,13 +15,13 @@ class Shopping extends Model
         'invoice_number',
         'shopping_date',
         'purchase_type',
+        'term',
         'subtotal',
         'iva',
         'total',
         'balance',
-        'expiration_date',
+        'due_date',
         'supplier_id',
-        'company_id',
         'user_id'
     ];
 
@@ -40,6 +40,10 @@ class Shopping extends Model
     }
     public function details(): HasMany
     {
-        return $this->hasMany(ShoppingDetail::class);
+        return $this->hasMany(ShoppingDetail::class, 'shopping_id');
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

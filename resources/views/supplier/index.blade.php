@@ -1,10 +1,7 @@
-
 @extends('layouts.app')
 
-@section('title', 'Proveedores')
-
 @section('content')
-    <div class="container-fluid px-4 py-4">
+    <div class="container-fluid px-4 py-4 m-4">
 
         {{-- Encabezado --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -45,7 +42,7 @@
                         <div>
                             <small class="text-muted">Total proveedores</small>
                             <h4 class="fw-bold mb-0">
-                                {{ $suppliers->total() }}
+                               {{ $suppliers?->total() ?? 0 }}
                             </h4>
                         </div>
 
@@ -85,7 +82,7 @@
                         <div>
                             <small class="text-muted">Con crédito</small>
                             <h4 class="fw-bold mb-0">
-                                {{ $suppliers->where('credit_amount', '>', 0)->count() }}
+                                {{ $suppliers->where('credit_amount', '>', 0)->count() ?? 0 }}
                             </h4>
                         </div>
 
@@ -105,7 +102,7 @@
                         <div>
                             <small class="text-muted">Ciudades</small>
                             <h4 class="fw-bold mb-0">
-                                {{ $suppliers->pluck('city')->filter()->unique()->count() }}
+                                {{ $suppliers->pluck('city')->filter()->unique()->count() ?? 0 }}
                             </h4>
                         </div>
 
@@ -153,9 +150,16 @@
 
                         </form>
 
+
+
+                    </div>
+                    <div class="col-12 col-lg-3 text-lg-end">
+                        <a href="{{ route('supplier.index') }}" type="button" class="btn btn-block btn-primary">Mostrar
+                            todos</a>
+
                     </div>
 
-                    <div class="col-12 col-lg-6 text-lg-end">
+                    <div class="col-12 col-lg-3 text-lg-end">
 
                         <span class="text-muted small">
                             Mostrando
@@ -163,7 +167,7 @@
                             -
                             <strong>{{ $suppliers->lastItem() ?? 0 }}</strong>
                             de
-                            <strong>{{ $suppliers->total() }}</strong>
+                            <strong>{{ $suppliers->total() ?? 0 }}</strong>
                             proveedores
                         </span>
 
@@ -244,7 +248,7 @@
                                 <td>
 
                                     <span class="badge bg-light text-dark border">
-                                        {{ $provider->identification_card }}
+                                        {{ $provider->identification }}
                                     </span>
 
                                 </td>
@@ -486,68 +490,4 @@
 
         });
     </script>
-
-
-<div class="row">
-
-    <div class="col-12">
-        <div class="card">
-
-            <div class="card-header">
-                <a href="{{ route('dashboard') }}">
-                    <button type="button" class="btn btn-primary">Volver</button>
-                </a>
-                <a href="{{ route('supplier.create') }}">
-                    <button type="button" class="btn btn-primary">Nuevo Proveedor</button>
-                </a>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <table id="" class="table table-bordered table-striped">
-                    <tr>
-                        <th style="width:10px">Codigo</th>
-                        <th>Razon Social o Nombre</th>
-                        <th>Nit</th>
-                        <th>Telefono</th>
-                        <th>Ciudad</th>
-                        <th>Departamento</th>
-                        <th>Acciones</th>
-                    </tr>
-                    <tbody>
-                        @foreach ($suppliers as $supplier)
-                            <tr>
-                                <td>{{ $supplier->id }}</td>
-                                <td>{{ $supplier->full_name }}</td>
-                                <td>{{ $supplier->identification_card }}</td>
-                                <td>{{ $supplier->phone }}</td>
-                                <td>{{ $supplier->city }}</td>
-                                <td>{{ $supplier->departament }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="{{ route('supplier.show', $supplier) }}" class="btn btn-primary ">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route('supplier.edit', $supplier) }}" class="btn btn-warning ">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('supplier.destroy', $supplier) }}" method="post"
-                                            style="display: inline">
-                                            @method('delete')
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger "> <i
-                                                    class="bi bi-trash3"></i></button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $suppliers->links() }}
-                </div>
-            </div>
-            <!-- /.card-body -->
-        </div>
-    </div>
 @endsection

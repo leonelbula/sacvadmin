@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('invoice_number');
             $table->date('shopping_date')->default(now());
             $table->enum('purchase_type', ['credit', 'counted']);
+            $table->integer('term');
             $table->integer('subtotal');
             $table->integer('iva');
             $table->integer('total');
             $table->integer('balance');
             $table->date('due_date')->nullable();
-            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');           
+            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });

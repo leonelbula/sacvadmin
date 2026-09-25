@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('salereturn/ticket/{salereturn}', [SaleReturnController::class, 'ticket'])->name('salereturn.ticket');
     Route::get('previewposclose', [PosController::class, 'previewclose'])->name('pos.previewclose');
     Route::get('/accountcustomer/{sale}', [AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
-
+    Route::post('/shopping/store', [ShoppingController::class,'store']);
 
     Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
     Route::get('/recibopago/{id}', [SalePaymentController::class, 'print'])->name('salepayment.print');
@@ -306,7 +306,7 @@ Route::middleware(['auth'])
     });
 
 Route::get('/customers/search/{q}', [CustomerController::class, 'search']);
-Route::get('/suppliers/search/{q}', [SupplierController::class, 'search']);
+Route::get('/supplier/search/{query}', [SupplierController::class, 'search']);
 Route::get('/products/search/{query}', [ProductController::class, 'search']);
 
 

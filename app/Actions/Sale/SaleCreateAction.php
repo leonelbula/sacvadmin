@@ -37,30 +37,29 @@ class SaleCreateAction
             $data = $dto->toArray();
             $parameter = Parameter::first();
 
-            // 1. Número de venta correlativo seguro
+
             $lastSale = $this->saleRepository->lastSale();
             $saleNumber = $lastSale ? ($lastSale->sale_number + 1) : ($parameter ? ($parameter->sale_code + 1) : 1);
 
-            // 2. Recálculo estricto de costos, subtotales e impuestos en el servidor (Evita fraudes del Frontend)
+
             $totalCost = collect($products)->sum(fn($prod) => $prod['cost'] * $prod['quantity']);
             $totalCalculated = collect($products)->sum(fn($prod) => $prod['price'] * $prod['quantity']);
             $utility = $totalCalculated - $totalCost;
 
-            // Determinar balance según la forma de pago
+
             $balance = $data['payment_form'] === 'counted' ? 0 : $totalCalculated;
 
-            // 3. Gestión estricta de fechas usando los datos limpios del DTO
+
             if ($data['payment_form'] === 'counted') {
                 $data['expiration_date'] = $data['date_sale'];
                 $data['term']            = '0';
             } else {
                 $data['type_sale']       = 0;
-                // CORREGIDO: Se usa el 'term' que ya validó el DTO en lugar de 'plazo'
                 $days                    = (int)$data['term'];
                 $data['expiration_date'] = date('Y-m-d', strtotime($data['date_sale'] . " + $days days"));
             }
 
-            // Inyección de variables calculadas obligatorias en el servidor
+
             $data['sale_number'] = $saleNumber;
             $data['cost']        = $totalCost;
             $data['utility']     = $utility;
@@ -69,14 +68,14 @@ class SaleCreateAction
             $data['hour']        = date('H:i:s');
             $data['state']       = 'active'; // Ajustado a string ya que tu migración define 'state' como string
 
-            // Guardar cabecera de la venta
+
             $sale = $this->saleRepository->create($data);
             $detailsData = [];
 
-            // Obtener el nombre del usuario autenticado de forma segura para el Kardex
+
             $userName = Auth::user()->name ?? 'Sistema';
 
-            // 4. Ciclo transaccional de productos (Concurrencia protegida)
+
             foreach ($products as $prod) {
                 // lockForUpdate previene condiciones de carrera concurrentes
                 $product = $this->productRepository->lockForUpdate($prod['id']);
@@ -127,7 +126,7 @@ class SaleCreateAction
                 ]);
             }
 
-            // 5. Inserción masiva mediante la relación HasMany del modelo
+           
             $sale->details()->createMany($detailsData);
 
             return $sale;

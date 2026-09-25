@@ -1220,7 +1220,7 @@ if (btnSubmitSave && formSale) {
             });
 
             const data = await response.json();
-
+            
             /*
             |--------------------------------------------------------------------------
             | Éxito
