@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-4 mt-5">
 
         {{-- ==========================================================
         ENCABEZADO
@@ -15,7 +15,7 @@
 
                 <div class="d-flex align-items-center gap-2 mb-1">
 
-                    <a href="{{ route('expenses.index') }}" class="btn btn-light border rounded-3">
+                    <a href="{{ route('expense.index') }}" class="btn btn-light border rounded-3">
 
                         <i class="bi bi-arrow-left"></i>
 
@@ -36,21 +36,25 @@
 
             {{-- ACCIONES --}}
             <div class="d-flex gap-2">
+                @can('expense.edit')
+                    <a href="{{ route('expense.edit', $expense->id) }}" class="btn btn-warning rounded-3">
 
-                <a href="{{ route('expenses.edit', $expense->id) }}" class="btn btn-warning rounded-3">
+                        <i class="bi bi-pencil me-2"></i>
+                        Editar
 
-                    <i class="bi bi-pencil me-2"></i>
-                    Editar
+                    </a>
+                @endcan
 
-                </a>
+                @can('expense.delete')
+                    <button type="button" class="btn btn-danger rounded-3" id="btnDelete">
+
+                        <i class="bi bi-trash me-2"></i>
+                        Eliminar
+
+                    </button>
+                @endcan
 
 
-                <button type="button" class="btn btn-danger rounded-3" id="btnDelete">
-
-                    <i class="bi bi-trash me-2"></i>
-                    Eliminar
-
-                </button>
 
             </div>
 
@@ -519,21 +523,22 @@
 
                         <hr>
 
-
-                        {{-- EDITAR --}}
-                        <a href="{{ route('expenses.edit', $expense->id) }}"
-                            class="btn btn-warning btn-lg
+                        @can('expense.edit')
+                            <a href="{{ route('expense.edit', $expense->id) }}"
+                                class="btn btn-warning btn-lg
                               rounded-3 w-100 mb-2">
 
-                            <i class="bi bi-pencil me-2"></i>
+                                <i class="bi bi-pencil me-2"></i>
 
-                            Editar gasto
+                                Editar gasto
 
-                        </a>
+                            </a>
+                        @endcan
+                        {{-- EDITAR --}}
 
 
                         {{-- VOLVER --}}
-                        <a href="{{ route('expenses.index') }}"
+                        <a href="{{ route('expense.index') }}"
                             class="btn btn-light border btn-lg
                               rounded-3 w-100">
 
@@ -557,7 +562,7 @@
     {{-- ==============================================================
     FORMULARIO ELIMINAR
 ================================================================ --}}
-    <form id="deleteExpenseForm" action="{{ route('expenses.destroy', $expense->id) }}" method="POST" class="d-none">
+    <form id="deleteExpenseForm" action="{{ route('expense.destroy', $expense->id) }}" method="POST" class="d-none">
 
         @csrf
         @method('DELETE')

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container-fluid px-4 py-4 m-5">
+    <div class="container-fluid  py-4 mt-4">
 
         {{-- Encabezado --}}
         <div class="d-flex flex-column flex-md-row justify-content-between
@@ -37,12 +37,14 @@
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>
+                @can('supplier.edit')
+                    <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-primary">
 
-                <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-primary">
+                        <i class="bi bi-pencil me-1"></i>
+                        Editar
+                    </a>
+                @endcan
 
-                    <i class="bi bi-pencil me-1"></i>
-                    Editar
-                </a>
 
             </div>
 
@@ -538,35 +540,41 @@
                     </div>
 
                     <div class="d-flex flex-wrap gap-2">
+                        @can('supplier.view')
+                            <a href="{{ route('supplier.index') }}" class="btn btn-light border">
 
-                        <a href="{{ route('supplier.index') }}" class="btn btn-light border">
+                                <i class="bi bi-list me-1"></i>
+                                Ver proveedores
 
-                            <i class="bi bi-list me-1"></i>
-                            Ver proveedores
+                            </a>
+                        @endcan
+                        @can('supplier.edit')
+                            <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-primary">
 
-                        </a>
+                                <i class="bi bi-pencil me-1"></i>
+                                Editar proveedor
 
-                        <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-primary">
+                            </a>
+                        @endcan
 
-                            <i class="bi bi-pencil me-1"></i>
-                            Editar proveedor
+                        @can('supplier.delete')
+                            <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST"
+                                class="delete-supplier-form">
 
-                        </a>
+                                @csrf
+                                @method('DELETE')
 
-                        <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST"
-                            class="delete-supplier-form">
+                                <button type="submit" class="btn btn-outline-danger">
 
-                            @csrf
-                            @method('DELETE')
+                                    <i class="bi bi-trash me-1"></i>
+                                    Eliminar
 
-                            <button type="submit" class="btn btn-outline-danger">
+                                </button>
 
-                                <i class="bi bi-trash me-1"></i>
-                                Eliminar
+                            </form>
+                        @endcan
 
-                            </button>
 
-                        </form>
 
                     </div>
 

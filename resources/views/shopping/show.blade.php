@@ -31,21 +31,25 @@
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>
+                @can('shoppingh.edit')
+                    <a href="{{ route('shopping.edit', $shopping->id) }}" class="btn btn-primary">
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Editar
+                    </a>
+                @endcan
+                @can('shopping.delete')
+                    <form action="{{ route('shopping.destroy', $shopping->id) }}" method="POST" class="form-delete d-inline">
+                        @csrf
+                        @method('DELETE')
 
-                <a href="{{ route('shopping.edit', $shopping->id) }}" class="btn btn-primary">
-                    <i class="bi bi-pencil-square me-1"></i>
-                    Editar
-                </a>
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-trash me-1"></i>
+                            Eliminar
+                        </button>
+                    </form>
+                @endcan
 
-                <form action="{{ route('shopping.destroy', $shopping->id) }}" method="POST" class="form-delete d-inline">
-                    @csrf
-                    @method('DELETE')
 
-                    <button type="submit" class="btn btn-outline-danger">
-                        <i class="bi bi-trash me-1"></i>
-                        Eliminar
-                    </button>
-                </form>
             </div>
         </div>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Actions\User;
 
 use App\DTOs\UserDTO;
 use App\Interfaces\UserRepositoryInterface;
@@ -17,10 +17,16 @@ class UserUpdateAction
     {
         return DB::transaction(function () use ($user, $dto) {
 
-            return $this->userRepository->update(
+            $user = $this->userRepository->update(
                 $user,
                 $dto
             );
+
+            if ($dto->role !== null) {
+                $user->syncRoles([$dto->role]);
+            }
+
+            return $user->fresh()->load('roles');
         });
     }
 }

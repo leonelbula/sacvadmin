@@ -17,7 +17,9 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\KardexController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,39 +40,160 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'permission:user.view'])
+    ->get('/user', [UserController::class, 'index'])
+    ->name('user.index');
+
+Route::middleware(['auth', 'permission:user.create'])
+    ->get('/user/create', [UserController::class, 'create'])
+    ->name('user.create');
+
+Route::middleware(['auth', 'permission:user.create'])
+    ->post('/user', [UserController::class, 'store'])
+    ->name('user.store');
+
+Route::middleware(['auth', 'permission:user.view'])
+    ->get('/user/{user}', [UserController::class, 'show'])
+    ->name('user.show');
+
+Route::middleware(['auth', 'permission:user.edit'])
+    ->get('/user/{user}/edit', [UserController::class, 'edit'])
+    ->name('user.edit');
+
+Route::middleware(['auth', 'permission:user.edit'])
+    ->put('/user/{user}', [UserController::class, 'update'])
+    ->name('user.update');
+
+Route::middleware(['auth', 'permission:user.delete'])
+    ->delete('/user/{user}', [UserController::class, 'destroy'])
+    ->name('user.destroy');
+
+
+
 Route::middleware('auth')->group(function () {
-    Route::resource('product', ProductController::class);
-    Route::resource('companydata', CompanyController::class);
-    Route::resource('customer', CustomerController::class);
-    Route::resource('supplier', SupplierController::class);
-    Route::resource('shopping', ShoppingController::class);
-    Route::resource('sale', SaleController::class);
-    Route::resource('salereturn', SaleReturnController::class);
-    Route::resource('pos', PosController::class);
-    Route::resource('expenses', ExpenseController::class);
     Route::resource('accountstatecustomer', AccountStatusCustomerController::class);
     Route::resource('salepyment', SalePaymentController::class);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('category/{category?}/{request?}', [CategoryController::class, 'index'])->name('category.index');
-    Route::post('category', [CategoryController::class, 'store'])->name('category.store');
-    Route::put('category/{category}', [CategoryController::class, 'update'])->name('category.update');
-    Route::delete('category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+
+    Route::get('/role', [RoleController::class, 'index'])->middleware('permission:role.view')->name('role.index');
+    Route::get('/role/create', [RoleController::class, 'create'])->middleware('permission:role.create')->name('role.create');
+    Route::post('/role', [RoleController::class, 'store'])->middleware('permission:role.create')->name('role.store');
+    Route::get('/role/{role}', [RoleController::class, 'show'])->middleware('permission:role.view')->name('role.show');
+    Route::get('/role/{role}/edit', [RoleController::class, 'edit'])->middleware('permission:role.edit')->name('role.edit');
+    Route::put('/role/{role}', [RoleController::class, 'update'])->middleware('permission:role.edit')->name('role.update');
+    Route::delete('/role/{role}', [RoleController::class, 'destroy'])->middleware('permission:role.delete')->name('role.destroy');
+
+
+    Route::get('/product', [ProductController::class, 'index'])->middleware('permission:product.view')->name('product.index');
+    Route::get('/product/create', [ProductController::class, 'create'])->middleware('permission:product.create')->name('product.create');
+    Route::post('/product', [ProductController::class, 'store'])->middleware('permission:product.create')->name('product.store');
+    Route::get('/product/{product}', [ProductController::class, 'show'])->middleware('permission:product.view')->name('product.show');
+    Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->middleware('permission:product.edit')->name('product.edit');
+    Route::put('/product/{product}', [ProductController::class, 'update'])->middleware('permission:product.edit')->name('product.update');
+    Route::delete('/product/{product}', [ProductController::class, 'destroy'])->middleware('permission:product.delete')->name('product.destroy');
+
+    Route::get('/category', [CategoryController::class, 'index'])->middleware('permission:category.view')->name('category.index');
+    Route::get('/category/create', [CategoryController::class, 'create'])->middleware('permission:category.create')->name('category.create');
+    Route::post('/category', [CategoryController::class, 'store'])->middleware('permission:category.create')->name('category.store');
+    Route::get('/category/{category}', [CategoryController::class, 'show'])->middleware('permission:category.view')->name('category.show');
+    Route::get('/category/{category}/edit', [CategoryController::class, 'edit'])->middleware('permission:category.edit')->name('category.edit');
+    Route::put('/category/{category}', [CategoryController::class, 'update'])->middleware('permission:category.edit')->name('category.update');
+    Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->middleware('permission:category.delete')->name('category.destroy');
+
+
+    Route::get('/customer', [CustomerController::class, 'index'])->middleware('permission:customer.view')->name('customer.index');
+    Route::get('/customer/create', [CustomerController::class, 'create'])->middleware('permission:customer.create')->name('customer.create');
+    Route::post('/customer', [CustomerController::class, 'store'])->middleware('permission:customer.create')->name('customer.store');
+    Route::get('/customer/{customer}', [CustomerController::class, 'show'])->middleware('permission:customer.view')->name('customer.show');
+    Route::get('/customer/{customer}/edit', [CustomerController::class, 'edit'])->middleware('permission:customer.edit')->name('customer.edit');
+    Route::put('/customer/{customer}', [CustomerController::class, 'update'])->middleware('permission:customer.edit')->name('customer.update');
+    Route::delete('/customer/{customer}', [CustomerController::class, 'destroy'])->middleware('permission:customer.delete')->name('customer.destroy');
+
+
+    Route::get('/supplier', [SupplierController::class, 'index'])->middleware('permission:supplier.view')->name('supplier.index');
+    Route::get('/supplier/create', [SupplierController::class, 'create'])->middleware('permission:supplier.create')->name('supplier.create');
+    Route::post('/supplier', [SupplierController::class, 'store'])->middleware('permission:supplier.create')->name('supplier.store');
+    Route::get('/supplier/{supplier}', [SupplierController::class, 'show'])->middleware('permission:supplier.view')->name('supplier.show');
+    Route::get('/supplier/{supplier}/edit', [SupplierController::class, 'edit'])->middleware('permission:supplier.edit')->name('supplier.edit');
+    Route::put('/supplier/{supplier}', [SupplierController::class, 'update'])->middleware('permission:supplier.edit')->name('supplier.update');
+    Route::delete('/supplier/{supplier}', [SupplierController::class, 'destroy'])->middleware('permission:supplier.delete')->name('supplier.destroy');
+
+
+    Route::get('/shopping', [ShoppingController::class, 'index'])->middleware('permission:shopping.view')->name('shopping.index');
+    Route::get('/shopping/create', [ShoppingController::class, 'create'])->middleware('permission:shopping.create')->name('shopping.create');
+    Route::post('/shopping/store', [ShoppingController::class, 'store'])->middleware('permission:shopping.create')->name('shopping.store');
+    Route::get('/shopping/{shopping}', [ShoppingController::class, 'show'])->middleware('permission:shopping.view')->name('shopping.show');
+    Route::get('/shopping/{shopping}/edit', [ShoppingController::class, 'edit'])->middleware('permission:shopping.edit')->name('shopping.edit');
+    Route::put('/shopping/{shopping}', [ShoppingController::class, 'update'])->middleware('permission:shopping.edit')->name('shopping.update');
+    Route::delete('/shopping/{shopping}', [ShoppingController::class, 'destroy'])->middleware('permission:shopping.delete')->name('shopping.destroy');
+
+    Route::get('/sale', [SaleController::class, 'index'])->middleware('permission:sale.view')->name('sale.index');
+    Route::get('/sale/create', [SaleController::class, 'create'])->middleware('permission:sale.create')->name('sale.create');
+    Route::post('/sale/store', [SaleController::class, 'store'])->middleware('permission:sale.create')->name('sale.store');
+    Route::get('/sale/{sale}', [SaleController::class, 'show'])->middleware('permission:sale.view')->name('sale.show');
+    Route::get('/sale/{sale}/edit', [SaleController::class, 'edit'])->middleware('permission:sale.edit')->name('sale.edit');
+    Route::put('/sale/{sale}', [SaleController::class, 'update'])->middleware('permission:sale.edit')->name('sale.update');
+    Route::delete('/sale/{sale}', [SaleController::class, 'destroy'])->middleware('permission:sale.delete')->name('sale.destroy');
+
+    Route::get('/pos', [PosController::class, 'index'])->middleware('permission:pos.view')->name('pos.index');
+    Route::get('/pos/create', [PosController::class, 'create'])->middleware('permission:pos.create')->name('pos.create');
+    Route::post('/pos', [PosController::class, 'store'])->middleware('permission:pos.create')->name('pos.store');
+    Route::post('/pos/close', [PosController::class, 'close'])->middleware('permission:pos.close')->name('pos.close');
+
+
+    Route::get('/salereturn', [SaleReturnController::class, 'index'])->middleware('permission:salereturn.view')->name('salereturn.index');
+    Route::get('/salereturn/create', [SaleReturnController::class, 'create'])->middleware('permission:salereturn.create')->name('salereturn.create');
+    Route::post('/salereturn', [SaleReturnController::class, 'store'])->middleware('permission:salereturn.create')->name('salereturn.store');
+    Route::get('/salereturn/{saleReturn}', [SaleReturnController::class, 'show'])->middleware('permission:salereturn.view')->name('salereturn.show');
+    Route::get('/salereturn/{saleReturn}/edit', [SaleReturnController::class, 'edit'])->middleware('permission:salereturn.edit')->name('salereturn.edit');
+    Route::put('/salereturn/{saleReturn}', [SaleReturnController::class, 'update'])->middleware('permission:salereturn.edit')->name('salereturn.update');
+    Route::delete('/salereturn/{saleReturn}', [SaleReturnController::class, 'destroy'])->middleware('permission:salereturn.delete')->name('salereturn.destroy');
+
+
+    Route::get('/expense', [ExpenseController::class, 'index'])->middleware('permission:expense.view')->name('expense.index');
+    Route::get('/expense/create', [ExpenseController::class, 'create'])->middleware('permission:expense.create')->name('expense.create');
+    Route::post('/expense', [ExpenseController::class, 'store'])->middleware('permission:expense.create')->name('expense.store');
+    Route::get('/expense/{expence}', [ExpenseController::class, 'show'])->middleware('permission:expense.view')->name('expense.show');
+    Route::get('/expense/{expence}/edit', [ExpenseController::class, 'edit'])->middleware('permission:expense.edit')->name('expense.edit');
+    Route::put('/expense/{expence}', [ExpenseController::class, 'update'])->middleware('permission:expense.edit')->name('expense.update');
+    Route::delete('/expense/{expence}', [ExpenseController::class, 'destroy'])->middleware('permission:expense.delete')->name('expense.destroy');
+
+
+    Route::get('/kardex/index/{search?}', [KardexController::class, 'index'])->middleware('permission:kardex.view')->name('kardex.index');
+    Route::get('/kardex/show/{id}', [KardexController::class, 'show'])->middleware('permission:kardex.view')->name('kardex.show');
+    Route::get('kardex/showdetail/{id}', [KardexController::class, 'showDetail'])->middleware('permission:kardex.view')->name('kardex.showDetail');
+
+
+    Route::get('/report', [ReportController::class, 'index'])->middleware('permission:report.view')->name('report.index');
+    Route::get('/report/sales', [ReportController::class, 'sales'])->middleware('permission:report.sales')->name('report.sales');
+    Route::get('/report/shopping', [ReportController::class, 'shopping'])->middleware('permission:report.shopping')->name('report.shopping');
+    Route::get('/report/expenses', [ReportController::class, 'expenses'])->middleware('permission:report.expenses')->name('report.expenses');
+    Route::get('/report/inventory', [ReportController::class, 'inventory'])->middleware('permission:report.inventory')->name('report.inventory');
+    Route::get('/report/kardex', [ReportController::class, 'kardex'])->middleware('permission:report.kardex')->name('report.kardex');
+
+
+    Route::get('/company', [CompanyController::class, 'show'])->middleware('permission:company.view')->name('company.show');
+    Route::get('/company/edit', [CompanyController::class, 'edit'])->middleware('permission:company.edit')->name('company.edit');
+    Route::put('/company', [CompanyController::class, 'update'])->middleware('permission:company.edit')->name('company.update');
+
+
+    //**/ */
+
     Route::get('/product/search/{query}', [ProductController::class, 'search'])->name('product.search');
     Route::get('/producto/ajuste', [ProductController::class, 'settings'])->name('product.settings');
     Route::post('/producto/saveajuste', [ProductController::class, 'saveSettings'])->name('product.saveSettings');
     Route::get('/sales/{sale}/print', [SaleController::class, 'print'])->name('sale.print');
     Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
-    Route::post('/sale/store', [SaleController::class, 'store']);
     Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
-    Route::get('kardex/index/{search?}', [KardexController::class, 'index'])->name('kardex.index');
-    Route::get('kardex/show/{id}', [KardexController::class, 'show'])->name('kardex.show');
-    Route::get('kardex/showdetail/{id}', [KardexController::class, 'showDetail'])->name('kardex.showDetail');
+
+
+
     Route::get('salereturn/ticket/{salereturn}', [SaleReturnController::class, 'ticket'])->name('salereturn.ticket');
     Route::get('previewposclose', [PosController::class, 'previewclose'])->name('pos.previewclose');
     Route::get('/accountcustomer/{sale}', [AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
-    Route::post('/shopping/store', [ShoppingController::class,'store']);
+
 
     Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
     Route::get('/recibopago/{id}', [SalePaymentController::class, 'print'])->name('salepayment.print');

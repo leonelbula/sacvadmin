@@ -22,12 +22,15 @@
         </div>
 
         <div>
-            <a href="{{ route('customer.create') }}" class="btn btn-primary">
+            @can('customer.create')
+                <a href="{{ route('customer.create') }}" class="btn btn-primary">
 
-                <i class="bi bi-plus-circle"></i>
+                    <i class="bi bi-plus-circle"></i>
 
-                Nuevo Cliente
-            </a>
+                    Nuevo Cliente
+                </a>
+            @endcan
+
 
 
         </div>
@@ -43,7 +46,7 @@
                 <form method="GET" action="{{ route('customer.index') }}" class="mb-3">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control"
-                            placeholder="Buscar por nombre o identificacion..." value="{{$search}}">
+                            placeholder="Buscar por nombre o identificacion..." value="{{ $search }}">
                         <button type="submit" class="btn btn-primary">Buscar</button>
                     </div>
                 </form>
@@ -95,20 +98,26 @@
                             <td>
                                 <div class="btn-group">
 
+                                    @can('customer.view')
+                                        <a href="{{ route('customer.show', $customer) }}" class="btn btn-primary ">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    @endcan
+                                    @can('customer.edit')
+                                        <a href="{{ route('customer.edit', $customer) }}" class="btn btn-warning ">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    @endcan
+                                    @can('customer.delete')
+                                        <form action="{{ route('customer.destroy', $customer) }}" method="post"
+                                            style="display: inline">
+                                            @method('delete')
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger "> <i
+                                                    class="bi bi-trash3"></i></button>
+                                        </form>
+                                    @endcan
 
-                                    <a href="{{ route('customer.show', $customer) }}" class="btn btn-primary ">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{{ route('customer.edit', $customer) }}" class="btn btn-warning ">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="{{ route('customer.destroy', $customer) }}" method="post"
-                                        style="display: inline">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger "> <i
-                                                class="bi bi-trash3"></i></button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>

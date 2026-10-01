@@ -12,7 +12,7 @@
             <div class="card-header bg-primary text-white rounded-top-4">
                 <h4 class="mb-0">
                     <i class="bi bi-box-seam me-2"></i>
-                    Nuevo Producto
+                    Editar Producto
                 </h4>
             </div>
 

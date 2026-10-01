@@ -14,6 +14,7 @@ use App\Interfaces\CustomerRepositoryInterface;
 use App\Interfaces\InventoryAdjustmentRepositoryInterface;
 use App\Interfaces\PosRepositoryInterface;
 use App\Interfaces\ReportRepositoryInterface;
+use App\Interfaces\RoleRepositoryInterface;
 use App\Interfaces\SaleReturnRepositoryInterface;
 use App\Interfaces\SaleRepositoryInterface;
 use App\Interfaces\ShoppingRepositoryInterface;
@@ -25,6 +26,7 @@ use App\Repositories\ExpenseRepository;
 use App\Repositories\InventoryAdjustmentRepository;
 use App\Repositories\PosRepository;
 use App\Repositories\ReportRepository;
+use App\Repositories\RoleRepository;
 use App\Repositories\SaleReturnRepository;
 use App\Repositories\SaleRepository;
 use App\Repositories\ShoppingRepository;
@@ -51,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(SupplierRepositoryInterface::class, SupplierRepository::class);
         $this->app->bind(ShoppingRepositoryInterface::class, ShoppingRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
 
     }
 

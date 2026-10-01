@@ -18,20 +18,24 @@
 
             <div class="d-flex gap-2">
 
-                <a href="{{route('sale.index')}}" class="btn btn-outline-secondary">
+                <a href="{{ route('sale.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>
+                @can('sale.edit')
+                    <a href="{{ route('sale.edit', $sale->id) }}" class="btn btn-warning">
+                        <i class="bi bi-pencil me-1"></i>
+                        Editar
+                    </a>
+                @endcan
+                @can('sale.delete')
+                    <button type="button" class="btn btn-primary" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i>
+                        Imprimir
+                    </button>
+                @endcan
 
-                <a href="{{ route('sale.edit', $sale->id) }}" class="btn btn-warning">
-                    <i class="bi bi-pencil me-1"></i>
-                    Editar
-                </a>
 
-                <button type="button" class="btn btn-primary" onclick="window.print()">
-                    <i class="bi bi-printer me-1"></i>
-                    Imprimir
-                </button>
 
             </div>
 

@@ -11,9 +11,9 @@
 
             <div class="card-header bg-primary text-white rounded-top-4">
                 <h4 class="mb-0">
-                   <i class="bi bi-person-plus-fill me-2"></i>
+                    <i class="bi bi-person-plus-fill me-2"></i>
 
-                Nuevo Cliente
+                    Nuevo Cliente
                 </h4>
             </div>
             <form action="{{ route('customer.store') }}" method="POST">
@@ -35,14 +35,15 @@
                             <i class="bi bi-x-circle"></i>
                             Cancelar
                         </a>
+                        @can('customer.create')
+                            <button type="submit" class="btn btn-primary px-4">
 
-                        <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle"></i>
 
-                            <i class="bi bi-check-circle"></i>
+                                Guardar
 
-                            Guardar
-
-                        </button>
+                            </button>
+                        @endcan
 
                     </div>
 

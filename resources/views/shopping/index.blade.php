@@ -2,7 +2,6 @@
 
 
 @section('content')
-
     <div class="container-fluid px-4 py-4 mt-5">
 
         {{-- Encabezado --}}
@@ -35,16 +34,15 @@
 
             </div>
 
+            @can('shopping.create')
+                <a href="{{ route('shopping.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Nueva compra
+                </a>
+            @endcan
 
-            <a href="{{ route('shopping.create') }}" class="btn btn-primary">
-
-                <i class="bi bi-plus-lg me-1"></i>
-                Nueva compra
-
-            </a>
 
         </div>
-
 
         {{-- Resumen --}}
         <div class="row g-3 mb-4">
@@ -443,7 +441,7 @@
 
                                         <small class="text-muted">
 
-                                           Nit:  {{ $shopping->supplier->identification }}
+                                            Nit: {{ $shopping->supplier->identification }}
 
                                         </small>
                                     @else
@@ -516,7 +514,7 @@
                                         </span>
                                     @else
                                         <span class="text-muted">
-                                           Credito
+                                            Credito
                                         </span>
                                     @endif
 
@@ -542,14 +540,14 @@
                                         $state = $shopping->balance ?? null;
                                     @endphp
 
-                                    @if ($state == 0 )
+                                    @if ($state == 0)
                                         <span class="badge bg-success-subtle text-success">
 
                                             <i class="bi bi-check-circle me-1"></i>
                                             Pagada
 
                                         </span>
-                                    @elseif($state > 0 )
+                                    @elseif($state > 0)
                                         <span class="badge bg-danger-subtle text-danger">
 
                                             <i class="bi bi-credit-card me-1"></i>
@@ -583,60 +581,64 @@
                                         <ul
                                             class="dropdown-menu dropdown-menu-end
                                            shadow-sm border-0">
+                                            @can('shopping.view')
+                                                <li>
 
-                                            <li>
+                                                    <a href="{{ route('shopping.show', $shopping->id) }}"
+                                                        class="dropdown-item">
 
-                                                <a href="{{ route('shopping.show', $shopping->id) }}"
-                                                    class="dropdown-item">
+                                                        <i class="bi bi-eye text-primary me-2"></i>
 
-                                                    <i class="bi bi-eye text-primary me-2"></i>
+                                                        Ver compra
 
-                                                    Ver compra
+                                                    </a>
 
-                                                </a>
+                                                </li>
+                                            @endcan
 
-                                            </li>
+                                            @can('shopping.edit')
+                                                <li>
 
+                                                    <a href="{{ route('shopping.edit', $shopping->id) }}"
+                                                        class="dropdown-item">
 
-                                            <li>
+                                                        <i class="bi bi-pencil text-warning me-2"></i>
 
-                                                <a href="{{ route('shopping.edit', $shopping->id) }}"
-                                                    class="dropdown-item">
+                                                        Editar
 
-                                                    <i class="bi bi-pencil text-warning me-2"></i>
+                                                    </a>
 
-                                                    Editar
-
-                                                </a>
-
-                                            </li>
+                                                </li>
+                                            @endcan
 
 
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
 
+                                            @can('shopping.delete')
+                                                <li>
 
-                                            <li>
+                                                    <form action="{{ route('shopping.destroy', $shopping->id) }}"
+                                                        method="POST" class="delete-shopping-form">
 
-                                                <form action="{{ route('shopping.destroy', $shopping->id) }}"
-                                                    method="POST" class="delete-shopping-form">
+                                                        @csrf
 
-                                                    @csrf
+                                                        @method('DELETE')
 
-                                                    @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-danger">
 
-                                                    <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="bi bi-trash me-2"></i>
 
-                                                        <i class="bi bi-trash me-2"></i>
+                                                            Eliminar
 
-                                                        Eliminar
+                                                        </button>
 
-                                                    </button>
+                                                    </form>
 
-                                                </form>
+                                                </li>
+                                            @endcan
 
-                                            </li>
 
                                         </ul>
 
@@ -698,14 +700,15 @@
                                                 Comienza registrando tu primera compra.
 
                                             </p>
+                                            @can('shopping.create')
+                                                <a href="{{ route('shopping.create') }}" class="btn btn-primary">
 
-                                            <a href="{{ route('shopping.create') }}" class="btn btn-primary">
+                                                    <i class="bi bi-plus-lg me-1"></i>
 
-                                                <i class="bi bi-plus-lg me-1"></i>
+                                                    Nueva compra
 
-                                                Nueva compra
-
-                                            </a>
+                                                </a>
+                                            @endcan
                                         @endif
 
                                     </div>
@@ -750,7 +753,6 @@
         </div>
 
     </div>
-
 @endsection
 
 

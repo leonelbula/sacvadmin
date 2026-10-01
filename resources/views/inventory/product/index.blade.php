@@ -24,12 +24,15 @@
         </div>
 
         <div>
-            <a href="{{ route('product.create') }}" class="btn btn-primary">
+            @can('product.create')
+                <a href="{{ route('product.create') }}" class="btn btn-primary">
 
-                <i class="bi bi-plus-circle"></i>
+                    <i class="bi bi-plus-circle"></i>
 
-                Nuevo Producto
-            </a>
+                    Nuevo Producto
+                </a>
+            @endcan
+
 
 
         </div>
@@ -109,20 +112,28 @@
                             <td>
                                 <div class="btn-group">
 
+                                    @can('product.view')
+                                        <a href="{{ route('product.show', $product) }}" class="btn btn-primary ">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    @endcan
 
-                                    <a href="{{ route('product.show', $product) }}" class="btn btn-primary ">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{{ route('product.edit', $product) }}" class="btn btn-warning ">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="{{ route('product.destroy', $product) }}" method="post"
-                                        style="display: inline">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger "> <i
-                                                class="bi bi-trash3"></i></button>
-                                    </form>
+                                    @can('product.edit')
+                                        <a href="{{ route('product.edit', $product) }}" class="btn btn-warning ">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    @endcan
+
+                                    @can('product.delete')
+                                        <form action="{{ route('product.destroy', $product) }}" method="post"
+                                            style="display: inline">
+                                            @method('delete')
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger "> <i
+                                                    class="bi bi-trash3"></i></button>
+                                        </form>
+                                    @endcan
+
                                 </div>
                             </td>
                         </tr>

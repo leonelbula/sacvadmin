@@ -30,31 +30,6 @@
                     </div>
 
                     <div>
-
-                        <button class="btn btn-light">
-
-                            <i class="bi bi-file-earmark-excel"></i>
-
-                            Excel
-
-                        </button>
-
-                        <button class="btn btn-success">
-
-                            <i class="bi bi-file-earmark-pdf"></i>
-
-                            PDF
-
-                        </button>
-
-                        <button class="btn btn-warning">
-
-                            <i class="bi bi-printer"></i>
-
-                            Imprimir
-
-                        </button>
-
                     </div>
 
                 </div>

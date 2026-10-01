@@ -29,14 +29,16 @@
                         <small>Administración de facturas de venta</small>
 
                     </div>
+                    @can('sale.create')
+                        <a href="{{ route('sale.create') }}" class="btn btn-light">
 
-                    <a href="{{ route('sale.create') }}" class="btn btn-light">
+                            <i class="bi bi-plus-circle"></i>
 
-                        <i class="bi bi-plus-circle"></i>
+                            Nueva Venta
 
-                        Nueva Venta
+                        </a>
+                    @endcan
 
-                    </a>
 
                 </div>
 
@@ -209,46 +211,57 @@
                                     <td class="text-center">
 
                                         <div class="btn-group">
-                                            <a href="{{ route('sale.show', $sale) }}">
-                                                <button class="btn btn-sm btn-outline-primary">
+                                            @can('sale.view')
+                                                <a href="{{ route('sale.show', $sale) }}">
+                                                    <button class="btn btn-sm btn-outline-primary">
 
-                                                    <i class="bi bi-eye"></i>
-
-                                                </button>
-                                            </a>
-                                            <a href="{{ route('sale.print', $sale->id) }}" target="_blank">
-                                                <button class="btn btn-sm btn-outline-success">
-
-                                                    <i class="bi bi-printer"></i>
-
-                                                </button>
-                                            </a>
-                                            <a href="{{ route('sale.ticket', $sale->id) }}" target="_blank">
-                                                <button class="btn btn-sm btn-outline-success">
-
-                                                    <i class="bi bi-receipt me-1"></i>
-
-                                                </button>
-                                            </a>
-                                            <a href="{{ route('sale.edit', $sale) }}">
-                                                <button class="btn btn-sm btn-outline-warning">
-
-                                                    <i class="bi bi-pencil"></i>
-
-                                                </button>
-                                            </a>
-
-                                            <a>
-                                                <form action="{{ route('sale.destroy', $sale) }}" method="post">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button class="btn btn-sm btn-outline-danger">
-
-                                                        <i class="bi bi-x-circle"></i>
+                                                        <i class="bi bi-eye"></i>
 
                                                     </button>
-                                                </form>
-                                            </a>
+                                                </a>
+                                            @endcan
+                                            @can('sale.print')
+                                                <a href="{{ route('sale.print', $sale->id) }}" target="_blank">
+                                                    <button class="btn btn-sm btn-outline-success">
+
+                                                        <i class="bi bi-printer"></i>
+
+                                                    </button>
+                                                </a>
+                                            @endcan
+                                            @can('sale.ticket')
+                                                <a href="{{ route('sale.ticket', $sale->id) }}" target="_blank">
+                                                    <button class="btn btn-sm btn-outline-success">
+
+                                                        <i class="bi bi-receipt me-1"></i>
+
+                                                    </button>
+                                                </a>
+                                            @endcan
+                                            @can('sale.edit')
+                                                <a href="{{ route('sale.edit', $sale) }}">
+                                                    <button class="btn btn-sm btn-outline-warning">
+
+                                                        <i class="bi bi-pencil"></i>
+
+                                                    </button>
+                                                </a>
+                                            @endcan
+                                            @can('sale.delete')
+                                                <a>
+                                                    <form action="{{ route('sale.destroy', $sale) }}" method="post">
+                                                        @method('delete')
+                                                        @csrf
+                                                        <button class="btn btn-sm btn-outline-danger">
+
+                                                            <i class="bi bi-x-circle"></i>
+
+                                                        </button>
+                                                    </form>
+                                                </a>
+                                            @endcan
+
+
                                         </div>
 
                                     </td>

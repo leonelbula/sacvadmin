@@ -12,6 +12,7 @@ class UserDTO
         public readonly string $type,
         public readonly bool $state,
         public readonly ?string $password = null,
+        public readonly ?string $role = null,
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -23,6 +24,9 @@ class UserDTO
             state: $request->boolean('state'),
             password: $request->filled('password')
                 ? $request->string('password')->toString()
+                : null,
+            role: $request->filled('role')
+                ? $request->string('role')->toString()
                 : null,
         );
     }

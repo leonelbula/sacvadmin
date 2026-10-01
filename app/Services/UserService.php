@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use App\Action\User\UserCreateAction;
-use App\Action\User\UserDeleteAction;
-use App\Action\User\UserUpdateAction;
+use App\Actions\User\UserCreateAction;
+use App\Actions\User\UserDeleteAction;
+use App\Actions\User\UserUpdateAction;
 use App\DTOs\UserDTO;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Spatie\Permission\Models\Role;
 
 class UserService
 {
@@ -27,6 +28,13 @@ class UserService
     public function findById(int $id): User
     {
         return $this->userRepository->findById($id);
+    }
+
+    public function getRoles()
+    {
+        return Role::query()
+            ->orderBy('name')
+            ->get();
     }
 
     public function create(UserDTO $dto): User

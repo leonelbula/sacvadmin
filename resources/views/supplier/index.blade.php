@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-4 py-4 m-4">
+    <div class="container-fluid px-4 py-4 mt-4">
 
         {{-- Encabezado --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -19,11 +19,13 @@
                     Administra y consulta los proveedores registrados.
                 </p>
             </div>
+            @can('supplier.create')
+                <a href="{{ route('supplier.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Nuevo proveedor
+                </a>
+            @endcan
 
-            <a href="{{ route('supplier.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-1"></i>
-                Nuevo proveedor
-            </a>
 
         </div>
 
@@ -42,7 +44,7 @@
                         <div>
                             <small class="text-muted">Total proveedores</small>
                             <h4 class="fw-bold mb-0">
-                               {{ $suppliers?->total() ?? 0 }}
+                                {{ $suppliers?->total() ?? 0 }}
                             </h4>
                         </div>
 
@@ -343,43 +345,46 @@
                                         </button>
 
                                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-
-                                            <li>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('supplier.show', $provider->id) }}">
-                                                    <i class="bi bi-eye me-2 text-primary"></i>
-                                                    Ver proveedor
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('supplier.edit', $provider->id) }}">
-                                                    <i class="bi bi-pencil me-2 text-warning"></i>
-                                                    Editar
-                                                </a>
-                                            </li>
-
+                                            @can('supplier.view')
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('supplier.show', $provider->id) }}">
+                                                        <i class="bi bi-eye me-2 text-primary"></i>
+                                                        Ver proveedor
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('supplier.edit')
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('supplier.edit', $provider->id) }}">
+                                                        <i class="bi bi-pencil me-2 text-warning"></i>
+                                                        Editar
+                                                    </a>
+                                                </li>
+                                            @endcan
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>
 
-                                            <li>
+                                            @can('supplier.delete')
+                                                <li>
 
-                                                <form action="{{ route('supplier.destroy', $provider->id) }}"
-                                                    method="POST" class="delete-provider-form">
+                                                    <form action="{{ route('supplier.destroy', $provider->id) }}"
+                                                        method="POST" class="delete-provider-form">
 
-                                                    @csrf
-                                                    @method('DELETE')
+                                                        @csrf
+                                                        @method('DELETE')
 
-                                                    <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="bi bi-trash me-2"></i>
-                                                        Eliminar
-                                                    </button>
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="bi bi-trash me-2"></i>
+                                                            Eliminar
+                                                        </button>
 
-                                                </form>
+                                                    </form>
 
-                                            </li>
+                                                </li>
+                                            @endcan
 
                                         </ul>
 
@@ -427,11 +432,12 @@
                                         <p class="text-muted mb-3">
                                             Comienza registrando tu primer proveedor.
                                         </p>
-
-                                        <a href="{{ route('suppliers.create') }}" class="btn btn-primary">
-                                            <i class="bi bi-plus-lg me-1"></i>
-                                            Registrar proveedor
-                                        </a>
+                                        @can('supplier.create')
+                                            <a href="{{ route('suppliers.create') }}" class="btn btn-primary">
+                                                <i class="bi bi-plus-lg me-1"></i>
+                                                Registrar proveedor
+                                            </a>
+                                        @endcan
                                     @endif
 
                                 </td>

@@ -8,7 +8,7 @@
 
         <div class="row justify-content-center">
 
-            <div class="col-xl-10">
+            <div class="col-xl-12">
 
                 <div class="card shadow-lg border-0 rounded-4">
 
@@ -277,15 +277,15 @@
                                 Volver
 
                             </a>
+                            @can('customer.edit')
+                                <a href="{{ route('customer.edit', $customer) }}" class="btn btn-primary">
 
-                            <a href="{{ route('customer.edit', $customer) }}" class="btn btn-primary">
+                                    <i class="bi bi-pencil-square"></i>
 
-                                <i class="bi bi-pencil-square"></i>
+                                    Editar Cliente
 
-                                Editar Cliente
-
-                            </a>
-
+                                </a>
+                            @endcan
                         </div>
 
                     </div>

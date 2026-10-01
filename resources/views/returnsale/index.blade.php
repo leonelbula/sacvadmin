@@ -16,13 +16,15 @@
                     Consulta y administra las devoluciones realizadas
                 </p>
             </div>
+            @can('salereturn.create')
+                <a href="{{ route('salereturn.create') }}" class="btn btn-primary rounded-3 px-4">
 
-            <a href="{{ route('salereturn.create') }}" class="btn btn-primary rounded-3 px-4">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    Nueva devolución
 
-                <i class="bi bi-plus-lg me-2"></i>
-                Nueva devolución
+                </a>
+            @endcan
 
-            </a>
 
         </div>
 
@@ -160,7 +162,7 @@
         </div>
 
 
-      
+
         {{-- TABLA --}}
         <div class="card border-0 shadow-sm rounded-4">
 
@@ -364,22 +366,24 @@
                                                     </a>
 
                                                 </li>
+                                                @can('salereturn.delete')
+                                                    <li>
+                                                        <a class="dropdown-item">
+                                                            <form action="{{ route('salereturn.destroy', $return->id) }}"
+                                                                method="post">
+                                                                @method('delete')
+                                                                @csrf
+                                                                <button class="btn btn-sm btn-outline-danger">
 
-                                                <li>
-                                                    <a class="dropdown-item">
-                                                        <form action="{{ route('salereturn.destroy', $return->id) }}"
-                                                            method="post">
-                                                            @method('delete')
-                                                            @csrf
-                                                            <button class="btn btn-sm btn-outline-danger">
+                                                                    <i class="bi bi-x-circle me-2"></i>
+                                                                    Eliminar
 
-                                                                <i class="bi bi-x-circle me-2"></i>
-                                                                Eliminar
+                                                                </button>
+                                                            </form>
+                                                        </a>
+                                                    </li>
+                                                @endcan
 
-                                                            </button>
-                                                        </form>
-                                                    </a>
-                                                </li>
 
 
                                                 <li>
@@ -424,13 +428,15 @@
                                         <p class="text-muted mb-3">
                                             No se encontraron devoluciones con los filtros seleccionados.
                                         </p>
+                                        @can('salereturn.create')
+                                            <a href="{{ route('salereturn.create') }}" class="btn btn-primary">
 
-                                        <a href="{{ route('salereturn.create') }}" class="btn btn-primary">
+                                                <i class="bi bi-plus-lg me-2"></i>
+                                                Registrar devolución
 
-                                            <i class="bi bi-plus-lg me-2"></i>
-                                            Registrar devolución
+                                            </a>
+                                        @endcan
 
-                                        </a>
 
                                     </td>
 

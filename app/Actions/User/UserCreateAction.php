@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Action\User;
+namespace App\Actions\User;
 
 use App\DTOs\UserDTO;
 use App\Interfaces\UserRepositoryInterface;
@@ -17,7 +17,13 @@ class UserCreateAction
     {
         return DB::transaction(function () use ($dto) {
 
-            return $this->userRepository->create($dto);
+            $user = $this->userRepository->create($dto);
+
+            if ($dto->role !== null) {
+                $user->assignRole($dto->role);
+            }
+
+            return $user->load('roles');
         });
     }
 }

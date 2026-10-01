@@ -24,98 +24,99 @@
                 <div class="row">
 
                     <!--=====================
-                                                                                    FORMULARIO
-                                                                                ======================-->
+                                                                                                FORMULARIO
+                                                                                            ======================-->
 
                     <div class="col-lg-4 mb-4">
+                        @can('category.create')
+                            <div class="card border-0 shadow-sm">
 
-                        <div class="card border-0 shadow-sm">
+                                <div class="card-body">
 
-                            <div class="card-body">
+                                    <h5 class="mb-4">
+                                        Nueva Categoría
+                                    </h5>
 
-                                <h5 class="mb-4">
-                                    Nueva Categoría
-                                </h5>
+                                    <form method="POST"
+                                        action="{{ isset($category->id) ? route('category.update', $category->id) : route('category.store') }} ">
+                                        @csrf
 
-                                <form method="POST"
-                                    action="{{ isset($category->id) ? route('category.update', $category->id) : route('category.store') }} ">
-                                    @csrf
-
-                                    @isset($category->id)
-                                        @method('PUT')
-                                    @endisset
+                                        @isset($category->id)
+                                            @method('PUT')
+                                        @endisset
 
 
 
-                                    <div class="mb-4">
+                                        <div class="mb-4">
 
-                                        <label class="form-label fw-semibold">
-                                            Nombre
-                                        </label>
-
-                                        <div class="input-group">
-
-                                            <span class="input-group-text">
-                                                <i class="bi bi-tag"></i>
-                                            </span>
-
-                                            <input type="text" class="form-control" name="name"
-                                                value="{{ old('name', $category->name ?? '') ? $category->name : '' }}"
-                                                placeholder="Nombre de la categoría">
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="mb-4">
-
-                                        <label class="form-label fw-semibold d-block">
-                                            Estado
-                                        </label>
-
-                                        <div class="form-check form-switch">
-                                            <input type="hidden" name="state" value="0">
-
-                                            <input class="form-check-input" type="checkbox" value="1" name="state"
-                                                {{ old('state', $category->state ?? false) ? 'checked' : '' }}>
-
-                                            <label class="form-check-label">
-                                                Activa
+                                            <label class="form-label fw-semibold">
+                                                Nombre
                                             </label>
 
+                                            <div class="input-group">
+
+                                                <span class="input-group-text">
+                                                    <i class="bi bi-tag"></i>
+                                                </span>
+
+                                                <input type="text" class="form-control" name="name"
+                                                    value="{{ old('name', $category->name ?? '') ? $category->name : '' }}"
+                                                    placeholder="Nombre de la categoría">
+
+                                            </div>
+
                                         </div>
 
-                                    </div>
+                                        <div class="mb-4">
 
-                                    <div class="d-grid gap-2">
+                                            <label class="form-label fw-semibold d-block">
+                                                Estado
+                                            </label>
 
-                                        <button class="btn btn-primary">
+                                            <div class="form-check form-switch">
+                                                <input type="hidden" name="state" value="0">
 
-                                            <i class="bi bi-check-circle"></i>
+                                                <input class="form-check-input" type="checkbox" value="1" name="state"
+                                                    {{ old('state', $category->state ?? false) ? 'checked' : '' }}>
 
-                                            Guardar
+                                                <label class="form-check-label">
+                                                    Activa
+                                                </label>
 
-                                        </button>
+                                            </div>
 
-                                        <button type="reset" class="btn btn-outline-secondary">
+                                        </div>
 
-                                            Cancelar
+                                        <div class="d-grid gap-2">
 
-                                        </button>
+                                            <button class="btn btn-primary">
 
-                                    </div>
+                                                <i class="bi bi-check-circle"></i>
 
-                                </form>
+                                                Guardar
+
+                                            </button>
+
+                                            <button type="reset" class="btn btn-outline-secondary">
+
+                                                Cancelar
+
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
 
                             </div>
-
-                        </div>
+                        @endcan
 
                     </div>
 
                     <!--=====================
-                                                                                    TABLA
-                                                                                ======================-->
+                                                                                                TABLA
+                                                                                            ======================-->
 
                     <div class="col-lg-8">
 
@@ -223,24 +224,29 @@
                                                     </td>
 
                                                     <td>
-                                                        <a href="{{ route('category.index', $category) }}">
+                                                        @can('category.edit')
+                                                            <a href="{{ route('category.index', $category) }}">
 
-                                                            <button class="btn btn-sm btn-warning">
+                                                                <button class="btn btn-sm btn-warning">
 
-                                                                <i class="bi bi-pencil"></i>
+                                                                    <i class="bi bi-pencil"></i>
 
-                                                            </button>
-                                                        </a>
-                                                        <form action="{{ route('category.destroy', $category) }}"
-                                                            method="post" style="display: inline">
-                                                            @method('delete')
-                                                            @csrf
-                                                            <button class="btn btn-sm btn-danger">
+                                                                </button>
+                                                            </a>
+                                                        @endcan
+                                                        @can('category.delete')
+                                                            <form action="{{ route('category.destroy', $category) }}"
+                                                                method="post" style="display: inline">
+                                                                @method('delete')
+                                                                @csrf
+                                                                <button class="btn btn-sm btn-danger">
 
-                                                                <i class="bi bi-trash"></i>
+                                                                    <i class="bi bi-trash"></i>
 
-                                                            </button>
-                                                        </form>
+                                                                </button>
+                                                            </form>
+                                                        @endcan
+
                                                     </td>
 
                                                 </tr>

@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -25,23 +26,27 @@ class UserController extends Controller
 
     public function create(): View
     {
-        return view('user.create');
+        $roles = $this->userService->getRoles();
+        return view('user.create', compact('roles'));
     }
 
     public function store(Request $request): RedirectResponse
     {
+
         $validated = $request->validate([
             'name' => [
                 'required',
                 'string',
                 'max:255',
             ],
+
             'email' => [
                 'required',
                 'email',
                 'max:255',
                 'unique:users,email',
             ],
+
             'type' => [
                 'required',
                 Rule::in([
@@ -50,25 +55,34 @@ class UserController extends Controller
                     'uservendor',
                 ]),
             ],
+
             'state' => [
                 'required',
                 'boolean',
             ],
+
             'password' => [
                 'required',
                 'string',
                 'min:8',
                 'confirmed',
             ],
+
+            'role' => [
+                'required',
+                'string',
+                Rule::exists('roles', 'name'),
+            ],
         ]);
+
+
 
         $dto = UserDTO::fromRequest($request);
 
         $this->userService->create($dto);
-
+        toastr()->success('Usuario creado exitosamente.');
         return redirect()
-            ->route('user.index')
-            ->with('success', 'Usuario creado exitosamente.');
+            ->route('user.index');
     }
 
     public function show(User $user): View
@@ -81,20 +95,20 @@ class UserController extends Controller
     public function edit(User $user): View
     {
         $user = $this->userService->findById($user->id);
-
-        return view('user.edit', compact('user'));
+        $roles = $this->userService->getRoles();
+        return view('user.edit', compact('user', 'roles'));
     }
 
-    public function update(
-        Request $request,
-        User $user
-    ): RedirectResponse {
+
+    public function update(Request $request, User $user): RedirectResponse
+    {
         $validated = $request->validate([
             'name' => [
                 'required',
                 'string',
                 'max:255',
             ],
+
             'email' => [
                 'required',
                 'email',
@@ -102,6 +116,7 @@ class UserController extends Controller
                 Rule::unique('users', 'email')
                     ->ignore($user->id),
             ],
+
             'type' => [
                 'required',
                 Rule::in([
@@ -110,33 +125,41 @@ class UserController extends Controller
                     'uservendor',
                 ]),
             ],
+
             'state' => [
                 'required',
                 'boolean',
             ],
+
             'password' => [
                 'nullable',
                 'string',
                 'min:8',
                 'confirmed',
             ],
+
+            'role' => [
+                'required',
+                'string',
+                Rule::exists('roles', 'name'),
+            ],
         ]);
 
         $dto = UserDTO::fromRequest($request);
 
         $this->userService->update($user, $dto);
-
+        toastr()->success('Usuario actualizado exitosamente.');
         return redirect()
-            ->route('user.index')
-            ->with('success', 'Usuario actualizado exitosamente.');
+            ->route('user.index');
     }
+
+
 
     public function destroy(User $user): RedirectResponse
     {
         $this->userService->delete($user);
-
+        toastr()->success('Usuario eliminado exitosamente.');
         return redirect()
-            ->route('user.index')
-            ->with('success', 'Usuario eliminado exitosamente.');
+            ->route('user.index');
     }
 }

@@ -5,7 +5,7 @@
 @section('content')
 
 
-    <div class="container py-4 mt-4">
+    <div class="container-fluid py-4 mt-4">
 
         <div class="card shadow-lg border-0 rounded-4">
 
@@ -13,7 +13,7 @@
                 <h4 class="mb-0">
                     <i class="bi bi-person-plus-fill me-2"></i>
 
-                    Nuevo Cliente
+                    Editar Cliente
                 </h4>
             </div>
             <form action="{{ route('customer.update', $customer) }}" method="POST">
@@ -35,14 +35,16 @@
                             <i class="bi bi-x-circle"></i>
                             Cancelar
                         </a>
+                        @can('customer.edit')
+                            <button type="submit" class="btn btn-primary px-4">
 
-                        <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle"></i>
 
-                            <i class="bi bi-check-circle"></i>
+                                Guardar Infomacion
 
-                            Guardar Infomacion
+                            </button>
+                        @endcan
 
-                        </button>
 
                     </div>
 

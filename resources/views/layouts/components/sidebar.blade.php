@@ -36,204 +36,192 @@
 
 
         <!-- ventas -->
+        @can('sale.view')
+            <div class="menu-group">
+                <button class="menu-item menu-toggle-item">
+                    <i class="bi bi-cart"></i>
+                    <span>
+                        Ventas
+                    </span>
+                    <i class="bi bi-chevron-down arrow"></i>
+                </button>
+                <div class="submenu">
+                    @can('sale.view')
+                        <a href="{{ route('sale.index') }}">
+                            <i class="bi bi-receipt"></i>
+                            Ventas
+                        </a>
+                    @endcan
 
-        <div class="menu-group">
+                    @can('salereturn.view')
+                        <a href="{{ route('salereturn.index') }}">
+                            <i class="bi bi-arrow-return-left"></i>
+                            Devoluciones
+                        </a>
+                    @endcan
+                    @can('pos.view')
+                        <a href="{{ route('pos.index') }}">
+                            <i class="bi bi-shop"></i>
+                            Punto de Venta
+                        </a>
+                    @endcan
 
-
-            <button class="menu-item menu-toggle-item">
-
-                <i class="bi bi-cart"></i>
-
-                <span>
-                    Ventas
-                </span>
-
-                <i class="bi bi-chevron-down arrow"></i>
-
-            </button>
-
-
-            <div class="submenu">
-
-
-                <a href="{{ route('sale.index') }}">
-                    <i class="bi bi-receipt"></i>
-                    Facturas
-                </a>
-
-
-                <a href="{{ route('salereturn.index') }}">
-                    <i class="bi bi-arrow-return-left"></i>
-                    Devoluciones
-                </a>
-
-
-                <a href="{{ route('pos.index') }}">
-                    <i class="bi bi-shop"></i>
-                    Punto de Venta
-                </a>
-
-
+                </div>
             </div>
-
-
-        </div>
-
-
-
+        @endcan
 
         <!-- Inventario -->
 
+        @can('product.view')
+            <div class="menu-group">
+                <button class="menu-item menu-toggle-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>
+                        Inventario
+                    </span>
+                    <i class="bi bi-chevron-down arrow"></i>
+                </button>
+                <div class="submenu">
+                    @can('product.view')
+                        <a href="{{ route('product.index') }}">
+                            Productos
+                        </a>
+                    @endcan
+                    @can('category.view')
+                        <a href="{{ route('category.index') }}">
+                            Categorías
+                        </a>
+                    @endcan
 
-        <div class="menu-group">
+                    <a href="{{ route('inventory.adjustments.index') }}">
+                        Ajustes Inventario
+                    </a>
+                    @can('kardex.view')
+                        <a href="{{ route('kardex.index') }}">
+                            Kardex
+                        </a>
+                    @endcan
 
-
-            <button class="menu-item menu-toggle-item">
-
-
-                <i class="bi bi-box-seam"></i>
-
-
-                <span>
-                    Inventario
-                </span>
-
-
-                <i class="bi bi-chevron-down arrow"></i>
-
-
-            </button>
-
-
-            <div class="submenu">
-
-
-                <a href="{{ route('product.index') }}">
-                    Productos
-                </a>
-
-
-                <a href="{{ route('category.index') }}">
-                    Categorías
-                </a>
-                <a href="{{ route('inventory.adjustments.index') }}">
-                    Ajustes Inventario
-                </a>
-
-                <a href="{{ route('kardex.index') }}">
-                    Kardex
-                </a>
+                </div>
 
 
             </div>
-
-
-        </div>
-
-
-
-        <a href="{{ route('customer.index') }}" class="menu-item">
-
-            <i class="bi bi-people"></i>
-
-            <span>
-                Clientes
-            </span>
-
-        </a>
+        @endcan
 
 
 
-        <a href="{{ route('supplier.index') }}" class="menu-item">
+        @can('customer.view')
+            <a href="{{ route('customer.index') }}" class="menu-item">
 
-            <i class="bi bi-truck"></i>
-
-            <span>
-                Proveedores
-            </span>
-
-        </a>
-        <div class="menu-group">
-
-
-            <button class="menu-item menu-toggle-item">
-
-
-                <i class="bi bi-box-seam"></i>
-
+                <i class="bi bi-people"></i>
 
                 <span>
-                    Compras
+                    Clientes
                 </span>
 
-
-                <i class="bi bi-chevron-down arrow"></i>
-
-
-            </button>
+            </a>
+        @endcan
 
 
-            <div class="submenu">
-                <a href="{{ route('shopping.index') }}">
-                    listas de compras
-                </a>
+        @can('supplier.view')
+            <a href="{{ route('supplier.index') }}" class="menu-item">
 
-            </div>
-
-
-        </div>
-
-        <div class="menu-group">
-
-
-            <button class="menu-item menu-toggle-item">
-
-
-                <i class="bi bi-cash-stack me-2"></i>
-
+                <i class="bi bi-truck"></i>
 
                 <span>
-                    Gastos
+                    Proveedores
                 </span>
 
-
-                <i class="bi bi-chevron-down arrow"></i>
-
-
-            </button>
+            </a>
+        @endcan
 
 
-            <div class="submenu">
+        @can('shopping.view')
+            <div class="menu-group">
+                <button class="menu-item menu-toggle-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>
+                        Compras
+                    </span>
+                    <i class="bi bi-chevron-down arrow"></i>
+                </button>
+                <div class="submenu">
+                    <a href="{{ route('shopping.index') }}">
+                        listas de compras
+                    </a>
+                </div>
+            </div>
+        @endcan
 
-                <a href="{{ route('expenses.index') }}">
-                    Lista de Gastos
-                </a>
+        @can('expense.view')
+            <div class="menu-group">
+
+
+                <button class="menu-item menu-toggle-item">
+
+
+                    <i class="bi bi-cash-stack me-2"></i>
+
+
+                    <span>
+                        Gastos
+                    </span>
+
+
+                    <i class="bi bi-chevron-down arrow"></i>
+
+
+                </button>
+
+
+                <div class="submenu">
+
+                    <a href="{{ route('expense.index') }}">
+                        Lista de Gastos
+                    </a>
+
+                </div>
+
 
             </div>
+        @endcan
 
 
-        </div>
+        @can('report.view')
+            <a href="{{ route('reports.index') }}" class="menu-item">
 
+                <i class="bi bi-bar-chart"></i>
 
+                <span>
+                    Reportes
+                </span>
 
-        <a href="{{ route('reports.index') }}" class="menu-item">
+            </a>
+        @endcan
 
-            <i class="bi bi-bar-chart"></i>
+        @can('user.view')
+            <a href="{{ route('user.index') }}" class="menu-item">
 
-            <span>
-                Reportes
-            </span>
+                <i class="bi bi-people"></i>
 
-        </a>
-        <a href="{{ route('customer.index') }}" class="menu-item">
+                <span>
+                    Usuarios
+                </span>
 
-            <i class="bi bi-people"></i>
+            </a>
+        @endcan
 
-            <span>
-                Clientes
-            </span>
+        @can('role.view')
+            <a href="{{ route('role.index') }}" class="menu-item">
 
-        </a>
+                <i class="bi bi-lock"></i>
+
+                <span>
+                    Roles
+                </span>
+
+            </a>
+        @endcan
 
 
         <a href="#" class="menu-item">

@@ -297,6 +297,7 @@ public function kardex(Request $request) {
 
 public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
 {
+    
 
     return $this->reportPdfService->sales(
         $fechaDesde,

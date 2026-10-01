@@ -16,7 +16,7 @@
 
                 <div class="d-flex align-items-center gap-2 mb-1">
 
-                    <a href="{{ route('expenses.index') }}" class="btn btn-light border rounded-3">
+                    <a href="{{ route('expense.index') }}" class="btn btn-light border rounded-3">
 
                         <i class="bi bi-arrow-left"></i>
 
@@ -76,7 +76,7 @@
         {{-- ==========================================================
         FORMULARIO
     =========================================================== --}}
-        <form id="expenseEditForm" action="{{ route('expenses.update', $expense->id) }}" method="POST">
+        <form id="expenseEditForm" action="{{ route('expense.update', $expense->id) }}" method="POST">
 
             @csrf
             @method('PUT')
@@ -609,7 +609,7 @@
 
                     </button>
 
-                    <a href="{{ route('expenses.index') }}" class="btn btn-danger rounded-3">
+                    <a href="{{ route('expense.index') }}" class="btn btn-danger rounded-3">
 
                         Salir
 

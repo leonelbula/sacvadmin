@@ -340,14 +340,6 @@
 
                     </a>
 
-                    <button class="btn btn-primary">
-
-                        <i class="bi bi-printer"></i>
-
-                        Imprimir
-
-                    </button>
-
                     <button class="btn btn-success">
 
                         <i class="bi bi-file-earmark-text"></i>

@@ -16,7 +16,7 @@
 
             <div class="d-flex align-items-center gap-2 mb-1">
 
-                <a href="{{ route('expenses.index') }}"
+                <a href="{{ route('expense.index') }}"
                    class="btn btn-light border rounded-3">
 
                     <i class="bi bi-arrow-left"></i>
@@ -80,7 +80,7 @@
         FORMULARIO
     =========================================================== --}}
     <form id="expenseForm"
-          action="{{ route('expenses.store') }}"
+          action="{{ route('expense.store') }}"
           method="POST">
 
         @csrf
@@ -603,7 +603,7 @@
 
 
                         {{-- CANCELAR --}}
-                        <a href="{{ route('expenses.index') }}"
+                        <a href="{{ route('expense.index') }}"
                            id="btnCancel"
                            class="btn btn-light border
                                   btn-lg w-100 rounded-3 mt-2">
@@ -674,7 +674,7 @@
 
                 </button>
 
-                <a href="{{ route('expenses.index') }}"
+                <a href="{{ route('expense.index') }}"
                    class="btn btn-danger rounded-3">
 
                     Salir

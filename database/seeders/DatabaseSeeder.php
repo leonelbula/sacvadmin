@@ -19,19 +19,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            IdentityDocumentsTableSeeder::class,
+           /* IdentityDocumentsTableSeeder::class,
             CustomerTributesTableSeeder::class,
             OrganizationTypesTableSeeder::class,
             TaxesTableSeeder::class,
             DepartamentsTableSeeder::class,
             CitiesTableSeeder::class,
-            PaymentMethodsTableSeeder::class,
+            PaymentMethodsTableSeeder::class,*/
+            RolePermissionSeeder::class
         ]);
-
+/*
         User::factory()->count(5)->create();
         Category::factory()->count(20)->create();
         Product::factory()->count(100)->create();
         Customer::factory()->count(20)->create();
-        Supplier::factory()->count(10)->create();
+        Supplier::factory()->count(10)->create();*/
     }
 }

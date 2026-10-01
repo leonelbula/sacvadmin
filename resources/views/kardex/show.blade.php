@@ -25,21 +25,6 @@
 
                 <div>
 
-                    <button class="btn btn-light">
-
-                        <i class="bi bi-printer"></i>
-
-                        Imprimir
-
-                    </button>
-
-                    <button class="btn btn-success">
-
-                        <i class="bi bi-file-earmark-pdf"></i>
-
-                        PDF
-
-                    </button>
 
                     <a href="{{route('kardex.index')}}" class="btn btn-secondary">
 

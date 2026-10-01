@@ -79,7 +79,7 @@
                                     Nombre
                                 </label>
 
-                                <h5>{{  $product->name }}</h5>
+                                <h5>{{ $product->name }}</h5>
 
                             </div>
 
@@ -316,14 +316,16 @@
                                 Volver
 
                             </a>
+                            @can('product.edit')
+                                <a href="{{ route('product.edit', $product) }}" class="btn btn-primary">
 
-                            <a href="{{ route('product.edit', $product) }}" class="btn btn-primary">
+                                    <i class="bi bi-pencil-square"></i>
 
-                                <i class="bi bi-pencil-square"></i>
+                                    Editar Producto
 
-                                Editar Producto
+                                </a>
+                            @endcan
 
-                            </a>
 
                         </div>
 
