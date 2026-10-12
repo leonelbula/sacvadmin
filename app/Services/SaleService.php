@@ -8,6 +8,7 @@ use App\Actions\Sale\SaleUpdateAction;
 use App\DTOs\SaleDTO;
 use App\Interfaces\SaleRepositoryInterface;
 use App\Models\Sale;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class SaleService
@@ -53,8 +54,8 @@ class SaleService
             userId: $box->user_id,
             startDate: $box->start_date,
             startTime: $box->start_time,
-            closingDate: $box->closing_date,
-            closingTime: $box->closing_time
+            closingDate: Carbon::now()->format('Y-m-d'),
+            closingTime: Carbon::now()->format('H:i:s')
         );
 
         return [
@@ -74,5 +75,14 @@ class SaleService
     public function findBySaleNumber(int $saleNumber)
     {
         return $this->saleRepository->findBySaleNumber($saleNumber);
+    }
+    public function saleDay(?int $userId, string $date)
+    {
+        return $this->saleRepository->saleDay($userId, $date);
+    }
+
+    public function saleDayTotal(?int $userId, string $date): array
+    {
+        return $this->saleRepository->saleDayTotal($userId, $date);
     }
 }

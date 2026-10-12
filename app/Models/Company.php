@@ -16,10 +16,9 @@ class Company extends Model
         'phone',
         'email',
         'address',
-        'Departament',
+        'departament',
         'city',
         'logo',
-        'user_id',
     ];
     public function categories(): HasMany
     {

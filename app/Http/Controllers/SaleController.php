@@ -16,6 +16,7 @@ use Spatie\Browsershot\Browsershot;
 use Carbon\Carbon;
 
 use App\DTOs\SaleDTO;
+use App\Services\PosService;
 use App\Services\SaleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -24,15 +25,28 @@ use Exception;
 class SaleController extends Controller
 {
     public function __construct(
-        protected SaleService $saleService
+        protected SaleService $saleService,
+        protected PosService $pos_service
     ) {}
 
     public function index(Request $request)
     {
         $search = $request->all();
 
+        $user = Auth::user();
+        $posActive = $this->pos_service->posActive($user->id);
 
+        if ($user->type != 'admin') {
+            if (isset($posActive) && $posActive->state == 1) {
+                $tbnSale = true;
+            } else {
+                $tbnSale = false;
+            }
+        } else {
+            $tbnSale = true;
+        }
 
+        
         if (isset($search['customer_name']) || isset($search['sale_number']) || isset($search['payment_form']) || isset($search['date_from']) || isset($search['date_to'])) {
             $dataSales = $this->saleService->searchSales($search);
         } else {
@@ -40,7 +54,7 @@ class SaleController extends Controller
         }
 
         $title = "Lista de ventas";
-        return view('sale.index', compact('title', 'dataSales'));
+        return view('sale.index', compact('title', 'dataSales', 'tbnSale'));
     }
     public function searchSale(int $saleNumber): JsonResponse
     {

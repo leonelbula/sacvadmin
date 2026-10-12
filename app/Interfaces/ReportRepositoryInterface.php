@@ -9,15 +9,15 @@ interface ReportRepositoryInterface
     | DASHBOARD
     |--------------------------------------------------------------------------
     */
-    public function getDashboard( ?string $fechaDesde = null, ?string $fechaHasta = null ): array;
+    public function getDashboard(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
-    public function getTotalSales( ?string $fechaDesde = null, ?string $fechaHasta = null ): int|float;
+    public function getTotalSales(?string $fechaDesde = null, ?string $fechaHasta = null): int|float;
 
-    public function getTotalPurchases( ?string $fechaDesde = null, ?string $fechaHasta = null ): int|float;
+    public function getTotalPurchases(?string $fechaDesde = null, ?string $fechaHasta = null): int|float;
 
-    public function getTotalExpenses( ?string $fechaDesde = null, ?string $fechaHasta = null ): int|float;
+    public function getTotalExpenses(?string $fechaDesde = null, ?string $fechaHasta = null): int|float;
 
-    public function getUtility( ?string $fechaDesde = null, ?string $fechaHasta = null ): int|float;
+    public function getUtility(?string $fechaDesde = null, ?string $fechaHasta = null): int|float;
 
 
     /*
@@ -34,6 +34,8 @@ interface ReportRepositoryInterface
 
     public function getSalesCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
+    public function getProductsByCategoryReport( ?string $fechaDesde = null, ?string $fechaHasta = null): array;
+
 
     /*
     |--------------------------------------------------------------------------
@@ -47,7 +49,11 @@ interface ReportRepositoryInterface
 
     public function getLowStockReport(): array;
 
-    public function getKardexReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getLowStockReportPaginated(): array;
+
+    public function getKardexReport(?int $productId = null, ?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50
+    ): array;
+    public function getKardexPdfReport(?int $productId = null, ?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
 
     /*
@@ -58,9 +64,9 @@ interface ReportRepositoryInterface
 
     public function getPurchasesReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
-    public function getPurchasesProductsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getPurchasesProductsReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array;
 
-    public function getPurchasesSuppliersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getPurchasesSuppliersReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array;
 
 
     /*
@@ -69,11 +75,11 @@ interface ReportRepositoryInterface
     |--------------------------------------------------------------------------
     */
 
-    public function getExpensesReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getExpensesReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array;
 
-    public function getExpensesTypesReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getExpensesTypesReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array;
 
-    public function getExpensesPaymentMethodsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getExpensesPaymentMethodsReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array;
 
 
     /*
@@ -95,10 +101,9 @@ interface ReportRepositoryInterface
     |--------------------------------------------------------------------------
     */
 
-    public function getCustomersReport(): array;
+    public function getCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
     public function getTopCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
-    public function getInactiveCustomersReport(): array;
+    public function getInactiveCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 }
-

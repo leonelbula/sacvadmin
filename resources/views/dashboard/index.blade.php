@@ -1,62 +1,60 @@
 @extends('layouts.app')
 
-@section('title','Dashboard')
+@section('title', 'Dashboard')
 
 @section('content')
 
-<div class="page-header">
+    <div class="page-header">
 
-    <div>
+        <div>
 
-        <h2 class="page-title">
+            <h2 class="page-title">
 
-            Dashboard
+                Dashboard
 
-        </h2>
+            </h2>
 
-        <p class="text-muted">
+            <p class="text-muted">
 
-            Bienvenido nuevamente 👋
+                Bienvenido nuevamente 👋 {{ Auth::user()->name }}
 
-        </p>
+            </p>
 
-    </div>
+        </div>
 
-    <div>
 
-        <button class="btn btn-primary">
-
-            <i class="bi bi-plus-circle"></i>
-
-            Nueva Venta
-
-        </button>
 
     </div>
 
-</div>
 
-<div class="row mt-4">
-    <div class="col-lg-12">
-    @include('dashboard.partials.cards')
-    </div>
-</div>
 
-<div class="row mt-4">
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            @include('dashboard.partials.cards')
+        </div>
 
-    <div class="col-lg-8">
-
-        @include('dashboard.partials.last-sales')
 
     </div>
 
-    <div class="col-lg-4">
+    <div class="row mt-4">
 
-        @include('dashboard.partials.stock')
+
+        @can('sale.view')
+            <div class="col-lg-8">
+                @include('dashboard.partials.last-sales')
+            </div>
+        @endcan
+
+
+
+
+        <div class="col-lg-4">
+
+            @include('dashboard.partials.stock')
+
+        </div>
 
     </div>
-
-</div>
 
 
 

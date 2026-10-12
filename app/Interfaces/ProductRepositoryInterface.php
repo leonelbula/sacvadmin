@@ -21,5 +21,6 @@ interface ProductRepositoryInterface
     public function countProduct(): int;
     public function findById(int $id);
     public function updateStock(int $productId, int $stock);
+    public function lowStockProducts(): Collection;
 
 }

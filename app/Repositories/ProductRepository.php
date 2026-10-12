@@ -153,4 +153,11 @@ class ProductRepository implements ProductRepositoryInterface
                 'stock' => $stock,
             ]);
     }
+    public function lowStockProducts(): Collection
+    {
+        return Product::whereColumn('stock', '<=', 'stock_min')
+            ->orderBy('stock', 'asc')
+            ->limit(5)
+            ->get();
+    }
 }

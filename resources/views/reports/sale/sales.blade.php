@@ -18,13 +18,24 @@
                     Consulta detallada de las ventas realizadas.
                 </p>
             </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('reports.index') }}" class="btn btn-outline-secondary rounded-3">
 
-            <a href="{{ route('reports.sales.pdf')}}" target="_blank" class="btn btn-danger rounded-3">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Volver
+                </a>
 
-                <i class="bi bi-file-earmark-pdf me-2"></i>
-                PDF
+                <a href="{{ route('reports.sales.pdf', [
+                    'fecha_desde' => $fechaDesde,
+                    'fecha_hasta' => $fechaHasta,
+                ]) }}"
+                    target="_blank" class="btn btn-danger rounded-3">
 
-            </a>
+                    <i class="bi bi-file-earmark-pdf me-2"></i>
+                    PDF
+
+                </a>
+            </div>
 
         </div>
 
@@ -161,7 +172,7 @@
                                     <td>{{ $loop->iteration }}</td>
 
                                     <td>
-                                        {{ $sale->date_sale}}
+                                        {{ $sale->date_sale }}
                                     </td>
 
                                     <td>

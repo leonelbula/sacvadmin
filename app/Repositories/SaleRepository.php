@@ -222,4 +222,98 @@ class SaleRepository implements SaleRepositoryInterface
             ->where('sale_number', $saleNumber)
             ->first();
     }
+
+    public function saleDay(?int $userId, string $startDate)
+    {
+
+        return Sale::query()
+            ->whereDate('date_sale', $startDate)
+            // Si existe $userId, filtra por ese usuario. Si no, ignora este paso.
+            ->when($userId, function ($query, $userId) {
+                $query->where('user_id', $userId);
+            })
+            ->latest() // Ordena por fecha de creación descendente (la venta más reciente primero)
+            ->limit(5)
+            ->get();
+    }
+    public function saleDayTotal(?int $userId, string $startDate): array
+    {
+        $query = Sale::query()
+            ->whereDate('date_sale', $startDate)
+            ->selectRaw('
+                COUNT(*) AS quantity,
+                COALESCE(SUM(total), 0) AS total
+            ');
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first()->toArray();
+    }
+    public function saleDayTotalByPaymentMethodCash(?int $userId, string $startDate): array
+    {
+        $query = Sale::query()
+            ->whereDate('date_sale', $startDate)
+            ->where('payment_method_id', 1) // Assuming 1 is the ID for cash payments
+            ->selectRaw('
+                COUNT(*) AS quantity,
+                COALESCE(SUM(total), 0) AS total
+            ');
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first()->toArray();
+    }
+    public function saleDayTotalByPaymentMethodTransfer(?int $userId, string $startDate): array
+    {
+        $query = Sale::query()
+            ->whereDate('date_sale', $startDate)
+            ->where('payment_method_id', 2) // Assuming 2 is the ID for transfer payments
+            ->selectRaw('
+                COUNT(*) AS quantity,
+                COALESCE(SUM(total), 0) AS total
+            ');
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first()->toArray();
+    }
+    public function saleDayTotalByPaymentMethodOther(?int $userId, string $startDate): array
+    {
+        $query = Sale::query()
+            ->whereDate('date_sale', $startDate)
+            ->where('payment_method_id', '!=', 1) // Assuming 1 is the ID for cash payments
+            ->where('payment_method_id', '!=', 2) // Assuming 2 is the ID for transfer payments
+            ->selectRaw('
+                COUNT(*) AS quantity,
+                COALESCE(SUM(total), 0) AS total
+            ');
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first()->toArray();
+    }
+
+    public function saleDayTotalByPaymentMethodCredit(?int $userId, string $startDate): array
+    {
+        $query = Sale::query()
+            ->whereDate('date_sale', $startDate)
+            ->where('payment_form', 'credit') // Assuming 'credit' is the value for credit payments
+            ->selectRaw('
+                COUNT(*) AS quantity,
+                COALESCE(SUM(total), 0) AS total
+            ');
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->first()->toArray();
+    }
 }

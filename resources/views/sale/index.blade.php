@@ -30,13 +30,15 @@
 
                     </div>
                     @can('sale.create')
-                        <a href="{{ route('sale.create') }}" class="btn btn-light">
+                        @if ($tbnSale == true)
+                            <a href="{{ route('sale.create') }}" class="btn btn-light">
 
-                            <i class="bi bi-plus-circle"></i>
+                                <i class="bi bi-plus-circle"></i>
 
-                            Nueva Venta
+                                Nueva Venta
 
-                        </a>
+                            </a>
+                        @endif
                     @endcan
 
 
@@ -220,7 +222,7 @@
                                                     </button>
                                                 </a>
                                             @endcan
-                                            @can('sale.print')
+                                            @can('sale.view')
                                                 <a href="{{ route('sale.print', $sale->id) }}" target="_blank">
                                                     <button class="btn btn-sm btn-outline-success">
 
@@ -229,7 +231,7 @@
                                                     </button>
                                                 </a>
                                             @endcan
-                                            @can('sale.ticket')
+                                            @can('sale.view')
                                                 <a href="{{ route('sale.ticket', $sale->id) }}" target="_blank">
                                                     <button class="btn btn-sm btn-outline-success">
 

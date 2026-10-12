@@ -260,53 +260,101 @@
 
                 <div class="card border-0 shadow-sm mt-4">
 
-                    <div class="card-header bg-white py-3">
+                    
 
-                        <div class="d-flex justify-content-between align-items-center">
 
-                            <h5 class="mb-0">
-                                <i class="bi bi-key me-2"></i>
-                                Permisos
-                            </h5>
 
-                            <span class="badge bg-primary">
-                                {{ $user->getAllPermissions()->count() }}
-                            </span>
+                    @php
+                        $modulos = [
+                            'dashboard' => 'Panel principal',
+                            'category' => 'Categorías',
+                            'product' => 'Productos',
+                            'customer' => 'Clientes',
+                            'supplier' => 'Proveedores',
+                            'shopping' => 'Compras',
+                            'sale' => 'Ventas',
+                            'salereturn' => 'Devoluciones',
+                            'expense' => 'Gastos',
+                            'report' => 'Reportes',
+                            'user' => 'Usuarios',
+                            'role' => 'Roles',
+                            'permission' => 'Permisos',
+                            'pos' => 'Caja',
+                            'kardex' => 'Kardex',
+                            'company' => 'Empresa',
+                            'configuration' => 'Configuración',
+                        ];
 
+                        $acciones = [
+                            'view' => 'Ver',
+                            'create' => 'Crear',
+                            'edit' => 'Editar',
+                            'update' => 'Actualizar',
+                            'delete' => 'Eliminar',
+                            'show' => 'Consultar detalle',
+                            'manage' => 'Administrar',
+                            'close' => 'Cerrar',
+                            'open' => 'Abrir',
+                            'pdf' => 'Generar PDF',
+                            'export' => 'Exportar',
+                        ];
+
+                        $permisosAgrupados = $user
+                            ->getAllPermissions()
+                            ->sortBy('name')
+                            ->groupBy(function ($permiso) {
+                                return explode('.', $permiso->name)[0];
+                            });
+                    @endphp
+
+                    <div class="card border-0 shadow-sm mt-4">
+                        <div class="card-header bg-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold">
+                                    <i class="bi bi-shield-lock text-primary me-2"></i>
+                                    Permisos asignados
+                                </h5>
+
+                                <span class="badge bg-primary rounded-pill">
+                                    {{ $user->getAllPermissions()->count() }}
+                                </span>
+                            </div>
                         </div>
 
-                    </div>
+                        <div class="card-body">
+                            @forelse($permisosAgrupados as $modulo => $permisos)
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">
+                                        <i class="bi bi-folder2-open text-primary me-2"></i>
+                                        {{ $modulos[$modulo] ?? ucfirst(str_replace('_', ' ', $modulo)) }}
+                                    </h6>
 
-                    <div class="card-body">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach ($permisos as $permiso)
+                                            @php
+                                                $partes = explode('.', $permiso->name, 2);
+                                                $accion = $partes[1] ?? '';
 
-                        @php
-                            $permissions = $user->getAllPermissions()->sortBy('name');
-                        @endphp
+                                                $nombreAccion =
+                                                    $acciones[$accion] ?? ucfirst(str_replace('_', ' ', $accion));
+                                            @endphp
 
-                        @forelse ($permissions as $permission)
-                            <div class="d-flex align-items-center mb-2">
-
-                                <i class="bi bi-check-circle text-success me-2"></i>
-
-                                <span class="small">
-                                    {{ $permission->name }}
-                                </span>
-
-                            </div>
-
-                        @empty
-
-                            <div class="text-center py-3">
-
-                                <i class="bi bi-key text-muted fs-2"></i>
-
-                                <p class="text-muted mb-0 mt-2">
-                                    No tiene permisos asignados.
-                                </p>
-
-                            </div>
-                        @endforelse
-
+                                            <span class="badge bg-light text-dark border px-3 py-2">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                {{ $nombreAccion }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center py-4">
+                                    <i class="bi bi-shield-x fs-1 text-muted"></i>
+                                    <p class="text-muted mb-0 mt-2">
+                                        Este usuario no tiene permisos asignados.
+                                    </p>
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
 
                 </div>

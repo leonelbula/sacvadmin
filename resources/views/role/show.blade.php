@@ -275,9 +275,7 @@
                                                             {{ $label }}
                                                         </span>
 
-                                                        <small class="text-muted d-block">
-                                                            {{ $permission->name }}
-                                                        </small>
+                                                       
 
                                                     </div>
 

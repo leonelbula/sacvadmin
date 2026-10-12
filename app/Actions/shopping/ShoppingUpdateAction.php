@@ -77,8 +77,8 @@ class ShoppingUpdateAction
                     'movement_type' => 'REVERSION',
                     'origin' =>  "ACTUALIZACION COMPRA NRO: {$shoppingNumber}",
                     'reference_id' => $shopping->id,
-                    'income' => $oldDetail->quantity,
-                    'output' => 0,
+                    'income' => 0,
+                    'output' => $oldDetail->quantity,
                     'stock_before' => $stockBefore,
                     'stock_after' => $stockAfter,
                     'unit_cost' => $oldDetail->price,
@@ -156,7 +156,7 @@ class ShoppingUpdateAction
                     'subtotal'   => $subtotalItem,
                     'has_iva' => 1,
                     'iva'     => $taxRecord->value,
-                    'total'   => $prod['quantity'],
+                    'total'   => $costTotalItem,
                 ];
 
 
@@ -166,8 +166,8 @@ class ShoppingUpdateAction
                     'movement_type' => 'INGRESO',
                     'origin'        => "COMPRA NRO: {$shopping->invoice_number}",
                     'reference_id'  => $shopping->id,
-                    'income'        => 0,
-                    'output'        => $prod['quantity'],
+                    'income'        => $prod['quantity'],
+                    'output'        => 0,
                     'stock_before'  => $stockBefore,
                     'stock_after'   => $stockAfter,
                     'unit_cost'     => $prod['price'],

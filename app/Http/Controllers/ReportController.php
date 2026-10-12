@@ -49,15 +49,18 @@ class ReportController extends Controller
         ]);
     }
 
-public function kardex(Request $request) {
-    $fechaDesde = $request->input('fecha_desde');
-    $fechaHasta = $request->input('fecha_hasta');
-    $data = $this->reportService->getKardexReport( $fechaDesde, $fechaHasta );
-     return view('reports.kardex', [
-        'kardex' => $data['kardex'],
-        'quantity' => $data['quantity'],
-         'fechaDesde' => $fechaDesde, 'fechaHasta' => $fechaHasta, ]);
-         }
+    public function kardex(Request $request)
+    {
+        $fechaDesde = $request->input('fecha_desde');
+        $fechaHasta = $request->input('fecha_hasta');
+        $data = $this->reportService->getKardexReport($fechaDesde, $fechaHasta);
+        return view('reports.kardex', [
+            'kardex' => $data['kardex'],
+            'quantity' => $data['quantity'],
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
+        ]);
+    }
 
 
     /**
@@ -68,7 +71,7 @@ public function kardex(Request $request) {
         $filters = $this->dates();
         $data = $this->reportService->getSalesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.sales', [
+        return view('reports.sale.sales', [
             ...$data,
             'fechaDesde' => $filters['fecha_desde'] ?? null,
             'fechaHasta' => $filters['fecha_hasta'] ?? null,
@@ -81,9 +84,14 @@ public function kardex(Request $request) {
      */
     public function salesProducts(): View
     {
-        $data = $this->reportService->getSalesProductsReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getSalesProductsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.sales-products', $data);
+        return view('reports.sale.sales-products', [
+            ...$data,
+            'fechaDesde' => $filters['fecha_desde'] ?? null,
+            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+        ]);
     }
 
 
@@ -92,9 +100,20 @@ public function kardex(Request $request) {
      */
     public function salesPaymentMethods(): View
     {
-        $data = $this->reportService->getSalesPaymentMethodsReport();
 
-        return view('reports.sales-payment-methods', $data);
+        $filters = $this->dates();
+
+        $data = $this->reportService->getSalesPaymentMethodsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+
+        return view(
+            'reports.sale.sales-payment-methods',
+
+            [
+                ...$data,
+                'fechaDesde' => $filters['fecha_desde'] ?? null,
+                'fechaHasta' => $filters['fecha_hasta'] ?? null,
+            ]
+        );
     }
 
 
@@ -103,10 +122,32 @@ public function kardex(Request $request) {
      */
     public function salesCustomers(): View
     {
-        $data = $this->reportService->getSalesCustomersReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getSalesCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.sales-customers', $data);
+        return view('reports.sale.sales-customers', [
+            ...$data,
+            'fechaDesde' => $filters['fecha_desde'] ?? null,
+            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+        ]);
     }
+
+
+public function getProductsByCategory(): View
+    {
+        $filters = $this->dates();
+        $data = $this->reportService->getProductsByCategoryReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+
+        return view('reports.sale.products-by-category', [
+            ...$data,
+            'fechaDesde' => $filters['fecha_desde'] ?? null,
+            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+        ]);
+    }
+
+
+
+
 
 
     /**
@@ -114,9 +155,10 @@ public function kardex(Request $request) {
      */
     public function inventory(): View
     {
+
         $data = $this->reportService->getInventoryReport();
 
-        return view('reports.inventory', $data);
+        return view('reports.inventory.inventory', $data);
     }
 
 
@@ -127,7 +169,7 @@ public function kardex(Request $request) {
     {
         $data = $this->reportService->getInventoryValuationReport();
 
-        return view('reports.inventory-valuation', $data);
+        return view('reports.inventory.inventory-valuation', $data);
     }
 
 
@@ -136,9 +178,9 @@ public function kardex(Request $request) {
      */
     public function inventoryLowStock(): View
     {
-        $data = $this->reportService->getLowStockReport();
+        $data = $this->reportService->getLowStockReportPaginated();
 
-        return view('reports.inventory-low-stock', $data);
+        return view('reports.inventory.inventory-low-stock', $data);
     }
 
 
@@ -147,9 +189,11 @@ public function kardex(Request $request) {
      */
     public function inventoryKardex(): View
     {
-        $data = $this->reportService->getKardexReport();
+        $filters = $this->dates();
+        $product_id = request()->input('product_id');
+        $data = $this->reportService->getKardexReport($product_id ?? null, $filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.kardex', $data);
+        return view('reports.inventory.kardex', $data);
     }
 
 
@@ -158,9 +202,10 @@ public function kardex(Request $request) {
      */
     public function purchases(): View
     {
-        $data = $this->reportService->getPurchasesReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getPurchasesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.purchases', $data);
+        return view('reports.shopping.purchases', $data);
     }
 
 
@@ -169,9 +214,10 @@ public function kardex(Request $request) {
      */
     public function purchasesProducts(): View
     {
-        $data = $this->reportService->getPurchasesProductsReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getPurchasesProductsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.purchases-products', $data);
+        return view('reports.shopping.purchases-products', $data);
     }
 
 
@@ -180,9 +226,10 @@ public function kardex(Request $request) {
      */
     public function purchasesSuppliers(): View
     {
-        $data = $this->reportService->getPurchasesSuppliersReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getPurchasesSuppliersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.purchases-suppliers', $data);
+        return view('reports.shopping.purchases-suppliers', $data);
     }
 
 
@@ -193,7 +240,7 @@ public function kardex(Request $request) {
     {
         $filters = $this->dates();
         $data = $this->reportService->getExpensesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
-        return view('reports.expenses', [
+        return view('reports.expenses.expenses', [
             ...$data,
             'fechaDesde' => $filters['fecha_desde'] ?? null,
             'fechaHasta' => $filters['fecha_hasta'] ?? null,
@@ -206,9 +253,14 @@ public function kardex(Request $request) {
      */
     public function expensesTypes(): View
     {
-        $data = $this->reportService->getExpensesTypesReport();
 
-        return view('reports.expenses-types', $data);
+        $filters = $this->dates();
+        $data = $this->reportService->getExpensesTypesReport(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
+
+        return view('reports.expenses.expenses-types', $data);
     }
 
 
@@ -217,9 +269,10 @@ public function kardex(Request $request) {
      */
     public function expensesPaymentMethods(): View
     {
-        $data = $this->reportService->getExpensesPaymentMethodsReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getExpensesPaymentMethodsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.expenses-payment-methods', $data);
+        return view('reports.expenses.expenses-payment-methods', $data);
     }
 
 
@@ -228,9 +281,10 @@ public function kardex(Request $request) {
      */
     public function profit(): View
     {
-        $data = $this->reportService->getProfitReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getProfitReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.profit', $data);
+        return view('reports.financial.profit', $data);
     }
 
 
@@ -239,9 +293,10 @@ public function kardex(Request $request) {
      */
     public function cashFlow(): View
     {
-        $data = $this->reportService->getCashFlowReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getCashFlowReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.cash-flow', $data);
+        return view('reports.financial.cash-flow', $data);
     }
 
 
@@ -250,9 +305,10 @@ public function kardex(Request $request) {
      */
     public function paymentMethods(): View
     {
-        $data = $this->reportService->getPaymentMethodsReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getPaymentMethodsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.payment-methods', $data);
+        return view('reports.financial.payment-methods', $data);
     }
 
 
@@ -261,9 +317,10 @@ public function kardex(Request $request) {
      */
     public function customers(): View
     {
-        $data = $this->reportService->getCustomersReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.customers', $data);
+        return view('reports.customers.customers', $data);
     }
 
 
@@ -272,9 +329,10 @@ public function kardex(Request $request) {
      */
     public function customersTop(): View
     {
-        $data = $this->reportService->getTopCustomersReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getTopCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.customers-top', $data);
+        return view('reports.customers.customers-top', $data);
     }
 
 
@@ -283,9 +341,10 @@ public function kardex(Request $request) {
      */
     public function customersInactive(): View
     {
-        $data = $this->reportService->getInactiveCustomersReport();
+        $filters = $this->dates();
+        $data = $this->reportService->getInactiveCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
 
-        return view('reports.customers-inactive', $data);
+        return view('reports.customers.customers-inactive', $data);
     }
 
 
@@ -295,31 +354,52 @@ public function kardex(Request $request) {
 |--------------------------------------------------------------------------
 */
 
-public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
-{
-    
+    public function salesPdf(Request $request): Response
+    {
+        $filters = $this->dates();
+        return $this->reportPdfService->sales(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
+    }
 
-    return $this->reportPdfService->sales(
-        $fechaDesde,
-        $fechaHasta
-    );
-}
 
 
 
     public function salesProductsPdf(): Response
     {
-        return $this->reportPdfService->salesProducts();
+        $filters = $this->dates();
+        return $this->reportPdfService->salesProducts(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function salesPaymentMethodsPdf(): Response
     {
-        return $this->reportPdfService->salesPaymentMethods();
+         $filters = $this->dates();
+        return $this->reportPdfService->salesPaymentMethods(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function salesCustomersPdf(): Response
     {
-        return $this->reportPdfService->salesCustomers();
+        $filters = $this->dates();
+        return $this->reportPdfService->salesCustomers(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
+    }
+
+    public function getProductsByCategoryPdf(): Response
+    {
+        $filters = $this->dates();
+        return $this->reportPdfService->getProductsByCategory(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
 
@@ -346,7 +426,13 @@ public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
 
     public function kardexPdf(): Response
     {
-        return $this->reportPdfService->kardex();
+        $filters = $this->dates();
+        $product_id = request()->input('product_id');
+        return $this->reportPdfService->kardex(
+            $product_id ?? null,
+             $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
 
@@ -358,17 +444,29 @@ public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
 
     public function purchasesPdf(): Response
     {
-        return $this->reportPdfService->purchases();
+        $filters = $this->dates();
+        return $this->reportPdfService->purchases(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function purchasesProductsPdf(): Response
     {
-        return $this->reportPdfService->purchasesProducts();
+        $filters = $this->dates();
+        return $this->reportPdfService->purchasesProducts(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function purchasesSuppliersPdf(): Response
     {
-        return $this->reportPdfService->purchasesSuppliers();
+        $filters = $this->dates();
+        return $this->reportPdfService->purchasesSuppliers(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
 
@@ -380,17 +478,29 @@ public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
 
     public function expensesPdf(): Response
     {
-        return $this->reportPdfService->expenses();
+        $filters = $this->dates();
+        return $this->reportPdfService->expenses(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function expensesTypesPdf(): Response
     {
-        return $this->reportPdfService->expensesTypes();
+        $filters = $this->dates();
+        return $this->reportPdfService->expensesTypes(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function expensesPaymentMethodsPdf(): Response
     {
-        return $this->reportPdfService->expensesPaymentMethods();
+        $filters = $this->dates();
+        return $this->reportPdfService->expensesPaymentMethods(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
 
@@ -402,17 +512,29 @@ public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
 
     public function profitPdf(): Response
     {
-        return $this->reportPdfService->profit();
+        $filters = $this->dates();
+        return $this->reportPdfService->profit(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function cashFlowPdf(): Response
     {
-        return $this->reportPdfService->cashFlow();
+        $filters = $this->dates();
+        return $this->reportPdfService->cashFlow(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function paymentMethodsPdf(): Response
     {
-        return $this->reportPdfService->paymentMethods();
+        $filters = $this->dates();
+        return $this->reportPdfService->paymentMethods(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
 
@@ -424,17 +546,29 @@ public function salesPdf($fechaDesde = null, $fechaHasta = null): Response
 
     public function customersPdf(): Response
     {
-        return $this->reportPdfService->customers();
+        $filters = $this->dates();
+        return $this->reportPdfService->customers(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function topCustomersPdf(): Response
     {
-        return $this->reportPdfService->topCustomers();
+        $filters = $this->dates();
+        return $this->reportPdfService->topCustomers(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 
     public function inactiveCustomersPdf(): Response
     {
-        return $this->reportPdfService->inactiveCustomers();
+        $filters = $this->dates();
+        return $this->reportPdfService->inactiveCustomers(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
     }
 }
 /*

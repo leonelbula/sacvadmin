@@ -94,7 +94,7 @@ class ShoppingCreateAction
                     'subtotal'   => $subtotalItem,
                     'has_iva' => 1,
                     'iva'     => $taxRecord->value,
-                    'total'   => $prod['quantity'],
+                    'total'   => $costTotalItem,
                 ];
 
 
@@ -102,10 +102,10 @@ class ShoppingCreateAction
                     'product_id'    => $prod['id'],
                     'date'          => now(),
                     'movement_type' => 'INGRESO',
-                    'origin'        => "cOMPRA NRO: {$shopping->invoice_number}",
+                    'origin'        => "COMPRA NRO: {$shopping->invoice_number}",
                     'reference_id'  => $shopping->id,
-                    'income'        => 0,
-                    'output'        => $prod['quantity'],
+                    'income'        => $prod['quantity'],
+                    'output'        => 0,
                     'stock_before'  => $stockBefore,
                     'stock_after'   => $stockAfter,
                     'unit_cost'     => $prod['price'],

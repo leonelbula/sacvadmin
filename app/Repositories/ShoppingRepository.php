@@ -50,7 +50,9 @@ class ShoppingRepository implements ShoppingRepositoryInterface
         return (bool) $sale->delete();
     }
 
-    public function totalShopping() {}
+    public function totalShopping() {
+        return Shopping::sum('total');
+    }
     public function totalShoppingDate(string $start_date, string $close_date) {}
 
 

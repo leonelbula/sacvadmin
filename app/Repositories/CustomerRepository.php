@@ -51,4 +51,8 @@ class CustomerRepository implements CustomerRepositoryInterface
 
         return $clientes;
     }
+    public function countCustomers()
+    {
+        return Customer::count();
+    }
 }

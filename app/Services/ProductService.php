@@ -67,4 +67,9 @@ class ProductService
     public function countProduct() {
         return  $this->repository->countProduct();
     }
+
+    public function lowStockProducts()
+    {
+        return $this->repository->lowStockProducts();
+    }
 }

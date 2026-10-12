@@ -54,4 +54,8 @@ class ShoppingService
     {
         return $this->shopping_repository->searchShopping($filters);
     }
+    public function totalShopping()
+    {
+        return $this->shopping_repository->totalShopping();
+    }
 }

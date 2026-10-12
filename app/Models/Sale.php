@@ -46,7 +46,10 @@ class Sale extends Model
 
     public function paymentMethod(): BelongsTo
     {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(
+            PaymentMethod::class,
+            'payment_method_id'
+        );
     }
     public function user(): BelongsTo
     {
@@ -56,4 +59,11 @@ class Sale extends Model
     {
         return $this->hasMany(SaleReturn::class);
     }
+    public function accountReceivablePayments(): HasMany
+    {
+        return $this->hasMany(AccountReceivablePayment::class);
+    }
+
+
+   
 }

@@ -1,3 +1,4 @@
+@can('product.view')
 <div class="dashboard-card">
 
     <div class="card-header-custom">
@@ -18,12 +19,12 @@
 
     <div class="stock-list">
 
-        @foreach ([['Mouse Logitech', 2], ['Monitor LG', 3], ['Teclado Gamer', 4], ['Memoria USB', 1], ['Impresora Epson', 5]] as $product)
+        @foreach ($LowStockProduct as $product)
             <div class="stock-item">
 
                 <div>
 
-                    <strong>{{ $product[0] }}</strong>
+                    <strong>{{ $product->name }}</strong>
 
                     <div class="text-muted">
 
@@ -35,7 +36,7 @@
 
                 <span class="stock-badge">
 
-                    {{ $product[1] }}
+                    {{ $product->stock }}
 
                 </span>
 
@@ -45,3 +46,5 @@
     </div>
 
 </div>
+@endcan
+

@@ -82,7 +82,7 @@
 
                         </th>
 
-                       
+
 
                         <th width="120">
 
@@ -126,7 +126,7 @@
 
                     <i class="bi bi-lightning-charge-fill text-warning"></i>
 
-                    <strong>F2</strong> Buscar Cliente
+                    <strong>F2</strong> Buscar Proveedor
 
                 </div>
 

@@ -2,7 +2,7 @@
 namespace App\Services;
 
 use App\Actions\Customer\CreateCustomerAction;
-use App\Actions\Customer\DeleteCustomerAction;  
+use App\Actions\Customer\DeleteCustomerAction;
 use App\Actions\Customer\UpdateCustomerAction;
 use App\Interfaces\CustomerRepositoryInterface;
 use App\DTOs\CustomerDTO;
@@ -43,5 +43,9 @@ class CustomerService
     public function search(string $query)
     {
         return $this->customerRepository->search($query);
+    }
+    public function countCustomers()
+    {
+        return $this->customerRepository->countCustomers();
     }
 }

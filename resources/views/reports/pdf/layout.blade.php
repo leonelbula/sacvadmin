@@ -10,10 +10,12 @@
     </title>
 
     <style>
-        @page {
-            margin: 25px 30px;
-        }
 
+         @page {
+            size: letter portrait;
+            margin: 15mm;
+        }
+       
         * {
             box-sizing: border-box;
         }

@@ -12,6 +12,7 @@ use App\Models\Expense;
 use App\Models\Customer;
 use App\Models\Kardex;
 use App\Models\PaymentMethod;
+use App\Models\Pos;
 use Illuminate\Support\Facades\DB;
 
 class ReportRepository implements ReportRepositoryInterface
@@ -167,37 +168,37 @@ class ReportRepository implements ReportRepositoryInterface
 
 
 
-public function getSalesReport(
-    ?string $fechaDesde = null,
-    ?string $fechaHasta = null
-): array {
+    public function getSalesReport(
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
 
-    $query = Sale::with([
-        'customer',
-        'user',
-    ]);
+        $query = Sale::with([
+            'customer',
+            'user',
+        ]);
 
-    $this->applyDateFilter(
-        $query,
-        $fechaDesde,
-        $fechaHasta,
-        'date_sale'
-    );
+        $this->applyDateFilter(
+            $query,
+            $fechaDesde,
+            $fechaHasta,
+            'date_sale'
+        );
 
-    $sales = $query
-        ->orderByDesc('date_sale')
-        ->get();
+        $sales = $query
+            ->orderByDesc('date_sale')
+            ->get();
 
-    return [
+        return [
 
-        'sales' => $sales,
+            'sales' => $sales,
 
-        'total' => $sales->sum('total'),
+            'total' => $sales->sum('total'),
 
-        'quantity' => $sales->count(),
+            'quantity' => $sales->count(),
 
-    ];
-}
+        ];
+    }
 
 
 
@@ -289,12 +290,14 @@ public function getSalesReport(
         ?string $fechaHasta = null
     ): array {
 
-        $query = Sale::query();
+        $query = Sale::query()
+            ->with('paymentMethod');
 
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date_sale'
         );
 
         $sales = $query->get();
@@ -303,61 +306,36 @@ public function getSalesReport(
 
         foreach ($sales as $sale) {
 
-            $salePayments = $sale->payment_methods
-                ?? $sale->payments
-                ?? null;
+            $paymentMethodId = $sale->payment_method_id;
 
-            if (is_string($salePayments)) {
-
-                $salePayments = json_decode(
-                    $salePayments,
-                    true
-                );
-            }
-
-            if (!is_array($salePayments)) {
+            if (!$paymentMethodId) {
                 continue;
             }
 
-            foreach ($salePayments as $payment) {
+            if (!isset($payments[$paymentMethodId])) {
 
-                $paymentMethodId =
-                    $payment['payment_method_id']
-                    ?? null;
-
-                if (!$paymentMethodId) {
-                    continue;
-                }
-
-                if (!isset($payments[$paymentMethodId])) {
-
-                    $payments[$paymentMethodId] = [
-
-                        'payment_method_id' =>
-                        $paymentMethodId,
-
-                        'quantity' => 0,
-
-                        'total' => 0,
-
-                    ];
-                }
-
-                $payments[$paymentMethodId]['quantity']
-                    += (int) (
-                        $payment['quantity']
-                        ?? 1
-                    );
-
-                $payments[$paymentMethodId]['total']
-                    += (float) (
-                        $payment['total']
-                        ?? 0
-                    );
+                $payments[$paymentMethodId] = [
+                    'payment_method_id' => $paymentMethodId,
+                    'quantity' => 0,
+                    'total' => 0,
+                ];
             }
+
+            $payments[$paymentMethodId]['quantity']++;
+
+            $payments[$paymentMethodId]['total'] +=
+                (float) ($sale->total ?? 0);
         }
 
         $methodIds = array_keys($payments);
+
+        if (empty($methodIds)) {
+            return [
+                'payments' => collect(),
+                'total' => 0,
+                'quantity' => 0,
+            ];
+        }
 
         $paymentMethods = PaymentMethod::whereIn(
             'id',
@@ -367,28 +345,118 @@ public function getSalesReport(
             ->keyBy('id');
 
         $payments = collect($payments)
-            ->map(function ($payment) use (
-                $paymentMethods
-            ) {
+            ->map(function ($payment) use ($paymentMethods) {
 
-                $payment['name'] =
-                    $paymentMethods[$payment['payment_method_id']]->name
-                    ?? 'Sin método';
+                $paymentMethod = $paymentMethods->get(
+                    $payment['payment_method_id']
+                );
+
+                $payment['name'] = $paymentMethod
+                    ? $paymentMethod->name
+                    : 'Sin método';
 
                 return (object) $payment;
             })
             ->values();
 
         return [
-
             'payments' => $payments,
-
             'total' => $payments->sum('total'),
-
             'quantity' => $payments->sum('quantity'),
-
         ];
     }
+
+
+    /* ventas por categoria */
+
+
+    public function getProductsByCategoryReport(
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
+
+        $salesQuery = Sale::query()
+            ->with([
+                'details.product.category'
+            ]);
+
+        $this->applyDateFilter(
+            $salesQuery,
+            $fechaDesde,
+            $fechaHasta,
+            'date_sale'
+        );
+
+        $sales = $salesQuery->get();
+
+        $categories = collect();
+
+        foreach ($sales as $sale) {
+
+            foreach ($sale->details as $detail) {
+
+                $product = $detail->product;
+
+                if (!$product || !$product->category) {
+                    continue;
+                }
+
+                $category = $product->category;
+
+                if (!$categories->has($category->id)) {
+
+                    $categories->put(
+                        $category->id,
+                        (object) [
+                            'category_id' => $category->id,
+                            'name' => $category->name,
+                            'quantity' => 0,
+                            'total' => 0,
+                        ]
+                    );
+                }
+
+                $categoryData = $categories->get($category->id);
+
+                $categoryData->quantity += (int) $detail->quantity;
+
+                $categoryData->total += (float) (
+                    $detail->subtotal
+                    ?? (
+                        $detail->quantity * $detail->price
+                    )
+                );
+            }
+        }
+
+        $total = $categories->sum('total');
+
+        $quantity = $categories->sum('quantity');
+
+        $categories = $categories
+            ->map(function ($category) use ($total) {
+
+                $category->percentage = $total > 0
+                    ? ($category->total / $total) * 100
+                    : 0;
+
+                return $category;
+            })
+            ->sortByDesc('total')
+            ->values();
+
+        return [
+            'categories' => $categories,
+            'total' => $total,
+            'quantity' => $quantity,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
+        ];
+    }
+
+
+
+
 
 
     /*
@@ -407,7 +475,8 @@ public function getSalesReport(
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date_sale'
         );
 
         $sales = $query->get();
@@ -449,20 +518,19 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
-    public function getInventoryReport(): array
+    public function getInventoryReport(int $perPage = 50): array
     {
         $products = Product::query()
-            ->orderBy('name')
-            ->get();
-
+            ->select(['id', 'code', 'name', 'stock', 'stock_min',])
+            ->orderBy('name')->paginate($perPage);
+        $summary = Product::query()
+            ->selectRaw(' COUNT(*) as quantity, SUM( CASE WHEN stock > stock_min THEN 1 ELSE 0 END ) as normal, SUM( CASE WHEN stock > 0 AND stock <= stock_min THEN 1 ELSE 0 END ) as low_stock, SUM( CASE WHEN stock <= 0 THEN 1 ELSE 0 END ) as out_of_stock ')->first();
         return [
-
             'products' => $products,
-
-            'quantity' => $products->count(),
-
-            'stock' => $products->sum('stock'),
-
+            'quantity' => (int) $summary->quantity,
+            'normal' => (int) $summary->normal,
+            'lowStock' => (int) $summary->low_stock,
+            'outOfStock' => (int) $summary->out_of_stock,
         ];
     }
 
@@ -473,40 +541,31 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
     public function getInventoryValuationReport(): array
     {
-        $products = Product::query()
-            ->orderBy('name')
-            ->get();
+        $valuation = Product::query()
+            ->selectRaw('
+            COUNT(*) as quantity,
+            COALESCE(SUM(stock), 0) as stock,
+            COALESCE(SUM(stock * cost), 0) as inventory_cost,
+            COALESCE(SUM(stock * price), 0) as inventory_price
+        ')
+            ->first();
 
-        $products = $products->map(
-            function ($product) {
-
-                $product->inventory_cost =
-                    $product->stock * $product->cost;
-
-                $product->inventory_price =
-                    $product->stock * $product->price;
-
-                return $product;
-            }
-        );
+        $inventoryCost = (float) $valuation->inventory_cost;
+        $inventoryPrice = (float) $valuation->inventory_price;
 
         return [
-
-            'products' => $products,
-
-            'totalCost' =>
-            $products->sum('inventory_cost'),
-
-            'totalPrice' =>
-            $products->sum('inventory_price'),
-
-            'stock' =>
-            $products->sum('stock'),
-
+            'quantity' => (int) $valuation->quantity,
+            'stock' => (int) $valuation->stock,
+            'inventory_cost' => $inventoryCost,
+            'inventory_price' => $inventoryPrice,
+            'utility' => $inventoryPrice - $inventoryCost,
         ];
     }
+
+
 
 
     /*
@@ -535,6 +594,26 @@ public function getSalesReport(
         ];
     }
 
+    public function getLowStockReportPaginated(): array
+    {
+        $products = Product::query()
+            ->whereColumn(
+                'stock',
+                '<=',
+                'stock_min'
+            )
+            ->orderBy('stock')
+            ->paginate(50);
+
+        return [
+
+            'products' => $products,
+
+            'quantity' => $products->count(),
+
+        ];
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -542,35 +621,153 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
     public function getKardexReport(
+        ?int $productId = null,
         ?string $fechaDesde = null,
-        ?string $fechaHasta = null
+        ?string $fechaHasta = null,
+        int $perPage = 50
     ): array {
+        $query = Kardex::query()
+            ->with('product')
+            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc');
 
-        $query = Kardex::with([
-            'product',
-            'user',
-        ]);
-
-        $this->applyDateFilter(
+        $this->applyKardexFilters(
             $query,
+            $productId,
             $fechaDesde,
             $fechaHasta
         );
 
         $kardex = $query
-            ->orderByDesc('date')
-            ->orderByDesc('id')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $summary = $this->getKardexSummary(
+            $productId,
+            $fechaDesde,
+            $fechaHasta
+        );
+
+        $productList = Product::query()
+            ->select([
+                'id',
+                'code',
+                'name',
+            ])
+            ->orderBy('name')
             ->get();
 
         return [
-
             'kardex' => $kardex,
-
-            'quantity' => $kardex->count(),
-
+            'quantity' => $summary['quantity'],
+            'income' => $summary['income'],
+            'output' => $summary['output'],
+            'currentStock' => $summary['currentStock'],
+            'productList' => $productList,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
+            'productId' => $productId,
         ];
     }
+
+    public function getKardexPdfReport(
+        ?int $productId = null,
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
+        $query = Kardex::query()
+            ->with('product')
+            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc');
+
+        $this->applyKardexFilters(
+            $query,
+            $productId,
+            $fechaDesde,
+            $fechaHasta
+        );
+
+        $kardex = $query->get();
+
+        $summary = $this->getKardexSummary(
+            $productId,
+            $fechaDesde,
+            $fechaHasta
+        );
+
+        $product = $productId
+            ? Product::select('id', 'code', 'name')->find($productId)
+            : null;
+
+        return [
+            'kardex' => $kardex,
+            'quantity' => $summary['quantity'],
+            'income' => $summary['income'],
+            'output' => $summary['output'],
+            'currentStock' => $summary['currentStock'],
+            'product' => $product,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
+        ];
+    }
+
+    private function getKardexSummary(
+        ?int $productId,
+        ?string $fechaDesde,
+        ?string $fechaHasta
+    ): array {
+        $query = Kardex::query();
+
+        $this->applyKardexFilters(
+            $query,
+            $productId,
+            $fechaDesde,
+            $fechaHasta
+        );
+
+        $summary = $query
+            ->selectRaw('
+            COUNT(*) as quantity,
+            COALESCE(SUM(income), 0) as income,
+            COALESCE(SUM(output), 0) as output
+        ')
+            ->first();
+
+        $currentStock = $productId
+            ? Product::whereKey($productId)->value('stock')
+            : Product::sum('stock');
+
+        return [
+            'quantity' => (int) $summary->quantity,
+            'income' => (int) $summary->income,
+            'output' => (int) $summary->output,
+            'currentStock' => (int) ($currentStock ?? 0),
+        ];
+    }
+
+    private function applyKardexFilters(
+        $query,
+        ?int $productId,
+        ?string $fechaDesde,
+        ?string $fechaHasta
+    ): void {
+        if ($productId) {
+            $query->where('product_id', $productId);
+        }
+
+        if ($fechaDesde) {
+            $query->whereDate('date', '>=', $fechaDesde);
+        }
+
+        if ($fechaHasta) {
+            $query->whereDate('date', '<=', $fechaHasta);
+        }
+    }
+
+
+
 
 
     /*
@@ -592,19 +789,22 @@ public function getSalesReport(
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'shopping_date'
         );
 
         $purchases = $query
-            ->orderByDesc('date')
-            ->get();
+            ->orderByDesc('shopping_date')
+            ->paginate(50);
 
         return [
-
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
             'purchases' => $purchases,
-
+            'subtotal' => $purchases->sum('subtotal'),
+            'iva' => $purchases->sum('iva'),
             'total' => $purchases->sum('total'),
-
+            'balance' => $purchases->sum('balance'),
             'quantity' => $purchases->count(),
 
         ];
@@ -617,11 +817,13 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
+
     public function getPurchasesProductsReport(
         ?string $fechaDesde = null,
-        ?string $fechaHasta = null
+        ?string $fechaHasta = null,
+        int $perPage = 50
     ): array {
-
         $query = ShoppingDetail::with([
             'product',
             'shopping',
@@ -633,11 +835,11 @@ public function getSalesReport(
                 $fechaDesde,
                 $fechaHasta
             ) {
-
                 $this->applyDateFilter(
                     $shoppingQuery,
                     $fechaDesde,
-                    $fechaHasta
+                    $fechaHasta,
+                    'shopping_date'
                 );
             }
         );
@@ -649,36 +851,61 @@ public function getSalesReport(
 
                 $first = $items->first();
 
+                $units = $items->sum('quantity');
+
+                $totalCost = $items->sum('subtotal');
+
+                $unitCost = $units > 0
+                    ? $totalCost / $units
+                    : 0;
+
                 return (object) [
-
                     'product' => $first->product,
-
-                    'quantity' => $items->sum('quantity'),
-
-                    'total' => $items->sum(
-                        function ($item) {
-
-                            return $item->subtotal
-                                ?? $item->total
-                                ?? 0;
-                        }
-                    ),
-
+                    'units' => $units,
+                    'unit_cost' => $unitCost,
+                    'total_cost' => $totalCost,
                 ];
             })
-            ->sortByDesc('quantity')
+            ->sortByDesc('units')
             ->values();
 
+        $quantity = $products->count();
+
+        $units = $products->sum('units');
+
+        $totalCost = $products->sum('total_cost');
+
+        $averageCost = $units > 0
+            ? $totalCost / $units
+            : 0;
+
+        if ($perPage > 0) {
+
+            $currentPage = request()->integer('page', 1);
+
+            $products = new \Illuminate\Pagination\LengthAwarePaginator(
+                $products->forPage($currentPage, $perPage)->values(),
+                $products->count(),
+                $perPage,
+                $currentPage,
+                [
+                    'path' => request()->url(),
+                    'query' => request()->query(),
+                ]
+            );
+        }
+
         return [
-
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
             'products' => $products,
-
-            'total' => $products->sum('total'),
-
-            'quantity' => $products->sum('quantity'),
-
+            'quantity' => $quantity,
+            'units' => $units,
+            'totalCost' => $totalCost,
+            'averageCost' => $averageCost,
         ];
     }
+
 
 
     /*
@@ -687,17 +914,19 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
     public function getPurchasesSuppliersReport(
         ?string $fechaDesde = null,
-        ?string $fechaHasta = null
+        ?string $fechaHasta = null,
+        int $perPage = 50
     ): array {
-
         $query = Shopping::with('supplier');
 
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'shopping_date'
         );
 
         $purchases = $query->get();
@@ -707,31 +936,64 @@ public function getSalesReport(
             ->map(function ($items) {
 
                 $first = $items->first();
+                $supplier = $first->supplier;
 
                 return (object) [
-
-                    'supplier' => $first->supplier,
-
-                    'purchases' => $items->count(),
-
+                    'id' => $supplier?->id,
+                    'full_name' => $supplier?->full_name ?? 'Sin proveedor',
+                    'identification' => $supplier?->identification ?? 'N/A',
+                    'quantity' => $items->count(),
+                    'subtotal' => $items->sum('subtotal'),
+                    'iva' => $items->sum('iva'),
                     'total' => $items->sum('total'),
-
+                    'balance' => $items->sum('balance'),
                 ];
             })
             ->sortByDesc('total')
             ->values();
 
+        $quantity = $suppliers->count();
+
+        $purchasesQuantity = $suppliers->sum('quantity');
+
+        $subtotal = $suppliers->sum('subtotal');
+
+        $iva = $suppliers->sum('iva');
+
+        $total = $suppliers->sum('total');
+
+        $balance = $suppliers->sum('balance');
+
+        if ($perPage > 0) {
+
+            $currentPage = request()->integer('page', 1);
+
+            $suppliers = new \Illuminate\Pagination\LengthAwarePaginator(
+                $suppliers->forPage($currentPage, $perPage)->values(),
+                $suppliers->count(),
+                $perPage,
+                $currentPage,
+                [
+                    'path' => request()->url(),
+                    'query' => request()->query(),
+                ]
+            );
+        }
+
         return [
-
             'suppliers' => $suppliers,
-
-            'total' => $suppliers->sum('total'),
-
-            'quantity' =>
-            $suppliers->sum('purchases'),
-
+            'quantity' => $quantity,
+            'purchasesQuantity' => $purchasesQuantity,
+            'subtotal' => $subtotal,
+            'iva' => $iva,
+            'total' => $total,
+            'balance' => $balance,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
+
+
 
 
     /*
@@ -740,11 +1002,12 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
     public function getExpensesReport(
         ?string $fechaDesde = null,
-        ?string $fechaHasta = null
+        ?string $fechaHasta = null,
+        int $perPage = 50
     ): array {
-
         $query = Expense::with([
             'paymentMethod',
             'typeExpense',
@@ -754,7 +1017,8 @@ public function getSalesReport(
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date'
         );
 
         $expenses = $query
@@ -762,16 +1026,33 @@ public function getSalesReport(
             ->orderByDesc('hour')
             ->get();
 
+        $quantity = $expenses->count();
+        $total = $expenses->sum('total');
+
+        if ($perPage > 0) {
+            $currentPage = request()->integer('page', 1);
+
+            $expenses = new \Illuminate\Pagination\LengthAwarePaginator(
+                $expenses->forPage($currentPage, $perPage)->values(),
+                $quantity,
+                $perPage,
+                $currentPage,
+                [
+                    'path' => request()->url(),
+                    'query' => request()->query(),
+                ]
+            );
+        }
+
         return [
-
             'expenses' => $expenses,
-
-            'total' => $expenses->sum('total'),
-
-            'quantity' => $expenses->count(),
-
+            'total' => $total,
+            'quantity' => $quantity,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
+
 
 
     /*
@@ -780,17 +1061,19 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
     public function getExpensesTypesReport(
         ?string $fechaDesde = null,
-        ?string $fechaHasta = null
+        ?string $fechaHasta = null,
+        int $perPage = 50
     ): array {
-
         $query = Expense::with('typeExpense');
 
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date'
         );
 
         $expenses = $query->get();
@@ -800,34 +1083,46 @@ public function getSalesReport(
             ->map(function ($items) {
 
                 $first = $items->first();
+                $typeExpense = $first->typeExpense;
 
                 return (object) [
-
-                    'typeExpense' =>
-                    $first->typeExpense,
-
-                    'quantity' =>
-                    $items->count(),
-
-                    'total' =>
-                    $items->sum('total'),
-
+                    'id' => $typeExpense?->id,
+                    'description' => $typeExpense?->description ?? 'Sin tipo',
+                    'quantity' => $items->count(),
+                    'total' => $items->sum('total'),
                 ];
             })
             ->sortByDesc('total')
             ->values();
 
+        $quantity = $types->sum('quantity');
+        $total = $types->sum('total');
+
+        if ($perPage > 0) {
+            $currentPage = request()->integer('page', 1);
+
+            $types = new \Illuminate\Pagination\LengthAwarePaginator(
+                $types->forPage($currentPage, $perPage)->values(),
+                $types->count(),
+                $perPage,
+                $currentPage,
+                [
+                    'path' => request()->url(),
+                    'query' => request()->query(),
+                ]
+            );
+        }
+
         return [
-
             'types' => $types,
-
-            'total' => $types->sum('total'),
-
-            'quantity' =>
-            $types->sum('quantity'),
-
+            'total' => $total,
+            'quantity' => $quantity,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
+
+
 
 
     /*
@@ -836,9 +1131,12 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
+
     public function getExpensesPaymentMethodsReport(
         ?string $fechaDesde = null,
-        ?string $fechaHasta = null
+        ?string $fechaHasta = null,
+        int $perPage = 50
     ): array {
 
         $query = Expense::with('paymentMethod');
@@ -846,44 +1144,69 @@ public function getSalesReport(
         $this->applyDateFilter(
             $query,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date'
         );
 
-        $expenses = $query->get();
+        $expenses = $query
+            ->orderByDesc('date')
+            ->orderByDesc('hour')
+            ->get();
 
-        $payments = $expenses
+        $paymentMethods = $expenses
             ->groupBy('payment_method_id')
             ->map(function ($items) {
 
                 $first = $items->first();
 
                 return (object) [
-
-                    'paymentMethod' =>
-                    $first->paymentMethod,
-
-                    'quantity' =>
-                    $items->count(),
-
-                    'total' =>
-                    $items->sum('total'),
-
+                    'id' => $first->paymentMethod?->id,
+                    'name' => $first->paymentMethod?->name ?? 'Sin método de pago',
+                    'paymentMethod' => $first->paymentMethod,
+                    'quantity' => $items->count(),
+                    'total' => $items->sum('total'),
                 ];
             })
             ->sortByDesc('total')
             ->values();
 
+        $quantity = $paymentMethods->sum('quantity');
+
+        $total = $paymentMethods->sum('total');
+
+        if ($perPage > 0) {
+
+            $currentPage = request()->integer('page', 1);
+
+            $paymentMethods = new \Illuminate\Pagination\LengthAwarePaginator(
+                $paymentMethods
+                    ->forPage($currentPage, $perPage)
+                    ->values(),
+
+                $paymentMethods->count(),
+
+                $perPage,
+
+                $currentPage,
+
+                [
+                    'path' => request()->url(),
+                    'query' => request()->query(),
+                ]
+            );
+        }
+
         return [
-
-            'payments' => $payments,
-
-            'total' => $payments->sum('total'),
-
-            'quantity' =>
-            $payments->sum('quantity'),
-
+            'paymentMethods' => $paymentMethods,
+            'total' => $total,
+            'quantity' => $quantity,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
+
+
+
 
 
     /*
@@ -891,6 +1214,9 @@ public function getSalesReport(
     | UTILIDAD
     |--------------------------------------------------------------------------
     */
+
+
+
 
     public function getProfitReport(
         ?string $fechaDesde = null,
@@ -902,15 +1228,8 @@ public function getSalesReport(
         $this->applyDateFilter(
             $salesQuery,
             $fechaDesde,
-            $fechaHasta
-        );
-
-        $purchasesQuery = Shopping::query();
-
-        $this->applyDateFilter(
-            $purchasesQuery,
-            $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date_sale'
         );
 
         $expensesQuery = Expense::query();
@@ -918,39 +1237,89 @@ public function getSalesReport(
         $this->applyDateFilter(
             $expensesQuery,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date'
         );
 
-        $sales = $salesQuery->sum('total');
+        $posQuery = Pos::query();
 
-        $purchases = $purchasesQuery->sum('total');
+        $this->applyDateFilter(
+            $posQuery,
+            $fechaDesde,
+            $fechaHasta,
+            'closing_date'
+        );
 
-        $expenses = $expensesQuery->sum('total');
+        $salesTotal = $salesQuery->sum('total');
 
-        $profit =
-            $sales
-            - $purchases
-            - $expenses;
+        $grossProfit = $salesQuery->sum('utility');
+
+        $expensesTotal = $expensesQuery->sum('total');
+
+        $netProfit = $grossProfit - $expensesTotal;
+
+        $costTotal = $salesTotal - $grossProfit;
+
+        $totalCash = (clone $posQuery)
+            ->sum('cash');
+
+        $totalConsignment = (clone $posQuery)
+            ->sum('consignment');
+
+        $totalReturnsSale = (clone $posQuery)
+            ->sum('returns_sale');
+
+        $totalDelivered = (clone $posQuery)
+            ->sum('delivered_value');
+
+        $surplus = (clone $posQuery)
+            ->where('difference', '>', 0)
+            ->sum('difference');
+
+        $shortage = (clone $posQuery)
+            ->where('difference', '<', 0)
+            ->sum('difference');
+
+        $shortage = abs($shortage);
+
+        $netCashDifference = $surplus - $shortage;
+
+        $adjustedProfit = $netProfit + $netCashDifference;
+
+        $profitMargin = $salesTotal > 0
+            ? ($adjustedProfit / $salesTotal) * 100
+            : 0;
 
         return [
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
 
-            'sales' => $sales,
+            'salesTotal' => $salesTotal,
+            'costTotal' => $costTotal,
+            'grossProfit' => $grossProfit,
+            'expensesTotal' => $expensesTotal,
+            'netProfit' => $netProfit,
 
-            'purchases' => $purchases,
+            'totalCash' => $totalCash,
+            'totalConsignment' => $totalConsignment,
+            'totalReturnsSale' => $totalReturnsSale,
+            'totalDelivered' => $totalDelivered,
 
-            'expenses' => $expenses,
+            'surplus' => $surplus,
+            'shortage' => $shortage,
+            'netCashDifference' => $netCashDifference,
 
-            'profit' => $profit,
-
+            'adjustedProfit' => $adjustedProfit,
+            'profitMargin' => $profitMargin,
         ];
     }
-
 
     /*
     |--------------------------------------------------------------------------
     | FLUJO DE CAJA
     |--------------------------------------------------------------------------
     */
+
 
     public function getCashFlowReport(
         ?string $fechaDesde = null,
@@ -962,7 +1331,8 @@ public function getSalesReport(
         $this->applyDateFilter(
             $salesQuery,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date_sale'
         );
 
         $expensesQuery = Expense::query();
@@ -970,7 +1340,8 @@ public function getSalesReport(
         $this->applyDateFilter(
             $expensesQuery,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date'
         );
 
         $purchasesQuery = Shopping::query();
@@ -978,7 +1349,17 @@ public function getSalesReport(
         $this->applyDateFilter(
             $purchasesQuery,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'shopping_date'
+        );
+
+        $posQuery = Pos::query();
+
+        $this->applyDateFilter(
+            $posQuery,
+            $fechaDesde,
+            $fechaHasta,
+            'closing_date'
         );
 
         $sales = $salesQuery->sum('total');
@@ -987,17 +1368,45 @@ public function getSalesReport(
 
         $purchases = $purchasesQuery->sum('total');
 
+        $totalCash = $posQuery->sum('cash');
+
+        $totalConsignment = $posQuery->sum('consignment');
+
+        $totalReturnsSale = $posQuery->sum('returns_sale');
+
+        $totalDelivered = $posQuery->sum('delivered_value');
+
+        $surplus = (clone $posQuery)
+            ->where('difference', '>', 0)
+            ->sum('difference');
+
+        $shortage = (clone $posQuery)
+            ->where('difference', '<', 0)
+            ->sum('difference');
+
+        $shortage = abs($shortage);
+
         $income = $sales;
 
         $outcome =
             $expenses
-            + $purchases;
+            + $purchases
+            + $totalReturnsSale;
+
+        $netCashFlow =
+            $income
+            - $outcome
+            + $surplus
+            - $shortage;
 
         return [
 
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
+
             'income' => $income,
 
-            'sales' => $sales,
+            'salesTotal' => $sales,
 
             'outcome' => $outcome,
 
@@ -1005,11 +1414,25 @@ public function getSalesReport(
 
             'expenses' => $expenses,
 
-            'balance' =>
-            $income - $outcome,
+            'totalCash' => $totalCash,
 
+            'totalConsignment' => $totalConsignment,
+
+            'totalReturnsSale' => $totalReturnsSale,
+
+            'totalDelivered' => $totalDelivered,
+
+            'surplus' => $surplus,
+
+            'shortage' => $shortage,
+
+            'netCashFlow' => $netCashFlow,
+
+            'balance' => $netCashFlow,
         ];
     }
+
+
 
 
     /*
@@ -1018,112 +1441,109 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
+
+
     public function getPaymentMethodsReport(
         ?string $fechaDesde = null,
         ?string $fechaHasta = null
     ): array {
 
-        $query = Sale::query();
+        $salesQuery = Sale::query();
 
         $this->applyDateFilter(
-            $query,
+            $salesQuery,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date_sale'
         );
 
-        $sales = $query->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Aquí utilizamos el JSON de métodos de pago de las ventas.
-        |--------------------------------------------------------------------------
-        */
+        $sales = $salesQuery
+            ->select([
+                'id',
+                'payment_method_id',
+                'total',
+            ])
+            ->get();
 
         $payments = [];
 
         foreach ($sales as $sale) {
 
-            $salePayments = $sale->payment_methods
-                ?? $sale->payments
-                ?? null;
+            $paymentMethodId = $sale->payment_method_id;
 
-            if (is_string($salePayments)) {
-
-                $salePayments = json_decode(
-                    $salePayments,
-                    true
-                );
-            }
-
-            if (!is_array($salePayments)) {
+            if (!$paymentMethodId) {
                 continue;
             }
 
-            foreach ($salePayments as $payment) {
+            if (!isset($payments[$paymentMethodId])) {
 
-                $id =
-                    $payment['payment_method_id']
-                    ?? null;
-
-                if (!$id) {
-                    continue;
-                }
-
-                if (!isset($payments[$id])) {
-
-                    $payments[$id] = [
-
-                        'payment_method_id' => $id,
-
-                        'quantity' => 0,
-
-                        'total' => 0,
-
-                    ];
-                }
-
-                $payments[$id]['quantity']
-                    += (int) (
-                        $payment['quantity']
-                        ?? 1
-                    );
-
-                $payments[$id]['total']
-                    += (float) (
-                        $payment['total']
-                        ?? 0
-                    );
+                $payments[$paymentMethodId] = [
+                    'payment_method_id' => $paymentMethodId,
+                    'quantity' => 0,
+                    'total' => 0,
+                ];
             }
+
+            $payments[$paymentMethodId]['quantity']++;
+
+            $payments[$paymentMethodId]['total']
+                += (float) $sale->total;
         }
 
-        $methods = PaymentMethod::whereIn(
-            'id',
-            array_keys($payments)
-        )
-            ->get()
+        $methods = PaymentMethod::query()
+            ->whereIn(
+                'id',
+                array_keys($payments)
+            )
+            ->get([
+                'id',
+                'name',
+            ])
             ->keyBy('id');
 
-        $payments = collect($payments)
-            ->map(function ($item) use ($methods) {
+        $paymentMethods = collect($payments)
+            ->map(function (array $payment) use ($methods) {
 
-                $item['paymentMethod'] =
-                    $methods[$item['payment_method_id']] ?? null;
+                $method = $methods->get(
+                    $payment['payment_method_id']
+                );
 
-                return (object) $item;
+                return (object) [
+                    'payment_method_id' =>
+                    $payment['payment_method_id'],
+
+                    'name' =>
+                    $method?->name ?? 'Sin nombre',
+
+                    'quantity' =>
+                    $payment['quantity'],
+
+                    'total' =>
+                    $payment['total'],
+                ];
             })
+            ->sortByDesc('total')
             ->values();
 
+        $total = $paymentMethods->sum('total');
+
+        $quantity = $paymentMethods->sum('quantity');
+
         return [
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
 
-            'payments' => $payments,
+            'paymentMethods' => $paymentMethods,
 
-            'total' => $payments->sum('total'),
+            'total' => $total,
 
-            'quantity' =>
-            $payments->sum('quantity'),
-
+            'quantity' => $quantity,
         ];
     }
+
+
+
+
 
 
     /*
@@ -1132,21 +1552,81 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
-    public function getCustomersReport(): array
-    {
-        $customers = Customer::query()
-            ->with('city')
-            ->orderBy('full_name')
-            ->get();
+
+    public function getCustomersReport(
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
+
+        $salesQuery = Sale::query()
+            ->with('customer');
+
+        $this->applyDateFilter(
+            $salesQuery,
+            $fechaDesde,
+            $fechaHasta,
+            'date_sale'
+        );
+
+        $sales = $salesQuery
+            ->whereNotNull('customer_id')
+            ->get([
+                'id',
+                'customer_id',
+                'total',
+            ]);
+
+        $customers = [];
+
+        foreach ($sales as $sale) {
+
+            $customerId = $sale->customer_id;
+
+            if (!isset($customers[$customerId])) {
+
+                $customers[$customerId] = [
+                    'customer_id' => $customerId,
+                    'name' => $sale->customer?->full_name ?? 'Sin nombre',
+                    'identification' => $sale->customer?->identification ?? 'Sin identificación',
+                    'quantity' => 0,
+                    'total' => 0,
+                ];
+            }
+
+            $customers[$customerId]['quantity']++;
+
+            $customers[$customerId]['total']
+                += (float) $sale->total;
+        }
+
+        $clients = collect($customers)
+            ->map(function (array $customer) {
+
+                return (object) [
+                    'customer_id' => $customer['customer_id'],
+                    'name' => $customer['name'],
+                    'identification' => $customer['identification'],
+                    'quantity' => $customer['quantity'],
+                    'total' => $customer['total'],
+                ];
+            })
+            ->sortByDesc('total')
+            ->values();
+
+        $total = $clients->sum('total');
+
+        $quantity = $clients->sum('quantity');
 
         return [
-
-            'customers' => $customers,
-
-            'quantity' => $customers->count(),
-
+            'clients' => $clients,
+            'total' => $total,
+            'quantity' => $quantity,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
+
+
 
 
     /*
@@ -1160,46 +1640,56 @@ public function getSalesReport(
         ?string $fechaHasta = null
     ): array {
 
-        $query = Sale::with('customer');
+        $salesQuery = Sale::query()
+            ->with('customer');
 
         $this->applyDateFilter(
-            $query,
+            $salesQuery,
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+            'date_sale'
         );
 
-        $sales = $query->get();
+        $sales = $salesQuery
+            ->whereNotNull('customer_id')
+            ->get([
+                'id',
+                'customer_id',
+                'total',
+            ]);
 
         $customers = $sales
             ->groupBy('customer_id')
             ->map(function ($items) {
 
-                $first = $items->first();
+                $customer = $items->first()->customer;
 
                 return (object) [
-
-                    'customer' => $first->customer,
-
-                    'sales' => $items->count(),
-
+                    'customer_id' => $customer?->id,
+                    'name' => $customer?->full_name ?? 'Sin nombre',
+                    'identification' => $customer?->identification ?? 'Sin identificación',
+                    'quantity' => $items->count(),
                     'total' => $items->sum('total'),
-
                 ];
             })
             ->sortByDesc('total')
             ->values()
             ->take(10);
 
+        $total = $customers->sum('total');
+
+        $quantity = $customers->sum('quantity');
+
         return [
-
-            'customers' => $customers,
-
-            'total' => $customers->sum('total'),
-
-            'quantity' => $customers->count(),
-
+            'clients' => $customers,
+            'total' => $total,
+            'quantity' => $quantity,
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
+
+
 
 
     /*
@@ -1208,19 +1698,77 @@ public function getSalesReport(
     |--------------------------------------------------------------------------
     */
 
-    public function getInactiveCustomersReport(): array
-    {
+    public function getInactiveCustomersReport(
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
+
         $customers = Customer::query()
-            ->whereDoesntHave('sales')
             ->orderBy('full_name')
             ->get();
 
+        $salesQuery = Sale::query()
+            ->select([
+                'id',
+                'customer_id',
+                'date_sale',
+                'total',
+            ])
+            ->whereNotNull('customer_id');
+
+        $this->applyDateFilter(
+            $salesQuery,
+            $fechaDesde,
+            $fechaHasta,
+            'date_sale'
+        );
+
+        $sales = $salesQuery
+            ->orderByDesc('date_sale')
+            ->get();
+
+        $salesByCustomer = $sales
+            ->groupBy('customer_id');
+
+        $inactiveCustomers = $customers
+            ->map(function ($customer) use ($salesByCustomer) {
+
+                $customerSales = $salesByCustomer
+                    ->get($customer->id, collect());
+
+                $lastSale = $customerSales->first();
+
+                return (object) [
+                    'customer_id' => $customer->id,
+                    'name' => $customer->full_name,
+                    'identification' => $customer->identification,
+                    'phone' => $customer->phone,
+                    'last_purchase' => $lastSale?->date_sale,
+                    'days_inactive' => $lastSale
+                        ? now()->startOfDay()->diffInDays(
+                            \Carbon\Carbon::parse($lastSale->date_sale)->startOfDay()
+                        )
+                        : null,
+                    'total_purchases' => $customerSales->sum('total'),
+                    'quantity' => $customerSales->count(),
+                ];
+            })
+            ->filter(function ($customer) {
+
+                return $customer->last_purchase === null;
+            })
+            ->sortByDesc(function ($customer) {
+
+                return $customer->days_inactive ?? PHP_INT_MAX;
+            })
+            ->values();
+
         return [
-
-            'customers' => $customers,
-
-            'quantity' => $customers->count(),
-
+            'clients' => $inactiveCustomers,
+            'quantity' => $inactiveCustomers->count(),
+            'total' => $inactiveCustomers->sum('total_purchases'),
+            'fechaDesde' => $fechaDesde,
+            'fechaHasta' => $fechaHasta,
         ];
     }
 }

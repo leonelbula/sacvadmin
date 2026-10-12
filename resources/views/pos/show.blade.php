@@ -505,12 +505,10 @@
 
                         </a>
 
-                        <button type="button" class="btn btn-primary" onclick="window.print()">
-
-                            <i class="bi bi-printer me-1"></i>
-                            Imprimir cierre
-
-                        </button>
+                        <a href="{{ route('pos.print', $box->id) }}" target="_blank" class="btn btn-primary">
+                            <i class="bi bi-printer"></i>
+                            Imprimir ticket
+                        </a>
 
                     </div>
 

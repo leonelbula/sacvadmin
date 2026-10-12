@@ -47,7 +47,7 @@ class PosController extends Controller
     {
         $posActive = $this->pos_service->posActive(Auth::user()->id);
 
-        if ($posActive->state == 0) {
+        if (isset($posActive) && $posActive->state == 1) {
             return  redirect()->route('pos.previewclose');
         }
 
@@ -69,8 +69,7 @@ class PosController extends Controller
 
         $userId = Auth::id();
         $posActive = $this->pos_service->posActive($userId);
-
-        if ($posActive) {
+        if (isset($posActive) && $posActive->state == 1) {
             toastr()->error('El usuario ya tiene un punto de venta activo.');
             return back();
         }
@@ -96,6 +95,7 @@ class PosController extends Controller
     public function previewclose()
     {
         $box = $this->pos_service->posActive(Auth::id());
+
         $sales = $this->sale_service->getSalesByBox($box);
         $totalExpenses = $this->expense_Service->getTotalExpensesForClosing($box);
         $returnSale = $this->sale_return->getSalesReturnByBox($box);
@@ -125,4 +125,10 @@ class PosController extends Controller
             return back();
         }
     }
+    public function print(Pos $pos)
+{
+    $pos->load('user');
+
+    return view('pdf.pos.print', compact('pos'));
+}
 }

@@ -181,7 +181,7 @@
                                     'kardex' => 'Kardex',
                                     'inventory-adjustment' => 'Ajustes de inventario',
                                     'report' => 'Reportes',
-                                    'company' => 'Empresa',
+                                    'configuration' => 'Configarion',
                                 ];
 
                                 $actionLabels = [

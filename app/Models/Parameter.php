@@ -18,4 +18,12 @@ class Parameter extends Model
         'automatic_product',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'sale_code' => 'integer',
+            'product_code' => 'integer',
+            'automatic_product' => 'boolean',
+        ];
+    }
 }

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Interfaces\AccountReceivablePaymentRepositoryInterface;
+use App\Repositories\AccountReceivablePaymentRepository;
+use App\Interfaces\AccountsReceivableRepositoryInterface;
+use App\Interfaces\ConfigurationRepositoryInterface;
 use App\Interfaces\ExpenseRepositoryInterface;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +26,8 @@ use App\Interfaces\SupplierRepositoryInterface;
 use App\Repositories\TaxRepository;
 use App\Interfaces\TaxRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Repositories\AccountsReceivableRepository;
+use App\Repositories\ConfigurationRepository;
 use App\Repositories\ExpenseRepository;
 use App\Repositories\InventoryAdjustmentRepository;
 use App\Repositories\PosRepository;
@@ -54,7 +60,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ShoppingRepositoryInterface::class, ShoppingRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
-
+        $this->app->bind(AccountsReceivableRepositoryInterface::class, AccountsReceivableRepository::class);
+        $this->app->bind(AccountReceivablePaymentRepositoryInterface::class, AccountReceivablePaymentRepository::class);
+        $this->app->bind(ConfigurationRepositoryInterface::class, ConfigurationRepository::class);
     }
 
     /**

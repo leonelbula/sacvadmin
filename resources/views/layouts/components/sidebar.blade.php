@@ -23,7 +23,7 @@
     <nav class="sidebar-menu">
 
 
-        <a href="#" class="menu-item active">
+        <a href="{{ route('dashboard') }}" class="menu-item active">
 
             <i class="bi bi-grid"></i>
 
@@ -66,6 +66,8 @@
                         </a>
                     @endcan
 
+
+
                 </div>
             </div>
         @endcan
@@ -92,10 +94,12 @@
                             Categorías
                         </a>
                     @endcan
+                    @can('nventory-adjustment.view')
+                        <a href="{{ route('inventory.adjustments.index') }}">
+                            Ajustes Inventario
+                        </a>
+                    @endcan
 
-                    <a href="{{ route('inventory.adjustments.index') }}">
-                        Ajustes Inventario
-                    </a>
                     @can('kardex.view')
                         <a href="{{ route('kardex.index') }}">
                             Kardex
@@ -111,15 +115,40 @@
 
 
         @can('customer.view')
-            <a href="{{ route('customer.index') }}" class="menu-item">
+            <div class="menu-group">
+                <button class="menu-item menu-toggle-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>
+                        Clientes
+                    </span>
+                    <i class="bi bi-chevron-down arrow"></i>
+                </button>
+                <div class="submenu">
 
-                <i class="bi bi-people"></i>
+                    <a href="{{ route('customer.index') }}" class="menu-item">
 
-                <span>
-                    Clientes
-                </span>
+                        <i class="bi bi-people"></i>
 
-            </a>
+                        <span>
+                            Lista de Clientes
+                        </span>
+
+                    </a>
+
+                    <a href="{{ route('accounts-receivable.index') }}" class="menu-item">
+
+                        <i class="bi bi-people"></i>
+
+                        <span>
+                            Ct. Por Cobrar
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+            </div>
         @endcan
 
 
@@ -222,17 +251,19 @@
 
             </a>
         @endcan
+        @can('configuration.view')
+            <a href="{{ route('configuration.index') }}" class="menu-item">
+
+                <i class="bi bi-gear"></i>
+
+                <span>
+                    Configuración
+                </span>
+
+            </a>
+        @endcan
 
 
-        <a href="#" class="menu-item">
-
-            <i class="bi bi-gear"></i>
-
-            <span>
-                Configuración
-            </span>
-
-        </a>
 
 
     </nav>

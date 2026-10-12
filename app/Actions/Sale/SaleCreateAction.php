@@ -55,7 +55,7 @@ class SaleCreateAction
                 $data['term']            = '0';
             } else {
                 $data['type_sale']       = 0;
-                $days                    = (int)$data['term'];
+                $days                    = (int) ($data['term'] ?: 30);
                 $data['expiration_date'] = date('Y-m-d', strtotime($data['date_sale'] . " + $days days"));
             }
 
@@ -126,7 +126,7 @@ class SaleCreateAction
                 ]);
             }
 
-           
+
             $sale->details()->createMany($detailsData);
 
             return $sale;

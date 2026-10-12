@@ -30,44 +30,57 @@ class ReportPdfService
     }
 
 
-    public function salesProducts(): Response
+    public function salesProducts($date_from = null, $date_until= null): Response
     {
         $data = $this->reportService
-            ->getSalesProductsReport();
+            ->getSalesProductsReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.sales-products',
+            'reports.pdf.sale.sales-products',
             $data,
             'productos-vendidos'
         );
     }
 
 
-    public function salesPaymentMethods(): Response
+    public function salesPaymentMethods($date_from = null, $date_until= null): Response
     {
         $data = $this->reportService
-            ->getSalesPaymentMethodsReport();
+            ->getSalesPaymentMethodsReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.sales-payment-methods',
+            'reports.pdf.sale.sales-payment-methods',
             $data,
             'ventas-metodos-pago'
         );
     }
 
 
-    public function salesCustomers(): Response
+    public function salesCustomers($date_from = null, $date_until= null): Response
     {
         $data = $this->reportService
-            ->getSalesCustomersReport();
+            ->getSalesCustomersReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.sales-customers',
+            'reports.pdf.sale.sales-customers',
             $data,
             'ventas-clientes'
         );
     }
 
+    public function getProductsByCategory(
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): Response {
+        $data = $this->reportService
+            ->getProductsByCategoryReport($fechaDesde, $fechaHasta);
+
+        return $this->pdf(
+            'reports.pdf.sale.products-by-category',
+            $data,
+            'productos-por-categoria'
+        );
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -75,53 +88,54 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function inventory(): Response
+    public function inventory($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getInventoryReport();
+            ->getInventoryReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.inventory',
+            'reports.pdf.inventory.inventory',
             $data,
             'inventario'
         );
     }
 
 
-    public function inventoryValuation(): Response
+    public function inventoryValuation($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getInventoryValuationReport();
+            ->getInventoryValuationReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.inventory-valuation',
+            'reports.pdf.inventory.inventory-valuation',
             $data,
             'valoracion-inventario'
         );
     }
 
 
-    public function inventoryLowStock(): Response
+    public function inventoryLowStock($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getLowStockReport();
+            ->getLowStockReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.inventory-low-stock',
+            'reports.pdf.inventory.inventory-low-stock',
             $data,
             'stock-bajo'
         );
     }
 
 
-    public function kardex(): Response
+    public function kardex($product_id = null,$date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getKardexReport();
+            ->getKardexPdfReport( $product_id, $date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.kardex',
+            'reports.pdf.inventory.kardex',
             $data,
+
             'kardex'
         );
     }
@@ -133,39 +147,39 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function purchases(): Response
+    public function purchases($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getPurchasesReport();
+            ->getPurchasesReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.purchases',
+            'reports.pdf.shopping.purchases',
             $data,
             'reporte-compras'
         );
     }
 
 
-    public function purchasesProducts(): Response
+    public function purchasesProducts($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getPurchasesProductsReport();
+            ->getPurchasesProductsReport($date_from, $date_until,0);
 
         return $this->pdf(
-            'reports.pdf.purchases-products',
+            'reports.pdf.shopping.purchases-products',
             $data,
             'productos-comprados'
         );
     }
 
 
-    public function purchasesSuppliers(): Response
+    public function purchasesSuppliers($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getPurchasesSuppliersReport();
+            ->getPurchasesSuppliersReport($date_from, $date_until, 0);
 
         return $this->pdf(
-            'reports.pdf.purchases-suppliers',
+            'reports.pdf.shopping.purchases-suppliers',
             $data,
             'compras-proveedores'
         );
@@ -178,39 +192,39 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function expenses(): Response
+    public function expenses($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getExpensesReport();
+            ->getExpensesReport($date_from, $date_until,0 );
 
         return $this->pdf(
-            'reports.pdf.expenses',
+            'reports.pdf.expenses.expenses',
             $data,
             'reporte-gastos'
         );
     }
 
 
-    public function expensesTypes(): Response
+    public function expensesTypes($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getExpensesTypesReport();
+            ->getExpensesTypesReport($date_from, $date_until, 0);
 
         return $this->pdf(
-            'reports.pdf.expenses-types',
+            'reports.pdf.expenses.expenses-types',
             $data,
             'gastos-por-tipo'
         );
     }
 
 
-    public function expensesPaymentMethods(): Response
+    public function expensesPaymentMethods($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getExpensesPaymentMethodsReport();
+            ->getExpensesPaymentMethodsReport($date_from, $date_until, 0);
 
         return $this->pdf(
-            'reports.pdf.expenses-payment-methods',
+            'reports.pdf.expenses.expenses-payment-methods',
             $data,
             'gastos-metodos-pago'
         );
@@ -223,39 +237,39 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function profit(): Response
+    public function profit($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getProfitReport();
+            ->getProfitReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.profit',
+            'reports.pdf.financial.profit',
             $data,
             'utilidad'
         );
     }
 
 
-    public function cashFlow(): Response
+    public function cashFlow($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getCashFlowReport();
+            ->getCashFlowReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.cash-flow',
+            'reports.pdf.financial.cash-flow',
             $data,
             'flujo-caja'
         );
     }
 
 
-    public function paymentMethods(): Response
+    public function paymentMethods($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getPaymentMethodsReport();
+            ->getPaymentMethodsReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.payment-methods',
+            'reports.pdf.financial.payment-methods',
             $data,
             'metodos-pago'
         );
@@ -268,39 +282,39 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function customers(): Response
+    public function customers($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getCustomersReport();
+            ->getCustomersReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.customers',
+            'reports.pdf.customers.customers',
             $data,
-            'clientes'
+            'compras-por-clientes'
         );
     }
 
 
-    public function topCustomers(): Response
+    public function topCustomers($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getTopCustomersReport();
+            ->getTopCustomersReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.customers-top',
+            'reports.pdf.customers.customers-top',
             $data,
             'mejores-clientes'
         );
     }
 
 
-    public function inactiveCustomers(): Response
+    public function inactiveCustomers($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getInactiveCustomersReport();
+            ->getInactiveCustomersReport($date_from, $date_until);
 
         return $this->pdf(
-            'reports.pdf.customers-inactive',
+            'reports.pdf.customers.customers-inactive',
             $data,
             'clientes-inactivos'
         );

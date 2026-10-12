@@ -353,6 +353,24 @@
 
                         </a>
 
+                        <a href="{{ route('reports.sales.products-by-category') }}" class="report-item">
+
+                            <div>
+
+                                <strong>
+                                    Ventas por categoría
+                                </strong>
+
+                                <small class="text-muted d-block">
+                                    Historial de compras por categoría.
+                                </small>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
                     </div>
 
                 </div>
@@ -720,7 +738,7 @@
 
                     <div class="card-body px-4 pt-0">
 
-                        <a href="{{ route('reports.profit') }}" class="report-item">
+                        <a href="{{ route('reports.financial.profit') }}" class="report-item">
 
                             <div>
 
@@ -739,7 +757,7 @@
                         </a>
 
 
-                        <a href="{{ route('reports.cash-flow') }}" class="report-item">
+                        <a href="{{ route('reports.financial.cash-flow') }}" class="report-item">
 
                             <div>
 
@@ -758,7 +776,7 @@
                         </a>
 
 
-                        <a href="{{ route('reports.payment-methods') }}" class="report-item">
+                        <a href="{{ route('reports.financial.payment-methods') }}" class="report-item">
 
                             <div>
 
@@ -826,11 +844,11 @@
                             <div>
 
                                 <strong>
-                                    Clientes
+                                   Compras por Clientes
                                 </strong>
 
                                 <small class="text-muted d-block">
-                                    Resumen de clientes.
+                                    Resumen de compras por cliente.
                                 </small>
 
                             </div>

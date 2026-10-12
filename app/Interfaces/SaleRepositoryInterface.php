@@ -15,5 +15,12 @@ interface SaleRepositoryInterface
     public function totalSaleDate(string $start_date, string $close_date);
     public function getSalesByPeriod(  int $userId, string $startDate, string $startTime,string $closingDate,string $closingTime);
     public function searchSales(array $filters): LengthAwarePaginator;
-     public function findBySaleNumber(int $saleNumber);
+    public function findBySaleNumber(int $saleNumber);
+    public function saleDay(int $userId, string $startDate);
+    public function saleDayTotal(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodCash(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodTransfer(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodOther(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodCredit(?int $userId, string $startDate): array;
+
 }

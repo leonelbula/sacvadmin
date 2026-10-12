@@ -8,10 +8,12 @@
                 Últimas transacciones registradas
             </small>
         </div>
+        @can('sale.view')
+            <a href="{{ route('sale.index') }}" class="btn btn-primary btn-sm">
+                Ver Todas
+            </a>
+        @endcan
 
-        <a href="#" class="btn btn-primary btn-sm">
-            Ver Todas
-        </a>
 
     </div>
 
@@ -25,10 +27,8 @@
 
                     <th>Factura</th>
                     <th>Cliente</th>
-                    <th>Vendedor</th>
                     <th>Total</th>
-                    <th>Pago</th>
-                    <th>Estado</th>
+
                     <th>Fecha</th>
 
                 </tr>
@@ -37,74 +37,19 @@
 
             <tbody>
 
-                <tr>
+                @foreach ($lisSale as $sale)
+                    <tr>
+                        <td>{{ $sale->sale_number }}</td>
+                        <td>{{ $sale->customer->full_name }}</td>
+                        <td>{{ $sale->total }}</td>
+                        <td>
+                            <span class="payment {{ $sale->id }}">
+                                {{ ucfirst($sale->id) }}
+                            </span>
+                        </td>
 
-                    <td>#FV-1001</td>
-                    <td>Juan Pérez</td>
-                    <td>Leonel</td>
-                    <td>$850.000</td>
-
-                    <td>
-                        <span class="payment cash">
-                            Efectivo
-                        </span>
-                    </td>
-
-                    <td>
-                        <span class="status success">
-                            Pagada
-                        </span>
-                    </td>
-
-                    <td>19 Jul</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>#FV-1002</td>
-                    <td>María López</td>
-                    <td>Leonel</td>
-                    <td>$420.000</td>
-
-                    <td>
-                        <span class="payment card">
-                            Tarjeta
-                        </span>
-                    </td>
-
-                    <td>
-                        <span class="status warning">
-                            Pendiente
-                        </span>
-                    </td>
-
-                    <td>19 Jul</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>#FV-1003</td>
-                    <td>Carlos Díaz</td>
-                    <td>Leonel</td>
-                    <td>$1.250.000</td>
-
-                    <td>
-                        <span class="payment transfer">
-                            Transferencia
-                        </span>
-                    </td>
-
-                    <td>
-                        <span class="status danger">
-                            Anulada
-                        </span>
-                    </td>
-
-                    <td>18 Jul</td>
-
-                </tr>
+                    </tr>
+                @endforeach
 
             </tbody>
 
