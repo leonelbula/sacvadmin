@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\DTOs\InventoryAdjustmentDTO;
 use App\Models\Product;
+use App\Services\ConfigurationService;
 use App\Services\InventoryAdjustmentService;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Throwable;
 
 class InventoryAdjustmentController extends Controller
 {
     public function __construct(
-        protected InventoryAdjustmentService $service
+        protected InventoryAdjustmentService $service,
+        protected ConfigurationService $configuration_service
     ) {}
 
     public function index(Request $request)
@@ -27,7 +30,7 @@ class InventoryAdjustmentController extends Controller
 
         return view(
             'inventory.adjustments.index',
-            compact('adjustments')
+            compact('adjustments', 'filters')
         );
     }
 
@@ -89,5 +92,24 @@ class InventoryAdjustmentController extends Controller
             'inventory.adjustments.show',
             compact('adjustment')
         );
+    }
+    public function reportpdf(Request $request)
+    {
+        $filters = [
+            'search' => $request->search,
+            'movement_type' => $request->movement_type,
+            'date_from' => $request->date_from,
+            'date_to' => $request->date_to,
+        ];
+        $adjustments = $this->service->report($filters);
+
+        $company = $this->configuration_service->getCompany();
+        $pdf = Pdf::loadView('inventory.adjustments.pdf.show', [
+            'company' => $company,
+            'adjustments' => $adjustments,
+            'filters'=> $filters
+        ])->setPaper('letter', 'portrait');
+
+        return $pdf->stream("report-ajuste.pdf");
     }
 }

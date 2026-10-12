@@ -121,7 +121,7 @@ class SaleCreateAction
                     'output'        => $prod['quantity'],
                     'stock_before'  => $stockBefore,
                     'stock_after'   => $stockAfter,
-                    'unit_cost'     => $prod['price'],
+                    'unit_cost'     => $prod['cost'],
                     'user_name'     => $userName, // CORREGIDO: Variable segura de Laravel Auth
                 ]);
             }

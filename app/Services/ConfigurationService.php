@@ -21,6 +21,10 @@ class ConfigurationService
         ];
     }
 
+    public function getCompany() {
+        return $this->repository->getCompany();
+    }
+
     public function updateConfiguration(
         array $companyData,
         array $parameterData,

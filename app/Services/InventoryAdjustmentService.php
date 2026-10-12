@@ -27,4 +27,8 @@ class InventoryAdjustmentService
     {
         return $this->repository->findById($id);
     }
+    public function report(array $filters = [])
+    {
+        return $this->repository->report($filters);
+    }
 }

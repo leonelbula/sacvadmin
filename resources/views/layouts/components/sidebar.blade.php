@@ -94,7 +94,7 @@
                             Categorías
                         </a>
                     @endcan
-                    @can('nventory-adjustment.view')
+                    @can('inventory-adjustment.view')
                         <a href="{{ route('inventory.adjustments.index') }}">
                             Ajustes Inventario
                         </a>
@@ -117,7 +117,8 @@
         @can('customer.view')
             <div class="menu-group">
                 <button class="menu-item menu-toggle-item">
-                    <i class="bi bi-box-seam"></i>
+                    <i class="bi bi-people"></i>
+
                     <span>
                         Clientes
                     </span>
@@ -140,7 +141,7 @@
                         <i class="bi bi-people"></i>
 
                         <span>
-                            Ct. Por Cobrar
+                            Cta. Por Cobrar
                         </span>
 
                     </a>
@@ -153,15 +154,37 @@
 
 
         @can('supplier.view')
-            <a href="{{ route('supplier.index') }}" class="menu-item">
+            <div class="menu-group">
+                <button class="menu-item menu-toggle-item">
+                    <i class="bi bi-truck"></i>
+                    <span>
+                        Proveedores
+                    </span>
+                    <i class="bi bi-chevron-down arrow"></i>
+                </button>
+                <div class="submenu">
 
-                <i class="bi bi-truck"></i>
+                    <a href="{{ route('supplier.index') }}" class="menu-item">
 
-                <span>
-                    Proveedores
-                </span>
+                        <i class="bi bi-truck"></i>
 
-            </a>
+                        <span>
+                            Lista Proveedores
+                        </span>
+
+                    </a>
+                    <a href="{{ route('supplier.index') }}" class="menu-item">
+
+                        <i class="bi bi-truck"></i>
+
+                        <span>
+                            Cta. x Pagar
+                        </span>
+
+                    </a>
+                </div>
+
+            </div>
         @endcan
 
 

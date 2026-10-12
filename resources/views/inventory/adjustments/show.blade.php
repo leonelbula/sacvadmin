@@ -30,13 +30,6 @@
 
                 </a>
 
-                <button type="button" class="btn btn-primary" onclick="window.print()">
-
-                    <i class="bi bi-printer me-1"></i>
-                    Imprimir
-
-                </button>
-
             </div>
 
         </div>

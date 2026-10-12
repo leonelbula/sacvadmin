@@ -12,4 +12,6 @@ interface InventoryAdjustmentRepositoryInterface
     public function findById(int $id): mixed;
 
     public function search(array $filters = []): LengthAwarePaginator;
+
+    public function report(array $filters = []);
 }

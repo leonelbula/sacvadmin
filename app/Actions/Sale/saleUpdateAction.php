@@ -97,42 +97,21 @@ class SaleUpdateAction
 
                 $this->kardexRepository->create([
 
-                    'product_id' =>
-                    $oldDetail->product_id,
-
-                    'date' =>
-                    now(),
-
-                    'movement_type' =>
-                    'REVERSION',
-
-                    'origin' =>
-                    "ACTUALIZACION VENTA NRO: {$saleNumber}",
-
-                    'reference_id' =>
-                    $sale->id,
-
-                    'income' =>
-                    $oldDetail->quantity,
-
-                    'output' =>
-                    0,
-
-                    'stock_before' =>
-                    $stockBefore,
-
-                    'stock_after' =>
-                    $stockAfter,
-
+                    'product_id' => $oldDetail->product_id,
+                    'date' => now(),
+                    'movement_type' => 'REVERSION',
+                    'origin' => "ACTUALIZACION VENTA NRO: {$saleNumber}",
+                    'reference_id' => $sale->id,
+                    'income' => $oldDetail->quantity,
+                    'output' => 0,
+                    'stock_before' => $stockBefore,
+                    'stock_after' => $stockAfter,
                     /*
                     | El Kardex debe registrar el costo
                     | y no el precio de venta.
                     */
-                    'unit_cost' =>
-                    $oldDetail->cost,
-
-                    'user_name' =>
-                    $userName,
+                    'unit_cost' => $oldDetail->cost,
+                    'user_name' => $userName,
                 ]);
             }
 
@@ -150,17 +129,9 @@ class SaleUpdateAction
             |--------------------------------------------------------------------------
             */
 
-            $totalCost = collect($products)->sum(
-                fn($product) =>
-                (float) $product['cost'] *
-                    (int) $product['quantity']
-            );
+            $totalCost = collect($products)->sum(fn($product) => (float) $product['cost'] * (int) $product['quantity']);
 
-            $totalCalculated = collect($products)->sum(
-                fn($product) =>
-                (float) $product['price'] *
-                    (int) $product['quantity']
-            );
+            $totalCalculated = collect($products)->sum(fn($product) => (float) $product['price'] * (int) $product['quantity']);
 
             $utility = $totalCalculated - $totalCost;
 
@@ -179,13 +150,9 @@ class SaleUpdateAction
             */
 
             if ($data['payment_form'] === 'counted') {
-
                 $data['expiration_date'] =  $data['date_sale'];
-
                 $data['term'] = 0;
-
                 $data['balance'] = 0;
-
                 /*
                 | Ajusta este valor según tu BD.
                 */
@@ -193,11 +160,8 @@ class SaleUpdateAction
             } else {
 
                 $data['type_sale'] = 0;
-
-                $days = (int) $data['term'];
-
+                $days = (int) ($data['term'] ?: 30);
                 $data['expiration_date'] = Carbon::parse($data['date_sale'])->addDays($days)->format('Y-m-d');
-
                 $data['balance'] = $totalCalculated;
             }
 
@@ -208,11 +172,8 @@ class SaleUpdateAction
             */
 
             $data['cost'] = $totalCost;
-
             $data['utility'] = $utility;
-
             $data['total'] = $totalCalculated;
-
             $data['state'] = 'active';
 
             /*
@@ -250,8 +211,7 @@ class SaleUpdateAction
 
             foreach ($products as $prod) {
 
-                $product = $this->productRepository
-                    ->lockForUpdate($prod['id']);
+                $product = $this->productRepository->lockForUpdate($prod['id']);
 
                 if (!$product) {
                     throw new Exception(
@@ -265,10 +225,7 @@ class SaleUpdateAction
                 |--------------------------------------------------------------------------
                 */
 
-                if (
-                    $product->stock <
-                    $prod['quantity']
-                ) {
+                if ($product->stock < $prod['quantity']) {
 
                     throw new Exception(
                         "Stock insuficiente para el producto: "

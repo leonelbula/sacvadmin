@@ -9,4 +9,5 @@ Route::prefix('inventory/adjustments')->name('inventory.adjustments.')->group(fu
     Route::get('/create', [InventoryAdjustmentController::class, 'create'])->middleware('permission:inventory-adjustment.create')->name('create');
     Route::post('/', [InventoryAdjustmentController::class, 'store'])->middleware('permission:inventory-adjustment.create')->name('store');
     Route::get('/{id}', [InventoryAdjustmentController::class, 'show'])->middleware('permission:inventory-adjustment.view')->name('show');
+    Route::get('/report/ajuste', [InventoryAdjustmentController::class, 'reportpdf'])->middleware('permission:inventory-adjustment.view')->name('pdf');
 });

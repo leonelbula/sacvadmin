@@ -175,7 +175,7 @@
                                     'supplier' => 'Proveedores',
                                     'shopping' => 'Compras',
                                     'sale' => 'Ventas',
-                                    'sale-return' => 'Devoluciones',
+                                    'salereturn' => 'Devoluciones',
                                     'expense' => 'Gastos',
                                     'pos' => 'Punto de venta',
                                     'kardex' => 'Kardex',

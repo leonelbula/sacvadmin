@@ -18,12 +18,20 @@
                     Gestiona las entradas y salidas manuales de inventario.
                 </p>
             </div>
+            <div class="d-flex gap-2">
+                <a href="{{ route('inventory.adjustments.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Nuevo ajuste
+                </a>
+                <a href="{{ route('inventory.adjustments.pdf', request()->query()) }}" class="btn btn-danger"
+                    target="_blank">
 
-            <a href="{{ route('inventory.adjustments.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-1"></i>
-                Nuevo ajuste
-            </a>
+                    <i class="bi bi-printer me-1"></i>
+                    Imprimir
 
+                </a>
+
+            </div>
         </div>
 
 

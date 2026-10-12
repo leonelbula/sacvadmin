@@ -18,7 +18,7 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    public function index(Category $category = null,Request $request)
+    public function index(Category $category,Request $request)
     {
         $search = $request->input('search');
 
@@ -27,6 +27,7 @@ class CategoryController extends Controller
         } else {
            $categories = $this->categoryService->getAllCategories(10);
         }
+
 
 
         $title = 'Categorias';

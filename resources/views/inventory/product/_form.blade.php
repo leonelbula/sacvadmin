@@ -10,12 +10,10 @@
             <span class="input-group-text">
                 <i class="bi bi-upc-scan"></i>
             </span>
-
             <input type="text" class="form-control" placeholder="Código del producto" name="code"
-                value="{{ old('code', $product->code ?? '') }}" @if ($automatic_product != 0) disabled @endif>
+                value="{{ old('code', $product->code ?? '') }}" @if ($automatic_product == 1) disabled @endif>
         </div>
     </div>
-
     <!-- Nombre -->
     <div class="col-md-8">
         <label class="form-label fw-semibold">

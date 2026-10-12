@@ -80,33 +80,6 @@
 
 
 
-                    <li>
-
-                        <a href="#" class="dropdown-item">
-
-                            <i class="bi bi-person"></i>
-
-                            Mi perfil
-
-                        </a>
-
-                    </li>
-
-
-
-                    <li>
-
-                        <a href="#" class="dropdown-item">
-
-                            <i class="bi bi-gear"></i>
-
-                            Configuración
-
-                        </a>
-
-                    </li>
-
-
 
                     <li>
 

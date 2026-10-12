@@ -28,11 +28,13 @@
                         Editar
                     </a>
                 @endcan
-                @can('sale.delete')
-                    <button type="button" class="btn btn-primary" onclick="window.print()">
-                        <i class="bi bi-printer me-1"></i>
-                        Imprimir
-                    </button>
+                @can('sale.view')
+                    <a href="{{ route('sale.print', $sale->id) }}" target="_blank">
+                        <button type="button" class="btn btn-primary">
+                            <i class="bi bi-printer me-1"></i>
+                            Imprimir
+                        </button>
+                    </a>
                 @endcan
 
 
@@ -649,30 +651,4 @@
         ```
 
     </div>
-
-    <style>
-        @media print {
-
-            body {
-                background: #fff !important;
-            }
-
-            .btn,
-            nav,
-            .sidebar {
-                display: none !important;
-            }
-
-            .card {
-                box-shadow: none !important;
-                border: 1px solid #ddd !important;
-            }
-
-            .container-fluid {
-                width: 100% !important;
-                padding: 0 !important;
-            }
-
-        }
-    </style>
 @endsection

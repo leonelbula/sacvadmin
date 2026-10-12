@@ -308,22 +308,7 @@
 
                 <!-- Observaciones -->
 
-                <h5 class="border-bottom pb-2 mb-3">
-
-                    <i class="bi bi-chat-left-text me-2"></i>
-
-                    Observaciones
-
-                </h5>
-
-                <div class="alert alert-light border">
-
-                    Compra realizada al proveedor
-                    <strong>Distribuidora ABC</strong> mediante la
-                    factura de compra <strong>CP-000012</strong>.
-
-                </div>
-
+                
             </div>
 
             <!-- Footer -->
@@ -340,13 +325,7 @@
 
                     </a>
 
-                    <button class="btn btn-success">
 
-                        <i class="bi bi-file-earmark-text"></i>
-
-                        Ver Documento
-
-                    </button>
 
                 </div>
 

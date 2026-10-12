@@ -68,7 +68,7 @@ class ExpenseController extends Controller
         $this->expenseService->create($dto);
         toastr()->success('Gasto registrado correctamente.');
         return redirect()
-            ->route('expenses.index');
+            ->route('expense.index');
     }
     /**
      * Mostrar detalle del gasto.
@@ -118,7 +118,7 @@ class ExpenseController extends Controller
         );
         toastr()->success('Gasto actualizado correctamente.');
         return redirect()
-            ->route('expenses.index');
+            ->route('expense.index');
     }
 
     /**
@@ -130,7 +130,6 @@ class ExpenseController extends Controller
 
         toastr()->success('Gasto eliminado correctamente.');
 
-        return redirect()
-            ->route('expenses.index');
+        return redirect()->route('expense.index');
     }
 }

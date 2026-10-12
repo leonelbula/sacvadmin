@@ -67,4 +67,49 @@ class InventoryAdjustmentRepository implements InventoryAdjustmentRepositoryInte
             ->paginate(10)
             ->withQueryString();
     }
+
+    public function report(array $filters = [])
+    {
+        $query = InventoryAdjustment::query()
+            ->with([
+                'product',
+                'user',
+            ]);
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+
+            $query->whereHas('product', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%");
+            });
+        }
+
+        if (!empty($filters['movement_type'])) {
+            $query->where(
+                'movement_type',
+                $filters['movement_type']
+            );
+        }
+
+        if (!empty($filters['date_from'])) {
+            $query->whereDate(
+                'created_at',
+                '>=',
+                $filters['date_from']
+            );
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query->whereDate(
+                'created_at',
+                '<=',
+                $filters['date_to']
+            );
+        }
+
+        return $query
+            ->latest('id')
+            ->get();
+    }
 }

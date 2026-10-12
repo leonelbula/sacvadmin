@@ -15,11 +15,4 @@ Route::get('/sales/{sale}/print', [SaleController::class, 'print'])->name('sale.
 Route::get('sale/ticket/{sale}', [SaleController::class, 'ticket'])->name('sale.ticket');
 Route::get('sale/ticket2/{sale}', [SaleController::class, 'ticketepson'])->name('sale.ticketepson');
 
-
-
-
-Route::get('/reporte-sale', [SaleController::class, 'report_sale'])->name('sale.report_sale');
-Route::get('/reporte-ventas', [SaleController::class, 'reporte'])->name('sale.reporte');
-Route::get('/reporte-ventas-dia', [SaleController::class, 'reporteTotalesPorDia'])->name('sale.reporte.dia');
-
 Route::get('sales/search-sale/{saleNumber}', [SaleController::class, 'searchSale'])->name('search-sale');

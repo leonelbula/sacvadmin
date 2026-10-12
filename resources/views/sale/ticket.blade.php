@@ -239,17 +239,18 @@
 
         <div class="center">
 
+
             <div class="company-name">
-                SACVAdmin
+                {{ $company->full_name }}
             </div>
 
             <div class="company-info">
 
-                Sistema de gestión empresarial
+
 
                 <br>
 
-                NIT: 000.000.000-0
+                NIT: {{ $company->identification_card }}
 
                 <br>
 
@@ -257,11 +258,14 @@
 
                 <br>
 
-                Tel: 000 000 0000
+                {{ $company->address }}
 
                 <br>
 
-                correo@empresa.com
+                {{ $company->email }}
+
+
+
 
             </div>
 

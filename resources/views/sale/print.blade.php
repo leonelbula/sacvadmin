@@ -285,20 +285,18 @@
             <td class="company">
 
                 <div class="company-name">
-                    SACVAdmin
+                   {{$company->full_name}}
                 </div>
 
-                <div class="company-data">
+                <div class="company-data">                
 
-                    Sistema de gestión empresarial<br>
+                   {{$company->address}}<br>
 
-                    Dirección de la empresa<br>
+                    Teléfono: {{$company->phone}}<br>
 
-                    Teléfono: 000 000 0000<br>
+                    Email: {{$company->email}}<br>
 
-                    Email: correo@empresa.com<br>
-
-                    NIT: 000.000.000-0
+                    NIT: {{$company->identification_card}}
 
                 </div>
 

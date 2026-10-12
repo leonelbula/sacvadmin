@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
-use App\Models\PaymentMethod;
-use App\Models\ReturnSale;
-use App\Models\Sale;
-use App\Models\spent;
-use App\Models\Term;
 
+use App\Models\PaymentMethod;
+use App\Models\Sale;
+use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -16,6 +13,7 @@ use Spatie\Browsershot\Browsershot;
 use Carbon\Carbon;
 
 use App\DTOs\SaleDTO;
+use App\Services\ConfigurationService;
 use App\Services\PosService;
 use App\Services\SaleService;
 use Illuminate\Http\JsonResponse;
@@ -26,7 +24,8 @@ class SaleController extends Controller
 {
     public function __construct(
         protected SaleService $saleService,
-        protected PosService $pos_service
+        protected PosService $pos_service,
+        protected ConfigurationService $configuration_service
     ) {}
 
     public function index(Request $request)
@@ -46,7 +45,7 @@ class SaleController extends Controller
             $tbnSale = true;
         }
 
-        
+
         if (isset($search['customer_name']) || isset($search['sale_number']) || isset($search['payment_form']) || isset($search['date_from']) || isset($search['date_to'])) {
             $dataSales = $this->saleService->searchSales($search);
         } else {
@@ -324,13 +323,14 @@ class SaleController extends Controller
             'details.product',
         ]);
 
+        $company = $this->configuration_service->getCompany();
         $pdf = Pdf::loadView('sale.print', [
-
+            'company' => $company,
             'sale' => $sale,
         ])->setPaper('letter', 'portrait');
 
         return $pdf->stream("Factura_{$sale->sale_number}.pdf");
-        return view('sale.print', compact('sale'));
+        //return view('sale.print', compact('sale'));
     }
 
 
@@ -341,7 +341,9 @@ class SaleController extends Controller
             'details.product',
         ]);
 
-        $pdf = Pdf::loadView('sale.ticket', compact('sale'));
+        $company = $this->configuration_service->getCompany();
+
+        $pdf = Pdf::loadView('sale.ticket', compact('sale', 'company'));
 
         // 80 mm de ancho
         $pdf->setPaper([0, 0, 226.77, 800], 'portrait');
@@ -357,7 +359,7 @@ class SaleController extends Controller
             'customer.city',
             'details.product'
         ])->findOrFail($sale->id);
-        $company = Company::findOrFail(Auth::user()->company_id);
+        $company = $this->configuration_service->getCompany();
         $payments = PaymentMethod::all();
         $pdf = Pdf::loadView('pdf.ticketepson', [
             'company' => $company,
@@ -373,7 +375,7 @@ class SaleController extends Controller
             'customer.city',
             'details.product'
         ])->findOrFail($sale->id);
-        $company = Company::findOrFail(Auth::user()->company_id);
+        $company = $this->configuration_service->getCompany()();
         $payments = PaymentMethod::all();
         $pdf = Pdf::view('pdf.factura', [
             'company' => $company,
@@ -383,199 +385,4 @@ class SaleController extends Controller
         // Descargar directamente
         return $pdf->download("Factura_{$sale->sale_number}.pdf");
     }
-    public function report_sale()
-    {
-        $title = "Reporte de Ventas";
-        $totalVentas = Sale::whereDate('date_sale', Carbon::today())
-            ->sum('total');
-        $totalUtilidad = Sale::whereDate('date_sale', Carbon::today())
-            ->sum('utility');
-        $totalDevoluciones = ReturnSale::whereDate('date_sale', Carbon::today())
-            ->sum('total');
-        $totalGastos = spent::whereDate('date_spent', Carbon::today())
-            ->sum('total');
-        return view(
-            'sale.report_sale',
-            compact(
-                'title',
-                'totalVentas',
-                'totalUtilidad',
-                'totalDevoluciones',
-                'totalGastos'
-            )
-        );
-    }
-    public function reporte(Request $request)
-    {
-        // Validar rango de fechas
-        $data = $request->validate([
-            'fecha_inicio' => 'required|date',
-            'fecha_fin'    => 'required|date',
-            'user_id'      => 'nullable|integer',
-        ]);
-
-        // Consulta con filtros
-        $ventas = Sale::query()
-            ->whereBetween('created_at', [
-                $data['fecha_inicio'] . " 00:00:00",
-                $data['fecha_fin'] . " 23:59:59"
-            ])
-            ->when($data['user_id'], function ($q) use ($data) {
-                $q->where('user_id', $data['user_id']);
-            })
-            ->where('state', 1) // solo activas
-            ->get();
-
-        // Totales
-        $total = $ventas->sum('total');
-
-        // Generar PDF
-        $pdf = Pdf::loadView('reports.sales', [
-            'ventas' => $ventas,
-            'total'  => $total,
-            'fecha_inicio' => $data['fecha_inicio'],
-            'fecha_fin'    => $data['fecha_fin'],
-        ]);
-
-        return $pdf->setPaper('letter')->stream('reporte_ventas.pdf');
-    }
-    public function reporteTotalesPorDia(Request $request)
-    {
-        $data = $request->validate([
-            'fecha_inicio' => 'required|date',
-            'fecha_fin'    => 'required|date',
-            'user_id'      => 'nullable|integer',
-        ]);
-
-        // Consulta agrupada por día
-        $ventas = Sale::selectRaw('DATE(created_at) as fecha, SUM(total) as total')
-            ->whereBetween('created_at', [
-                $data['fecha_inicio'] . " 00:00:00",
-                $data['fecha_fin'] . " 23:59:59"
-            ])
-            ->when($data['user_id'], function ($q) use ($data) {
-                $q->where('user_id', $data['user_id']);
-            })
-            ->where('state', 1) // solo activas
-            ->groupBy('fecha')
-            ->orderBy('fecha')
-            ->get();
-
-        $granTotal = $ventas->sum('total');
-
-        $pdf = Pdf::loadView('reports.sales_day', [
-            'ventas' => $ventas,
-            'granTotal' => $granTotal,
-            'fecha_inicio' => $data['fecha_inicio'],
-            'fecha_fin'    => $data['fecha_fin'],
-        ]);
-
-        return $pdf->setPaper('letter')->stream('reporte_totales_por_dia.pdf');
-    }
 }
-/**
- *
- * public function store(Request $request)
-    {
-        // 1. Validar los datos del JSON
-        $validador = Validator::make($request->all(), [
-            'cliente_id' => 'required|exists:clientes,id',
-            'articulos' => 'required|array|min:1',
-            'articulos.*.id' => 'required|exists:productos,id',
-            'articulos.*.cantidad' => 'required|integer|min:1',
-            'articulos.*.precio' => 'required|numeric|min:0',
-        ]);
-
-        if ($validador->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validador->errors()
-            ], 422);
-        }
-
-        // 2. Iniciar transacción para asegurar la integridad de los datos
-        try {
-            $resultado = DB::transaction(function () use ($request) {
-
-                // Calcular el total de la factura sumando los subtotales
-                $total = collect($request->articulos)->sum(function ($articulo) {
-                    return $articulo['cantidad'] * $articulo['precio'];
-                });
-
-                // Crear la cabecera de la factura
-                $factura = Factura::create([
-                    'cliente_id' => $request->cliente_id,
-                    'total' => $total,
-                    'fecha' => now(), // o la fecha que envíes desde el frontend
-                    'estado' => 'pagada'
-                ]);
-
-                // Guardar cada artículo en la tabla de detalles
-                foreach ($request->articulos as $articulo) {
-                    FacturaDetalle::create([
-                        'factura_id' => $factura->id,
-                        'producto_id' => $articulo['id'],
-                        'cantidad' => $articulo['cantidad'],
-                        'precio_unitario' => $articulo['precio'],
-                        'subtotal' => $articulo['cantidad'] * $articulo['precio']
-                    ]);
-
-                    // (Opcional) Aquí podrías restar el stock del producto si lo necesitas
-                    // $producto = Producto::find($articulo['id']);
-                    // $producto->decrement('stock', $articulo['cantidad']);
-                }
-
-                return $factura;
-            });
-
-            // 3. Responder al frontend con el éxito de la operación
-            return response()->json([
-                'success' => true,
-                'message' => 'Factura creada exitosamente.',
-                'factura_id' => $resultado->id
-            ], 201);
-
-        } catch (\Exception $e) {
-            // Si algo falla dentro del DB::transaction, Laravel hace un Rollback automático
-            return response()->json([
-                'success' => false,
-                'message' => 'No se pudo guardar la factura en el servidor.',
-                'error' => $e->getMessage() // Quitar en producción por seguridad
-            ], 500);
-        }
-    }
-
-// ... dentro de tu FacturaController.php en el método store()
-
-// Si la validación falla, NO usamos Toastr desde Laravel, mandamos el JSON con errores
-if ($validador->fails()) {
-    return response()->json([
-        'success' => false,
-        'errors' => $validador->errors()
-    ], 422);
-}
-
-try {
-    $resultado = DB::transaction(function () use ($request) {
-        // ... (Tu lógica de guardado que hicimos antes)
-        return $factura;
-    });
-
-    // AQUÍ USAS TU TOASTR DE LARAVEL
-    // Se guarda en la sesión y se activará inmediatamente cuando JS redirija la página
-    toastr()->success('Factura registrada y procesada con éxito');
-
-    return response()->json([
-        'success' => true,
-        'factura_id' => $resultado->id
-    ], 201);
-
-} catch (\Exception $e) {
-    return response()->json([
-        'success' => false,
-        'message' => 'Error crítico en el servidor.'
-    ], 500);
-}
-
-
- */
