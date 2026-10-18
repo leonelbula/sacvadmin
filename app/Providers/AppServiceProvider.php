@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Interfaces\AccountPayablePaymentRepositoryInterface;
 use App\Interfaces\AccountReceivablePaymentRepositoryInterface;
+use App\Interfaces\AccountsPayableRepositoryInterface;
 use App\Repositories\AccountReceivablePaymentRepository;
 use App\Interfaces\AccountsReceivableRepositoryInterface;
 use App\Interfaces\ConfigurationRepositoryInterface;
@@ -26,7 +28,9 @@ use App\Interfaces\SupplierRepositoryInterface;
 use App\Repositories\TaxRepository;
 use App\Interfaces\TaxRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Repositories\AccountsPayableRepository;
 use App\Repositories\AccountsReceivableRepository;
+use App\Repositories\AcountPayablePaymentRepository;
 use App\Repositories\ConfigurationRepository;
 use App\Repositories\ExpenseRepository;
 use App\Repositories\InventoryAdjustmentRepository;
@@ -63,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AccountsReceivableRepositoryInterface::class, AccountsReceivableRepository::class);
         $this->app->bind(AccountReceivablePaymentRepositoryInterface::class, AccountReceivablePaymentRepository::class);
         $this->app->bind(ConfigurationRepositoryInterface::class, ConfigurationRepository::class);
+        $this->app->bind(AccountsPayableRepositoryInterface::class, AccountsPayableRepository::class);
+        $this->app->bind(AccountPayablePaymentRepositoryInterface::class, AcountPayablePaymentRepository::class);
     }
 
     /**

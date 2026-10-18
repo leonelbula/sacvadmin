@@ -24,7 +24,10 @@
             'company' => 'Empresa',
             'configuration' => 'Configuración',
             'parameter' => 'Parámetros',
+            'inventory-adjustment' => 'Ajustes de inventario',
             'tax' => 'Impuestos',
+            'accounts-payable' => 'Cta. x Pagar',
+            'accounts-receivable' => 'Cta. x Cobrar',
         ];
 
         $actionLabels = [

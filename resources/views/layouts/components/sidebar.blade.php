@@ -135,16 +135,18 @@
                         </span>
 
                     </a>
+                    @can('accounts-receivable.view')
+                        <a href="{{ route('accounts-receivable.index') }}" class="menu-item">
 
-                    <a href="{{ route('accounts-receivable.index') }}" class="menu-item">
+                            <i class="bi bi-people"></i>
 
-                        <i class="bi bi-people"></i>
+                            <span>
+                                Cta. Por Cobrar
+                            </span>
 
-                        <span>
-                            Cta. Por Cobrar
-                        </span>
+                        </a>
+                    @endcan
 
-                    </a>
 
                 </div>
 
@@ -173,15 +175,18 @@
                         </span>
 
                     </a>
-                    <a href="{{ route('supplier.index') }}" class="menu-item">
+                    @can('accounts-payable.view')
+                        <a href="{{ route('accounts-payable.index') }}" class="menu-item">
 
-                        <i class="bi bi-truck"></i>
+                            <i class="bi bi-truck"></i>
 
-                        <span>
-                            Cta. x Pagar
-                        </span>
+                            <span>
+                                Cta. x Pagar
+                            </span>
 
-                    </a>
+                        </a>
+                    @endcan
+
                 </div>
 
             </div>

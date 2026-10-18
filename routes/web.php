@@ -18,8 +18,6 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/companycreate', [HomeController::class, 'companycreate'])->middleware(['auth', 'verified'])->name('createcompany');
-Route::post('/homecompanydata', [HomeController::class, 'store'])->middleware('auth')->name('homecompanydata.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -51,6 +49,7 @@ Route::middleware('auth')->group(function () {
     require __DIR__ . '/modules/pos.php';
     require __DIR__ . '/modules/user.php';
     require __DIR__ . '/modules/accounts-receivable.php';
+    require __DIR__ . '/modules/accounts-payable.php';
     require __DIR__ . '/modules/inventory-asjustement.php';
 
 

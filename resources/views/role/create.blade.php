@@ -182,6 +182,8 @@
                                     'inventory-adjustment' => 'Ajustes de inventario',
                                     'report' => 'Reportes',
                                     'configuration' => 'Configarion',
+                                    'accounts-payable' => 'Cta. x Pagar',
+                                    'accounts-receivable' => 'Cta. x Cobrar',
                                 ];
 
                                 $actionLabels = [

@@ -12,7 +12,7 @@
         }
 
         body {
-            margin: 10px 10px;
+            margin: 15px 10px;
             padding: 0;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 12px;

@@ -23,11 +23,11 @@
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>
-
-                <button type="button" class="btn btn-primary" onclick="window.print()">
+                <a href="{{ route('pos.print', $box->id) }}" target="_blank" class="btn btn-primary">
                     <i class="bi bi-printer me-1"></i>
                     Imprimir
-                </button>
+
+                </a>
             </div>
         </div>
 
@@ -521,34 +521,3 @@
     </div>
 
 @endsection
-
-@push('styles')
-    <style>
-        @media print {
-
-            body {
-                background: #fff !important;
-            }
-
-            .navbar,
-            .sidebar,
-            footer,
-            .btn,
-            .no-print {
-                display: none !important;
-            }
-
-            .container-fluid {
-                width: 100% !important;
-                padding: 0 !important;
-            }
-
-            .card {
-                box-shadow: none !important;
-                border: 1px solid #ddd !important;
-            }
-
-        }
-    </style>
-@endpush
-```

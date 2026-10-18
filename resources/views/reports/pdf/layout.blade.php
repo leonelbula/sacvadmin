@@ -15,7 +15,7 @@
             size: letter portrait;
             margin: 15mm;
         }
-       
+
         * {
             box-sizing: border-box;
         }

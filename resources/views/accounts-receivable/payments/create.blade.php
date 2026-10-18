@@ -158,16 +158,15 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const amountInput = document.getElementById('amount');
-            const payFullBalance = document.getElementById('payFullBalance');
-            const balance = {{ (float) $cuenta->balance }};
 
-            payFullBalance.addEventListener('click', function() {
-                amountInput.value = balance;
-            });
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('amount');
+        const payFullBalance = document.getElementById('payFullBalance');
+        const balance = {{ (float) $cuenta->balance }};
+
+        payFullBalance.addEventListener('click', function() {
+            amountInput.value = balance;
         });
-    </script>
-@endpush
+    });
+</script>
