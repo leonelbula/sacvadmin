@@ -211,7 +211,8 @@ class SaleRepository implements SaleRepositoryInterface
 
             ->orderByDesc('date_sale')
             ->orderByDesc('hour')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
     }
     public function findBySaleNumber(int $saleNumber)
     {

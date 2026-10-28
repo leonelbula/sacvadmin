@@ -442,7 +442,7 @@ function renderSearchProducts(products) {
                     <button
                         type="button"
                         class="btn btn-primary btn-sm"
-                        onclick='selectProduct(${JSON.stringify(product)})'>
+                        onclick='selectProduct(${JSON.stringify(product)})' ${product.stock == 0 ? 'disabled':''}>
 
                         <i class="bi bi-plus-circle"></i>
 
@@ -1220,7 +1220,7 @@ if (btnSubmitSave && formSale) {
             });
 
             const data = await response.json();
-            
+
             /*
             |--------------------------------------------------------------------------
             | Éxito

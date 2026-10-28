@@ -18,22 +18,18 @@ class ReportService
     */
 
 
-    public function getDashboard(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-
+    public function getDashboard(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
         return $this->reportRepository->getDashboard(
             $fechaDesde,
-            $fechaHasta
+            $fechaHasta,
+
         );
     }
 
 
-    public function getTotalSales(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): int|float {
+    public function getTotalSales(?string $fechaDesde = null, ?string $fechaHasta = null): int|float
+    {
 
         return $this->reportRepository->getTotalSales(
             $fechaDesde,
@@ -42,10 +38,8 @@ class ReportService
     }
 
 
-    public function getTotalPurchases(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): int|float {
+    public function getTotalPurchases(?string $fechaDesde = null, ?string $fechaHasta = null): int|float
+    {
 
         return $this->reportRepository->getTotalPurchases(
             $fechaDesde,
@@ -54,10 +48,8 @@ class ReportService
     }
 
 
-    public function getTotalExpenses(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): int|float {
+    public function getTotalExpenses(?string $fechaDesde = null, ?string $fechaHasta = null): int|float
+    {
 
         return $this->reportRepository->getTotalExpenses(
             $fechaDesde,
@@ -66,15 +58,9 @@ class ReportService
     }
 
 
-    public function getUtility(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): int|float {
-
-        return $this->reportRepository->getUtility(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getUtility(?string $fechaDesde = null, ?string $fechaHasta = null): int|float
+    {
+        return $this->reportRepository->getUtility($fechaDesde, $fechaHasta);
     }
 
 
@@ -85,57 +71,32 @@ class ReportService
     |--------------------------------------------------------------------------
     */
 
-    public function getSalesReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getSalesReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getSalesReport(?string $fechaDesde = null, ?string $fechaHasta = null,$perPage = 10): array
+    {
+        return $this->reportRepository->getSalesReport($fechaDesde, $fechaHasta ,$perPage);
     }
 
 
-    public function getSalesProductsReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getSalesProductsReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getSalesProductsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getSalesProductsReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getSalesPaymentMethodsReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getSalesPaymentMethodsReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getSalesPaymentMethodsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getSalesPaymentMethodsReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getSalesCustomersReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getSalesCustomersReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getSalesCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getSalesCustomersReport($fechaDesde, $fechaHasta);
     }
 
-    public function getProductsByCategoryReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getProductsByCategoryReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getProductsByCategoryReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getProductsByCategoryReport($fechaDesde, $fechaHasta);
     }
 
 
@@ -168,29 +129,14 @@ class ReportService
     }
 
 
-    public function getKardexReport(
-        ?int $productId = null,
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getKardexReport(
-            $productId,
-            $fechaDesde,
-            $fechaHasta,
-            50
-        );
+    public function getKardexReport(?int $productId = null, ?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getKardexReport($productId, $fechaDesde, $fechaHasta, 50);
     }
 
-    public function getKardexPdfReport(
-        ?int $productId = null,
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getKardexPdfReport(
-            $productId,
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getKardexPdfReport(?int $productId = null, ?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getKardexPdfReport($productId, $fechaDesde, $fechaHasta);
     }
 
 
@@ -200,40 +146,21 @@ class ReportService
     |--------------------------------------------------------------------------
     */
 
-    public function getPurchasesReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getPurchasesReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getPurchasesReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getPurchasesReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getPurchasesProductsReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null,
-        int $perPage = 50
-    ): array {
-        return $this->reportRepository->getPurchasesProductsReport(
-            $fechaDesde,
-            $fechaHasta,
-            $perPage
-        );
+    public function getPurchasesProductsReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array
+    {
+        return $this->reportRepository->getPurchasesProductsReport($fechaDesde, $fechaHasta, $perPage);
     }
 
 
-    public function getPurchasesSuppliersReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null,
-        int $perPage = 50
-    ): array {
-        return $this->reportRepository->getPurchasesSuppliersReport(
-            $fechaDesde,
-            $fechaHasta,
-            $perPage
-        );
+    public function getPurchasesSuppliersReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array
+    {
+        return $this->reportRepository->getPurchasesSuppliersReport($fechaDesde, $fechaHasta, $perPage);
     }
 
 
@@ -243,43 +170,22 @@ class ReportService
     |--------------------------------------------------------------------------
     */
 
-    public function getExpensesReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null,
-        int $perPage = 50
-    ): array {
-        return $this->reportRepository->getExpensesReport(
-            $fechaDesde,
-            $fechaHasta,
-            $perPage
-        );
+    public function getExpensesReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array
+    {
+        return $this->reportRepository->getExpensesReport($fechaDesde, $fechaHasta, $perPage);
     }
 
 
 
-    public function getExpensesTypesReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null,
-        int $perPage = 50
-    ): array {
-        return $this->reportRepository->getExpensesTypesReport(
-            $fechaDesde,
-            $fechaHasta,
-            $perPage
-        );
+    public function getExpensesTypesReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array
+    {
+        return $this->reportRepository->getExpensesTypesReport($fechaDesde, $fechaHasta, $perPage);
     }
 
 
-    public function getExpensesPaymentMethodsReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null,
-        int $perPage = 50
-    ): array {
-        return $this->reportRepository->getExpensesPaymentMethodsReport(
-            $fechaDesde,
-            $fechaHasta,
-            $perPage
-        );
+    public function getExpensesPaymentMethodsReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 50): array
+    {
+        return $this->reportRepository->getExpensesPaymentMethodsReport($fechaDesde, $fechaHasta, $perPage);
     }
 
 
@@ -289,36 +195,21 @@ class ReportService
     |--------------------------------------------------------------------------
     */
 
-    public function getProfitReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getProfitReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getProfitReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getProfitReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getCashFlowReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getCashFlowReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getCashFlowReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getCashFlowReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getPaymentMethodsReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getPaymentMethodsReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getPaymentMethodsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getPaymentMethodsReport($fechaDesde, $fechaHasta);
     }
 
 
@@ -328,35 +219,20 @@ class ReportService
     |--------------------------------------------------------------------------
     */
 
-    public function getCustomersReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getCustomersReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getCustomersReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getTopCustomersReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getTopCustomersReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getTopCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getTopCustomersReport($fechaDesde, $fechaHasta);
     }
 
 
-    public function getInactiveCustomersReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
-        return $this->reportRepository->getInactiveCustomersReport(
-            $fechaDesde,
-            $fechaHasta
-        );
+    public function getInactiveCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getInactiveCustomersReport($fechaDesde, $fechaHasta);
     }
 }

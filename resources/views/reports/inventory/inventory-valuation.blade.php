@@ -21,19 +21,14 @@
 
             <div class="d-flex gap-2">
 
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                <a href="{{ route('reports.index')  }}" class="btn btn-secondary">
 
                     <i class="bi bi-arrow-left"></i>
                     Volver
 
                 </a>
 
-                <a href="{{ route('reports.inventory.pdf') }}" target="_blank" class="btn btn-danger">
-
-                    <i class="bi bi-file-earmark-pdf"></i>
-                    Generar PDF
-
-                </a>
+              
 
             </div>
 

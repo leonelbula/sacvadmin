@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\ReportRepositoryInterface;
+use App\Jobs\ExportSalesReportJob;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\Product;
@@ -23,12 +24,8 @@ class ReportRepository implements ReportRepositoryInterface
     |--------------------------------------------------------------------------
     */
 
-    private function applyDateFilter(
-        $query,
-        ?string $fechaDesde,
-        ?string $fechaHasta,
-        string $column = 'date'
-    ) {
+    private function applyDateFilter($query, ?string $fechaDesde, ?string $fechaHasta, string $column = 'date')
+    {
         return $query
             ->when(
                 $fechaDesde,
@@ -168,39 +165,27 @@ class ReportRepository implements ReportRepositoryInterface
 
 
 
-    public function getSalesReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
+    public function getSalesReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 15): array
+    {
+        $query = Sale::with(['customer', 'user',]);
 
-        $query = Sale::with([
-            'customer',
-            'user',
-        ]);
+        $this->applyDateFilter($query, $fechaDesde, $fechaHasta, 'date_sale');
 
-        $this->applyDateFilter(
-            $query,
-            $fechaDesde,
-            $fechaHasta,
-            'date_sale'
-        );
+        $totalGeneral = (clone $query)->sum('total');
 
-        $sales = $query
+        $cantidadTotal = (clone $query)->count();
+
+        $sales = (clone $query)
             ->orderByDesc('date_sale')
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
 
         return [
-
             'sales' => $sales,
-
-            'total' => $sales->sum('total'),
-
-            'quantity' => $sales->count(),
-
+            'total' => $totalGeneral,
+            'quantity' => $cantidadTotal,
         ];
     }
-
-
 
     /*
     |--------------------------------------------------------------------------
@@ -208,10 +193,8 @@ class ReportRepository implements ReportRepositoryInterface
     |--------------------------------------------------------------------------
     */
 
-    public function getSalesProductsReport(
-        ?string $fechaDesde = null,
-        ?string $fechaHasta = null
-    ): array {
+    public function getSalesProductsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
 
         $query = SaleDetail::with([
             'product',
@@ -228,7 +211,8 @@ class ReportRepository implements ReportRepositoryInterface
                 $this->applyDateFilter(
                     $saleQuery,
                     $fechaDesde,
-                    $fechaHasta
+                    $fechaHasta,
+                    'date_sale'
                 );
             }
         );
@@ -375,10 +359,10 @@ class ReportRepository implements ReportRepositoryInterface
         ?string $fechaHasta = null
     ): array {
 
+        $categories = collect();
+
         $salesQuery = Sale::query()
-            ->with([
-                'details.product.category'
-            ]);
+            ->with('details.product.category');
 
         $this->applyDateFilter(
             $salesQuery,
@@ -387,55 +371,45 @@ class ReportRepository implements ReportRepositoryInterface
             'date_sale'
         );
 
-        $sales = $salesQuery->get();
+        $salesQuery->chunkById(200, function ($sales) use (&$categories) {
 
-        $categories = collect();
+            foreach ($sales as $sale) {
+                foreach ($sale->details as $detail) {
 
-        foreach ($sales as $sale) {
+                    $product = $detail->product;
 
-            foreach ($sale->details as $detail) {
+                    if (!$product || !$product->category) {
+                        continue;
+                    }
 
-                $product = $detail->product;
+                    $category = $product->category;
 
-                if (!$product || !$product->category) {
-                    continue;
-                }
-
-                $category = $product->category;
-
-                if (!$categories->has($category->id)) {
-
-                    $categories->put(
-                        $category->id,
-                        (object) [
+                    if (!$categories->has($category->id)) {
+                        $categories->put($category->id, (object) [
                             'category_id' => $category->id,
                             'name' => $category->name,
                             'quantity' => 0,
                             'total' => 0,
-                        ]
+                        ]);
+                    }
+
+                    $categoryData = $categories->get($category->id);
+
+                    $categoryData->quantity += (int) $detail->quantity;
+
+                    $categoryData->total += (float) (
+                        $detail->subtotal
+                        ?? ($detail->quantity * $detail->price)
                     );
                 }
-
-                $categoryData = $categories->get($category->id);
-
-                $categoryData->quantity += (int) $detail->quantity;
-
-                $categoryData->total += (float) (
-                    $detail->subtotal
-                    ?? (
-                        $detail->quantity * $detail->price
-                    )
-                );
             }
-        }
+        });
 
         $total = $categories->sum('total');
-
         $quantity = $categories->sum('quantity');
 
         $categories = $categories
             ->map(function ($category) use ($total) {
-
                 $category->percentage = $total > 0
                     ? ($category->total / $total) * 100
                     : 0;

@@ -33,30 +33,32 @@
         {{-- RESUMEN --}}
         <div class="row g-3 mb-4">
 
+            @if (Auth::user()->type == 'admin')
+                {{-- TOTAL VENTAS --}}
+                <div class="col-xl-3 col-md-6">
 
-            {{-- TOTAL VENTAS --}}
-            <div class="col-xl-3 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
 
-                <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body">
 
-                    <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
 
-                        <div class="d-flex justify-content-between align-items-center">
+                                <div>
 
-                            <div>
+                                    <span class="text-muted small">
+                                        Ventas realizadas
+                                    </span>
 
-                                <span class="text-muted small">
-                                    Ventas realizadas
-                                </span>
+                                    <h3 class="fw-bold mb-0 mt-1">
+                                        ${{ number_format($closures['totalSale'], 0, ',', '.') }}
+                                    </h3>
 
-                                <h3 class="fw-bold mb-0 mt-1">
-                                    ${{ number_format($closures['totalSale'], 0, ',', '.') }}
-                                </h3>
+                                </div>
 
-                            </div>
+                                <div class="bg-success bg-opacity-10 text-success rounded-3 p-3">
+                                    <i class="bi bi-graph-up-arrow fs-4"></i>
+                                </div>
 
-                            <div class="bg-success bg-opacity-10 text-success rounded-3 p-3">
-                                <i class="bi bi-graph-up-arrow fs-4"></i>
                             </div>
 
                         </div>
@@ -65,32 +67,32 @@
 
                 </div>
 
-            </div>
 
+                {{-- EFECTIVO --}}
+                <div class="col-xl-3 col-md-6">
 
-            {{-- EFECTIVO --}}
-            <div class="col-xl-3 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
 
-                <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body">
 
-                    <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
 
-                        <div class="d-flex justify-content-between align-items-center">
+                                <div>
 
-                            <div>
+                                    <span class="text-muted small">
+                                        Total efectivo
+                                    </span>
 
-                                <span class="text-muted small">
-                                    Total efectivo
-                                </span>
+                                    <h3 class="fw-bold mb-0 mt-1">
+                                        ${{ number_format($closures['totalCash'], 0, ',', '.') }}
+                                    </h3>
 
-                                <h3 class="fw-bold mb-0 mt-1">
-                                    ${{ number_format($closures['totalCash'], 0, ',', '.') }}
-                                </h3>
+                                </div>
 
-                            </div>
+                                <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-3">
+                                    <i class="bi bi-cash-stack fs-4"></i>
+                                </div>
 
-                            <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-3">
-                                <i class="bi bi-cash-stack fs-4"></i>
                             </div>
 
                         </div>
@@ -98,8 +100,8 @@
                     </div>
 
                 </div>
+            @endif
 
-            </div>
 
 
             {{-- DIFERENCIAS --}}

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\DTOs\ExpenseDTO;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\PaymentMethod;
-use App\Models\typeExpense;
+use App\Models\TypeExpense;
 use App\Services\ExpenseService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class ExpenseController extends Controller
             dateTo: $request->input('date_to'),
             perPage: 10
         );
-        $typeExpenses = typeExpense::orderBy('description')->get();
+        $typeExpenses = TypeExpense::orderBy('description')->get();
 
         $paymentMethods = PaymentMethod::orderBy('name')->get();
 
@@ -47,7 +47,7 @@ class ExpenseController extends Controller
      */
     public function create(): View
     {
-        $typeExpenses = typeExpense::orderBy('description')->get();
+        $typeExpenses = TypeExpense::orderBy('description')->get();
 
         $paymentMethods = PaymentMethod::orderBy('name')->get();
 

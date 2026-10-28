@@ -28,7 +28,7 @@ class ExpenseDTO
             date: $request->date,
             delivered_to: $request->delivered_to,
             hour: $request->hour,
-            observation: $request->observation,
+            observation: $request->observation ?? 'Sin detalles',
             payment_method_id: (int) $request->payment_method_id,
             type_expense_id: (int) $request->type_expense_id,
             user_id: (int) Auth::id(),

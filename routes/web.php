@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TypeExpenseController;
 use App\Http\Controllers\AccountStatusCustomerController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ConfigurationController;
@@ -68,6 +69,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/accountcustomer/{sale}', [AccountStatusCustomerController::class, 'list_show'])->name('accountsattuscustomer.list_show');
 
     Route::get('/recibopago/{id}', [SalePaymentController::class, 'print'])->name('salepayment.print');
+
+
+
+
+    Route::get('/expense-types/{typeExpense?}', [TypeExpenseController::class, 'index'])->name('expense-types.index');
+    Route::post('/expense-types/typeExpense', [TypeExpenseController::class, 'store'])->name('expense-types.store');
+    Route::put('/expense-types/{id}', [TypeExpenseController::class, 'update'])->name('expense-types.update');
+    Route::delete('/expense-types/{id}', [TypeExpenseController::class, 'update'])->name('expense-types.destroy');
 });
 
 Route::middleware(['auth'])->prefix('inventario/reportes')->name('inventory.reports.')->group(function () {

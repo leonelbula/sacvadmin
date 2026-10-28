@@ -4,6 +4,7 @@
 
 const STORAGE_KEY_PRODUCTS = "datosProducts";
 const STORAGE_SHOPPING = "saleInformation";
+const STORAGE_CUSTOMER = "datosCustomer";
 
 /*=========================================================
 =            ELEMENTOS DEL DOM                            =
@@ -216,7 +217,7 @@ function renderSearchProducts(products) {
                     <button
                         type="button"
                         class="btn btn-primary btn-sm"
-                        onclick='selectProduct(${JSON.stringify(product)})'>
+                        onclick='selectProduct(${JSON.stringify(product)})' ${product.stock == 0 ? "disabled" : ""}>
 
                         <i class="bi bi-plus-circle"></i>
 
@@ -244,10 +245,9 @@ function clearSearchTable() {
 function loadProductData() {
     try {
         datosProducts =
-            JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS)) || [];
+            JSON.parse(sessionStorage.getItem(STORAGE_KEY_PRODUCTS)) || [];
     } catch (error) {
         console.error("Error leyendo productos:", error);
-
         datosProducts = [];
     }
 
@@ -255,9 +255,10 @@ function loadProductData() {
 }
 
 function saveProducts() {
-    localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(datosProducts));
+    sessionStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(datosProducts));
 
     products.value = JSON.stringify(datosProducts);
+
     renderShoppingProducts();
 }
 
@@ -533,65 +534,29 @@ function removeProduct(id) {
 
 function updateSummary() {
     let subtotal = 0;
-
-    let totalDiscount = 0;
-
     let totalTax = 0;
-
     let totalQuantity = 0;
-
     let valtotal = 0;
 
     datosProducts.forEach((product) => {
         const quantity = Number(product.quantity);
-
         const price = Number(product.price);
-
-        // const discount = Number(product.discount);
-
         const tax = Number(product.tax ?? 0);
 
-        /*
-         * El precio YA INCLUYE IVA.
-         */
         const lineSubtotal = quantity * price;
 
-        /*
-         * Valor después del descuento.
-         */
-        const valor = lineSubtotal;
-
-        /*
-         * Extraer la base sin IVA.
-         *
-         * Ejemplo:
-         *
-         * $119.000 / 1.19 = $100.000
-         */
         const base =
-            tax > 0 ? Math.round(valor / (1 + tax / 100)) : Math.round(valor);
+            tax > 0
+                ? Math.round(lineSubtotal / (1 + tax / 100))
+                : Math.round(lineSubtotal);
 
-        /*
-         * IVA incluido.
-         */
-        const lineTax = tax > 0 ? Math.round(valor - base) : 0;
+        const lineTax = tax > 0 ? Math.round(lineSubtotal - base) : 0;
 
         subtotal += base;
-
         valtotal += lineSubtotal;
-
         totalTax += lineTax;
-
         totalQuantity += quantity;
     });
-
-    /*
-     * IMPORTANTE:
-     *
-     * Como el precio ya incluye IVA,
-     * NO debemos sumar nuevamente el IVA.
-     */
-    //const total = subtotal - totalDiscount;
 
     document.getElementById("subTotal").value = subtotal;
 
@@ -599,10 +564,12 @@ function updateSummary() {
         "$ " + subtotal.toLocaleString("es-CO");
 
     document.getElementById("tax").value = totalTax;
+
     document.getElementById("iva19Invoice").textContent =
         "$ " + totalTax.toLocaleString("es-CO");
 
-    document.getElementById("total").value = total;
+    document.getElementById("total").value = valtotal;
+
     document.getElementById("totalInvoice").textContent =
         "$ " + valtotal.toLocaleString("es-CO");
 
@@ -611,9 +578,6 @@ function updateSummary() {
 
     document.getElementById("quantityInvoice").textContent = totalQuantity;
 
-    /*
-     * Actualizamos forma de pago.
-     */
     updatePayment();
 }
 
@@ -646,35 +610,28 @@ function getInvoiceTotal() {
 
 function loadShoppingInformation() {
     try {
-        const sale = JSON.parse(localStorage.getItem(STORAGE_SHOPPING));
+        const sale = JSON.parse(sessionStorage.getItem(STORAGE_SHOPPING));
 
         if (!sale) {
-            /*
-             * Por defecto:
-             * efectivo
-             */
             paymentMethod.value = "1";
-
             receivedAmount.value = 0;
+            observation.value = "";
 
             updatePayment();
-
             return;
         }
 
         paymentMethod.value = sale.paymentMethod ?? "1";
-
         receivedAmount.value = sale.receivedAmount ?? 0;
-
         observation.value = sale.observation ?? "";
 
         updatePayment();
     } catch (error) {
         console.error("Error cargando información de venta:", error);
 
-        paymentMethod.value = "cash";
-
+        paymentMethod.value = "1";
         receivedAmount.value = 0;
+        observation.value = "";
 
         updatePayment();
     }
@@ -683,13 +640,11 @@ function loadShoppingInformation() {
 function saveShoppingInformation() {
     const sale = {
         paymentMethod: paymentMethod.value,
-
         receivedAmount: Number(receivedAmount.value),
-
         observation: observation.value,
     };
 
-    localStorage.setItem(STORAGE_SHOPPING, JSON.stringify(sale));
+    sessionStorage.setItem(STORAGE_SHOPPING, JSON.stringify(sale));
 }
 
 /*=========================================================
@@ -763,40 +718,26 @@ function calculateChange(save = true) {
 =========================================================*/
 
 function clearSaleData() {
-    /*
-     * NO usar localStorage.clear()
-     *
-     * porque eliminaría todos los datos
-     * almacenados por tu aplicación.
-     */
-
-    localStorage.removeItem(STORAGE_KEY_PRODUCTS);
-
-    localStorage.removeItem(STORAGE_SHOPPING);
-
-    localStorage.removeItem("datosCustomer");
+    sessionStorage.removeItem(STORAGE_KEY_PRODUCTS);
+    sessionStorage.removeItem(STORAGE_SHOPPING);
+    sessionStorage.removeItem(STORAGE_CUSTOMER);
 
     datosProducts = [];
 
     tbodyProducts.innerHTML = "";
-
     tbodySaleProducts.innerHTML = "";
 
     searchProduct.value = "";
 
-    paymentMethod.value = "cash";
-
+    paymentMethod.value = "1";
     receivedAmount.value = 0;
-
     receivedAmount.disabled = false;
 
     changeAmount.value = 0;
-
     observation.value = "";
 
-    /*
-     * Actualizar resumen.
-     */
+    products.value = JSON.stringify(datosProducts);
+
     updateSummary();
 }
 

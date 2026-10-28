@@ -13,80 +13,7 @@ class RolePermissionSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $permissions = [
-            'dashboard.view',
-
-            'user.view',
-            'user.create',
-            'user.edit',
-            'user.delete',
-
-            'role.view',
-            'role.create',
-            'role.edit',
-            'role.delete',
-
-            'permission.view',
-            'permission.create',
-            'permission.edit',
-            'permission.delete',
-
-            'product.view',
-            'product.create',
-            'product.edit',
-            'product.delete',
-
-            'category.view',
-            'category.create',
-            'category.edit',
-            'category.delete',
-
-            'customer.view',
-            'customer.create',
-            'customer.edit',
-            'customer.delete',
-
-            'supplier.view',
-            'supplier.create',
-            'supplier.edit',
-            'supplier.delete',
-
-            'shopping.view',
-            'shopping.create',
-            'shopping.edit',
-            'shopping.delete',
-
-            'sale.view',
-            'sale.create',
-            'sale.edit',
-            'sale.delete',
-
-            'sale-return.view',
-            'sale-return.create',
-            'sale-return.edit',
-            'sale-return.delete',
-
-            'expense.view',
-            'expense.create',
-            'expense.edit',
-            'expense.delete',
-
-            'inventory-adjustment.view',
-            'inventory-adjustment.create',
-            'inventory-adjustment.edit',
-            'inventory-adjustment.delete',
-
-            'kardex.view',
-
-            'report.view',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate([
-                'name' => $permission,
-                'guard_name' => 'web',
-            ]);
-        }
+       
 
         $admin = Role::firstOrCreate([
             'name' => 'Administrador',
@@ -145,9 +72,9 @@ class RolePermissionSeeder extends Seeder
             'sale.create',
             'sale.edit',
 
-            'sale-return.view',
-            'sale-return.create',
-            'sale-return.edit',
+            'salereturn.view',
+            'salereturn.create',
+            'salereturn.edit',
 
             'expense.view',
             'expense.create',
@@ -176,8 +103,8 @@ class RolePermissionSeeder extends Seeder
             'sale.view',
             'sale.create',
 
-            'sale-return.view',
-            'sale-return.create',
+            'salereturn.view',
+            'salereturn.create',
         ]);
 
         $almacen->syncPermissions([

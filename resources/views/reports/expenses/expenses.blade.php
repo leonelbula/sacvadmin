@@ -17,7 +17,7 @@
             </div>
 
             <div class="d-flex gap-2">
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                <a href="{{ route('reports.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>

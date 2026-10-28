@@ -12,7 +12,8 @@ Route::get('/report/inventory', [ReportController::class, 'inventory'])->middlew
 Route::get('/report/kardex', [ReportController::class, 'kardex'])->middleware('permission:report.kardex')->name('report.kardex');
 Route::get('/reporteinventario', [ReportController::class, 'reporteinventario'])->name('report.reporteinventario');
 
-
+Route::get('/reports/sales/pdf/view', [ReportController::class, 'showPdf'])->name('reports.sales.pdf.view');
+Route::get('/reports/sales/excel',[ReportController::class, 'exportSalesExcel'])->name('reports.sales.excel');
 
 Route::prefix('reports')->name('reports.')->controller(ReportController::class)->group(function () {
     /* |--------------------------------------------------------------------------

@@ -25,16 +25,12 @@
                     Volver
                 </a>
 
-                <a href="{{ route('reports.sales.pdf', [
-                    'fecha_desde' => $fechaDesde,
-                    'fecha_hasta' => $fechaHasta,
-                ]) }}"
-                    target="_blank" class="btn btn-danger rounded-3">
-
-                    <i class="bi bi-file-earmark-pdf me-2"></i>
-                    PDF
-
+                <a href="{{ route('reports.sales.excel', request()->only('fecha_desde', 'fecha_hasta')) }}"
+                    class="btn btn-success">
+                    <i class="bi bi-file-earmark-excel"></i>
+                    Exportar a Excel
                 </a>
+
             </div>
 
         </div>
@@ -237,6 +233,11 @@
             </div>
 
         </div>
+        @if ($sales->hasPages())
+            <div class="card-footer bg-white">
+                {{ $sales->links() }}
+            </div>
+        @endif
 
     </div>
 

@@ -18,12 +18,13 @@
             </div>
 
             <div class="d-flex gap-2">
-                <a href="{{ route('reports.inventory.kardex.pdf', request()->query()) }}" class="btn btn-danger" target="_blank">
+                <a href="{{ route('reports.inventory.kardex.pdf', request()->query()) }}" class="btn btn-danger"
+                    target="_blank">
                     <i class="bi bi-file-earmark-pdf me-1"></i>
                     PDF
                 </a>
 
-                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
+                <a href="{{ route('reports.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>

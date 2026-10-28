@@ -230,11 +230,17 @@
 
                 </button>
 
-
                 <div class="submenu">
 
                     <a href="{{ route('expense.index') }}">
                         Lista de Gastos
+                    </a>
+
+                </div>
+                <div class="submenu">
+
+                    <a href="{{ route('expense-types.index') }}">
+                        Tipos de Gastos
                     </a>
 
                 </div>
@@ -279,6 +285,7 @@
 
             </a>
         @endcan
+
         @can('configuration.view')
             <a href="{{ route('configuration.index') }}" class="menu-item">
 

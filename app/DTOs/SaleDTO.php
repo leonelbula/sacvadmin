@@ -33,7 +33,7 @@ class SaleDTO
             subtotal: (int)$request->input('subtotal'),
             total: (int)$request->input('total'),
             balance: (int)$request->input('balance'),
-            hour: $request->input('hour', ''),
+            hour: $request->input('hour', now()->format('H:i:s')),
             date_sale: $request->input('date_sale', ''),
             term: $request->input('term', ''),
             expiration_date: $request->input('expiration_date', ''),

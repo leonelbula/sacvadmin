@@ -671,7 +671,7 @@
                                         filtros seleccionados.
                                     </p>
 
-                                    <a href="{{ route('expenses.create') }}" class="btn btn-primary rounded-3">
+                                    <a href="{{ route('expense.create') }}" class="btn btn-primary rounded-3">
 
                                         <i class="bi bi-plus-lg me-2"></i>
                                         Registrar primer gasto

@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SalesExport;
+use App\Jobs\GenerateSalesReportPdf;
 use App\Services\ReportService;
 use Illuminate\Contracts\View\View;
 use App\Services\ReportPdfService;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -73,8 +79,8 @@ class ReportController extends Controller
 
         return view('reports.sale.sales', [
             ...$data,
-            'fechaDesde' => $filters['fecha_desde'] ?? null,
-            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+            'fechaDesde' => $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            'fechaHasta' => $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'),
         ]);
     }
 
@@ -85,12 +91,12 @@ class ReportController extends Controller
     public function salesProducts(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getSalesProductsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getSalesProductsReport($filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'), $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'));
 
         return view('reports.sale.sales-products', [
             ...$data,
-            'fechaDesde' => $filters['fecha_desde'] ?? null,
-            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+            'fechaDesde' => $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            'fechaHasta' => $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'),
         ]);
     }
 
@@ -103,15 +109,15 @@ class ReportController extends Controller
 
         $filters = $this->dates();
 
-        $data = $this->reportService->getSalesPaymentMethodsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getSalesPaymentMethodsReport($filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'), $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'));
 
         return view(
             'reports.sale.sales-payment-methods',
 
             [
                 ...$data,
-                'fechaDesde' => $filters['fecha_desde'] ?? null,
-                'fechaHasta' => $filters['fecha_hasta'] ?? null,
+                'fechaDesde' => $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+                'fechaHasta' => $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'),
             ]
         );
     }
@@ -123,25 +129,25 @@ class ReportController extends Controller
     public function salesCustomers(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getSalesCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getSalesCustomersReport($filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'), $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'));
 
         return view('reports.sale.sales-customers', [
             ...$data,
-            'fechaDesde' => $filters['fecha_desde'] ?? null,
-            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+            'fechaDesde' => $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            'fechaHasta' => $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'),
         ]);
     }
 
 
-public function getProductsByCategory(): View
+    public function getProductsByCategory(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getProductsByCategoryReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getProductsByCategoryReport($filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'), $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'));
 
         return view('reports.sale.products-by-category', [
             ...$data,
-            'fechaDesde' => $filters['fecha_desde'] ?? null,
-            'fechaHasta' => $filters['fecha_hasta'] ?? null,
+            'fechaDesde' => $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            'fechaHasta' => $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d'),
         ]);
     }
 
@@ -191,7 +197,11 @@ public function getProductsByCategory(): View
     {
         $filters = $this->dates();
         $product_id = request()->input('product_id');
-        $data = $this->reportService->getKardexReport($product_id ?? null, $filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getKardexReport(
+            $product_id ?? null,
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.inventory.kardex', $data);
     }
@@ -203,7 +213,10 @@ public function getProductsByCategory(): View
     public function purchases(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getPurchasesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getPurchasesReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.shopping.purchases', $data);
     }
@@ -215,7 +228,10 @@ public function getProductsByCategory(): View
     public function purchasesProducts(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getPurchasesProductsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getPurchasesProductsReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.shopping.purchases-products', $data);
     }
@@ -227,7 +243,10 @@ public function getProductsByCategory(): View
     public function purchasesSuppliers(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getPurchasesSuppliersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getPurchasesSuppliersReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.shopping.purchases-suppliers', $data);
     }
@@ -239,7 +258,10 @@ public function getProductsByCategory(): View
     public function expenses()
     {
         $filters = $this->dates();
-        $data = $this->reportService->getExpensesReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getExpensesReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
         return view('reports.expenses.expenses', [
             ...$data,
             'fechaDesde' => $filters['fecha_desde'] ?? null,
@@ -256,8 +278,8 @@ public function getProductsByCategory(): View
 
         $filters = $this->dates();
         $data = $this->reportService->getExpensesTypesReport(
-            $filters['fecha_desde'] ?? null,
-            $filters['fecha_hasta'] ?? null
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
         );
 
         return view('reports.expenses.expenses-types', $data);
@@ -270,7 +292,10 @@ public function getProductsByCategory(): View
     public function expensesPaymentMethods(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getExpensesPaymentMethodsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getExpensesPaymentMethodsReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.expenses.expenses-payment-methods', $data);
     }
@@ -282,7 +307,10 @@ public function getProductsByCategory(): View
     public function profit(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getProfitReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getProfitReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.financial.profit', $data);
     }
@@ -294,7 +322,10 @@ public function getProductsByCategory(): View
     public function cashFlow(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getCashFlowReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getCashFlowReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.financial.cash-flow', $data);
     }
@@ -306,7 +337,10 @@ public function getProductsByCategory(): View
     public function paymentMethods(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getPaymentMethodsReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getPaymentMethodsReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.financial.payment-methods', $data);
     }
@@ -318,7 +352,10 @@ public function getProductsByCategory(): View
     public function customers(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getCustomersReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.customers.customers', $data);
     }
@@ -330,7 +367,10 @@ public function getProductsByCategory(): View
     public function customersTop(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getTopCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getTopCustomersReport(
+            $filters['fecha_desde'] ?? Carbon::now()->format('Y-m-d'),
+            $filters['fecha_hasta'] ?? Carbon::now()->format('Y-m-d')
+        );
 
         return view('reports.customers.customers-top', $data);
     }
@@ -342,7 +382,10 @@ public function getProductsByCategory(): View
     public function customersInactive(): View
     {
         $filters = $this->dates();
-        $data = $this->reportService->getInactiveCustomersReport($filters['fecha_desde'] ?? null, $filters['fecha_hasta'] ?? null);
+        $data = $this->reportService->getInactiveCustomersReport(
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
 
         return view('reports.customers.customers-inactive', $data);
     }
@@ -354,13 +397,56 @@ public function getProductsByCategory(): View
 |--------------------------------------------------------------------------
 */
 
-    public function salesPdf(Request $request): Response
+    public function showPdf()
+    {
+        $path = 'reports/sale/ventas-' . Auth::user()->id . '.pdf';
+
+        if (!Storage::disk('local')->exists($path)) {
+            return back()->with(
+                'error',
+                'El PDF todavía no está listo.'
+            );
+        }
+
+        return response()->file(
+            Storage::disk('local')->path($path),
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="reporte-ventas.pdf"',
+            ]
+        );
+    }
+
+    public function exportSalesExcel(Request $request)
+    {
+        $dates = $request->validate([
+            'fecha_desde' => ['nullable', 'date'],
+            'fecha_hasta' => [
+                'nullable',
+                'date',
+                'after_or_equal:fecha_desde',
+            ],
+        ]);
+
+        $fechaDesde = $dates['fecha_desde'] ?? null;
+        $fechaHasta = $dates['fecha_hasta'] ?? null;
+
+        return Excel::download(
+            new SalesExport($fechaDesde, $fechaHasta),
+            'reporte-ventas-' . now()->format('Y-m-d-His') . '.xlsx'
+        );
+    }
+
+    public function salesPdf(Request $request)
     {
         $filters = $this->dates();
-        return $this->reportPdfService->sales(
+        GenerateSalesReportPdf::dispatch(
             $filters['fecha_desde'] ?? null,
-            $filters['fecha_hasta'] ?? null
+            $filters['fecha_hasta'] ?? null,
+            Auth::user()->id
         );
+        toastr()->success('El reporte se está generando');
+        return back();
     }
 
 
@@ -377,7 +463,7 @@ public function getProductsByCategory(): View
 
     public function salesPaymentMethodsPdf(): Response
     {
-         $filters = $this->dates();
+        $filters = $this->dates();
         return $this->reportPdfService->salesPaymentMethods(
             $filters['fecha_desde'] ?? null,
             $filters['fecha_hasta'] ?? null
@@ -430,7 +516,7 @@ public function getProductsByCategory(): View
         $product_id = request()->input('product_id');
         return $this->reportPdfService->kardex(
             $product_id ?? null,
-             $filters['fecha_desde'] ?? null,
+            $filters['fecha_desde'] ?? null,
             $filters['fecha_hasta'] ?? null
         );
     }

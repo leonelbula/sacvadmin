@@ -26,7 +26,7 @@ interface ReportRepositoryInterface
     |--------------------------------------------------------------------------
     */
 
-    public function getSalesReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
+    public function getSalesReport(?string $fechaDesde = null, ?string $fechaHasta = null, int $perPage = 10): array;
 
     public function getSalesProductsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 

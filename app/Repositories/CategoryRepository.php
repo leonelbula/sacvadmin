@@ -15,7 +15,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }else{
             return Category::all();
         }
-        
+
     }
 
     public function searchCategories(?string $search = null, int $perPage = 10)
@@ -30,7 +30,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->withQueryString();
     }
 
-    public function getCategoryById($id)
+    public function getCategoryById(int $id)
     {
         return Category::findOrFail($id);
     }
@@ -40,7 +40,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return Category::create($data);
     }
 
-    public function updateCategory($id, array $data)
+    public function updateCategory(int $id, array $data)
     {
         $category = Category::findOrFail($id);
         if ($category) {
@@ -50,7 +50,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return null;
     }
 
-    public function deleteCategory($id)
+    public function deleteCategory(int $id)
     {
         $category = Category::find($id);
         if ($category) {

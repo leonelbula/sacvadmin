@@ -18,9 +18,9 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function sales($date_from = null, $date_until= null): Response
+    public function sales($date_from = null, $date_until= null,): Response
     {
-        $data = $this->reportService->getSalesReport($date_from, $date_until);
+        $data = $this->reportService->getSalesReport($date_from, $date_until,0);
 
         return $this->pdf(
             'reports.pdf.sales',

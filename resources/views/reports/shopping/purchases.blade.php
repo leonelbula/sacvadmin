@@ -25,7 +25,7 @@
                     PDF
                 </a>
 
-                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
+                <a href="{{ route('reports.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i>
                     Volver
                 </a>

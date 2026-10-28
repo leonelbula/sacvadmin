@@ -39,6 +39,15 @@
 
                             </a>
                         @endif
+                        @if (Auth::user()->type == 'Admin')
+                            <a href="{{ route('sale.create') }}" class="btn btn-light">
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Nueva Venta
+
+                            </a>
+                        @endif
                     @endcan
 
 

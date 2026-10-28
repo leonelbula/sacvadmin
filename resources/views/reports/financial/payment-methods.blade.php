@@ -21,7 +21,7 @@
 
             <div class="d-flex gap-2">
 
-                <a href="{{ url()->previous() }}" class="btn btn-secondary">
+                <a href="{{ route('reports.index') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i>
                     Volver
                 </a>
@@ -273,7 +273,7 @@
                                     <td class="text-center">
 
                                         <span class="badge bg-secondary">
-                                           {{ $paymentMethod->quantity }}
+                                            {{ $paymentMethod->quantity }}
                                         </span>
 
                                     </td>
