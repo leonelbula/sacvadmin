@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\AccountReceivablePaymentRepositoryInterface;
+use App\Repositories\Contracts\AccountReceivablePaymentRepositoryInterface;
 use App\Models\AccountReceivablePayment;
 use App\Models\Sale;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

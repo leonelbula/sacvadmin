@@ -14,7 +14,7 @@ use App\Models\Tax;
 
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
-use App\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\DTOs\CustomerDTO;
 
 class CustomerController extends Controller
@@ -71,7 +71,7 @@ class CustomerController extends Controller
     public function store(CustomerRequest $request)
     {
 
-   
+
         $data = CustomerDTO::fromRequest($request);
         $customer = $this->customerService->create($data);
         if ($customer) {

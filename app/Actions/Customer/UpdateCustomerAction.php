@@ -1,6 +1,6 @@
 <?php
 namespace App\Actions\Customer;
-use App\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\DTOs\CustomerDTO;
 use Illuminate\Support\Facades\DB;
 use Exception;

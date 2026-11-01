@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Repositories\Contracts;
+
+use App\DTOs\InventoryAdjustmentDTO;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+interface InventoryAdjustmentRepositoryInterface
+{
+    public function create(array $data): mixed;
+
+    public function findById(int $id): mixed;
+
+    public function search(array $filters = []): LengthAwarePaginator;
+
+    public function report(array $filters = []);
+}

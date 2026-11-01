@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\AccountsPayableRepositoryInterface;
+use App\Repositories\Contracts\AccountsPayableRepositoryInterface;
 use App\Models\Shopping;
 
 class AccountsPayableService

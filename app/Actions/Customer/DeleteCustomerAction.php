@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Actions\Customer;
-use App\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Contracts\CustomerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Exception;
 

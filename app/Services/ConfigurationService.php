@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\ConfigurationRepositoryInterface;
+use App\Repositories\Contracts\ConfigurationRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;

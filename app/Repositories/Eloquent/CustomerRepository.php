@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Repositories\Eloquent;
+
+use App\Repositories\Contracts\CustomerRepositoryInterface;
+use App\Models\Customer;
+
+class CustomerRepository implements CustomerRepositoryInterface
+{
+    public function find(int $id)
+    {
+        return Customer::find($id);
+    }
+
+    public function all()
+    {
+        return Customer::orderBy('full_name', 'asc')->paginate(10);
+    }
+
+    public function create(array $data)
+    {
+        return Customer::create($data);
+    }
+
+    public function update(int $id, array $data)
+    {
+        $customer = Customer::findOrFail($id);
+
+        $customer->update($data);
+
+        return $customer;
+    }
+
+    public function delete(int $id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        return $customer->delete();
+    }
+
+    public function search(string $search)
+    {
+        $clientes = Customer::with('city')
+            ->where(function ($query) use ($search) {
+                $query->where('full_name', 'LIKE', "%{$search}%")
+                    ->orWhere('identification', 'LIKE', "%{$search}%");
+            })
+            ->select('customers.*')
+            ->groupBy('customers.id')
+            ->paginate(5);
+
+        return $clientes;
+    }
+    public function countCustomers()
+    {
+        return Customer::count();
+    }
+}

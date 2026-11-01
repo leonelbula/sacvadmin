@@ -6,7 +6,7 @@ use App\Actions\User\UserCreateAction;
 use App\Actions\User\UserDeleteAction;
 use App\Actions\User\UserUpdateAction;
 use App\DTOs\UserDTO;
-use App\Interfaces\UserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Spatie\Permission\Models\Role;

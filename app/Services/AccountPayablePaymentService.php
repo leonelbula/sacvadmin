@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\AccountPayablePaymentRepositoryInterface;
+use App\Repositories\Contracts\AccountPayablePaymentRepositoryInterface;
 use App\Models\AcountPayablePayment;
 use App\Models\Shopping;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

@@ -3,9 +3,9 @@
 namespace App\Actions\Shopping;
 
 use App\DTOs\ShoppingDTO;
-use App\Interfaces\KardexRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
-use App\Interfaces\ShoppingRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Repositories\Contracts\ShoppingRepositoryInterface;
 use App\Models\Shopping;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

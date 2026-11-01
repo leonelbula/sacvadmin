@@ -4,8 +4,8 @@ namespace App\Actions\Product;
 
 use Exception;
 use App\DTOs\ProductDTO;
-use App\Interfaces\KardexRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

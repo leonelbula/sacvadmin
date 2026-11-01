@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\CategoryDTO;
-use App\Repositories\CategoryRepository;
+use App\Repositories\Eloquent\CategoryRepository;
 use App\Actions\Category\CreateCategoryAction;
 use App\Actions\Category\UpdateCategoryAction;
 use App\Actions\Category\DeleteCategoryAction;

@@ -5,8 +5,8 @@ namespace App\Services; // Asegúrate de agregar el namespace correcto
 use App\Actions\Pos\PosCreateAction;
 use App\Actions\Pos\PosUpdateAction;
 use App\DTOs\PosDTO;
-use App\Interfaces\PosRepositoryInterface;
-use App\Interfaces\SaleRepositoryInterface;
+use App\Repositories\Contracts\PosRepositoryInterface;
+use App\Repositories\Contracts\SaleRepositoryInterface;
 use App\Models\Pos;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

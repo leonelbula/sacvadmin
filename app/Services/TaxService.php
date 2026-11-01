@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Tax;
-use App\Repositories\TaxRepository;
+use App\Repositories\Eloquent\TaxRepository;
 
 class TaxService
 {

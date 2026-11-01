@@ -6,7 +6,7 @@ use App\Actions\Supplier\CreateSupplierAction;
 use App\Actions\Supplier\DeleteSupplierAction;
 use App\Actions\Supplier\UpdateSupplierAction;
 use App\DTOs\SupplierDTO;
-use App\Interfaces\SupplierRepositoryInterface;
+use App\Repositories\Contracts\SupplierRepositoryInterface;
 use App\Models\Supplier;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

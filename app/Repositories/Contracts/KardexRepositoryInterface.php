@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Repositories\Contracts;
+
+
+interface KardexRepositoryInterface
+{
+    public function create(array $data);
+    public function all();
+    public function search(string $query);
+    public function allId(int $id);
+    public function getId(int $id);
+    public function countRegister();
+}

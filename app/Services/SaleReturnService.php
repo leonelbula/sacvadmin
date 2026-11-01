@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Actions\SaleReturn\SaleReturnCreateAction;
 use App\Actions\SaleReturn\SaleReturnDeleteAction;
 use App\DTOs\SaleReturnDTO;
-use App\Interfaces\SaleReturnRepositoryInterface;
+use App\Repositories\Contracts\SaleReturnRepositoryInterface;
 
 class SaleReturnService
 {

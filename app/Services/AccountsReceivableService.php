@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\AccountsReceivableRepositoryInterface;
+use App\Repositories\Contracts\AccountsReceivableRepositoryInterface;
 use App\Models\Sale;
 
 class AccountsReceivableService
@@ -40,5 +40,5 @@ class AccountsReceivableService
         return $this->repository->findAccount($id);
     }
 
-   
+
 }

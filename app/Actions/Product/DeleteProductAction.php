@@ -2,8 +2,8 @@
 
 namespace App\Actions\Product;
 
-use App\Interfaces\KardexRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use Exception;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;

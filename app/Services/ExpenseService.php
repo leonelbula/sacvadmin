@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Actions\Expense\ExpenseCreateAction;
 use App\DTOs\ExpenseDTO;
-use App\Interfaces\ExpenseRepositoryInterface;
+use App\Repositories\Contracts\ExpenseRepositoryInterface;
 use App\Models\Expense;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

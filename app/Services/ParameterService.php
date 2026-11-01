@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 use App\DTOs\ParameterDTO;
-use App\Repositories\ParameterRepository;
+use App\Repositories\Eloquent\ParameterRepository;
 use App\Actions\Parameter\CreateParameterAction;
 use App\Actions\Parameter\UpdateParameterAction;
 

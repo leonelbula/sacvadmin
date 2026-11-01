@@ -6,7 +6,7 @@ use App\Actions\Sale\SaleCreateAction;
 use App\Actions\Sale\SaleDeleteAction;
 use App\Actions\Sale\SaleUpdateAction;
 use App\DTOs\SaleDTO;
-use App\Interfaces\SaleRepositoryInterface;
+use App\Repositories\Contracts\SaleRepositoryInterface;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

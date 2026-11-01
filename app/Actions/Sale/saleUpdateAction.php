@@ -3,9 +3,9 @@
 namespace App\Actions\Sale;
 
 use App\DTOs\SaleDTO;
-use App\Interfaces\KardexRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
-use App\Interfaces\SaleRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Repositories\Contracts\SaleRepositoryInterface;
 use App\Models\Sale;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

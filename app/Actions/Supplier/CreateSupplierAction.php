@@ -5,7 +5,7 @@ namespace App\Actions\Supplier;
 
 use Exception;
 use App\DTOs\SupplierDTO;
-use App\Interfaces\SupplierRepositoryInterface;
+use App\Repositories\Contracts\SupplierRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class CreateSupplierAction

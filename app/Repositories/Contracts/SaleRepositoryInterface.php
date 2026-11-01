@@ -1,0 +1,26 @@
+<?php
+namespace App\Repositories\Contracts;
+
+use App\Models\Sale;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+interface SaleRepositoryInterface
+{
+    public function All(): LengthAwarePaginator;
+    public function findById(int $id): Sale;
+    public function create(array $data): Sale;
+    public function update(int $id, array $data): Sale;
+    public function delete(int $id): bool;
+    public function lastSale(): ?Sale;
+    public function totalSale();
+    public function totalSaleDate(string $start_date, string $close_date);
+    public function getSalesByPeriod(  int $userId, string $startDate, string $startTime,string $closingDate,string $closingTime);
+    public function searchSales(array $filters): LengthAwarePaginator;
+    public function findBySaleNumber(int $saleNumber);
+    public function saleDay(int $userId, string $startDate);
+    public function saleDayTotal(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodCash(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodTransfer(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodOther(?int $userId, string $startDate): array;
+    public function saleDayTotalByPaymentMethodCredit(?int $userId, string $startDate): array;
+
+}

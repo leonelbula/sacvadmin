@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\KardexRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
 
 class KardexService
 {

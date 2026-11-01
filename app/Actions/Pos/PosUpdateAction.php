@@ -3,7 +3,7 @@
 namespace App\Actions\Pos;
 
 use App\DTOs\PosDTO;
-use App\Interfaces\PosRepositoryInterface;
+use App\Repositories\Contracts\PosRepositoryInterface;
 use App\Models\Pos;
 use Illuminate\Support\Facades\DB;
 use Exception;

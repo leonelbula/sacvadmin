@@ -3,7 +3,7 @@
 namespace App\Actions\User;
 
 use App\DTOs\UserDTO;
-use App\Interfaces\UserRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

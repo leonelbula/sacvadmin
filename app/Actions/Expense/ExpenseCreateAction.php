@@ -3,7 +3,7 @@
 namespace App\Actions\Expense;
 
 use App\DTOs\ExpenseDTO;
-use App\Interfaces\ExpenseRepositoryInterface;
+use App\Repositories\Contracts\ExpenseRepositoryInterface;
 use App\Models\Expense;
 use Illuminate\Support\Facades\DB;
 

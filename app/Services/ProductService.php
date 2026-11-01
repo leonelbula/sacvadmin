@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\DTOs\ProductDTO;
 
-//use App\Repositories\ProductRepository;
+//use App\Repositories\Eloquent\ProductRepository;
 
 use App\Actions\Product\CreateProductAction;
 use App\Actions\Product\UpdateProductAction;
 use App\Actions\Product\DeleteProductAction;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 
 class ProductService
 {

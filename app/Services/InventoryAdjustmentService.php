@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Actions\InventoryAdjustment\InventoryAdjustmentCreateAction;
 use App\DTOs\InventoryAdjustmentDTO;
-use App\Interfaces\InventoryAdjustmentRepositoryInterface;
+use App\Repositories\Contracts\InventoryAdjustmentRepositoryInterface;
 
 class InventoryAdjustmentService
 {

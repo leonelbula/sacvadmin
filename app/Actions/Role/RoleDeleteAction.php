@@ -2,7 +2,7 @@
 
 namespace App\Actions\Role;
 
-use App\Interfaces\RoleRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 use Spatie\Permission\Models\Role;
 
 class RoleDeleteAction

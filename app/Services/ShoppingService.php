@@ -8,7 +8,7 @@ use App\Actions\Shopping\ShoppingDeleteAction;
 use App\Actions\Shopping\ShoppingCreateAction;
 use App\Actions\Shopping\ShoppingUpdateAction;
 use App\DTOs\ShoppingDTO;
-use App\Interfaces\ShoppingRepositoryInterface;
+use App\Repositories\Contracts\ShoppingRepositoryInterface;
 use App\Models\Shopping;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

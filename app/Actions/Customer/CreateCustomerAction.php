@@ -5,7 +5,7 @@ namespace App\Actions\Customer;
 
 use Exception;
 use App\DTOs\CustomerDTO;
-use App\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Contracts\CustomerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 class CreateCustomerAction

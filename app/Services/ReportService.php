@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Interfaces\ReportRepositoryInterface;
+use App\Repositories\Contracts\ReportRepositoryInterface;
 
 class ReportService
 {

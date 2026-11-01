@@ -3,9 +3,9 @@
 namespace App\Actions\SaleReturn;
 
 use App\DTOs\SaleReturnDTO;
-use App\Interfaces\SaleReturnRepositoryInterface;
-use App\Interfaces\KardexRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\SaleReturnRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Models\SaleReturn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

@@ -6,7 +6,7 @@ use App\Actions\Role\RoleCreateAction;
 use App\Actions\Role\RoleDeleteAction;
 use App\Actions\Role\RoleUpdateAction;
 use App\DTOs\RoleDTO;
-use App\Interfaces\RoleRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;

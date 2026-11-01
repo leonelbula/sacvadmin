@@ -2,7 +2,7 @@
 
 namespace App\Actions\Supplier;
 
-use App\Interfaces\SupplierRepositoryInterface;
+use App\Repositories\Contracts\SupplierRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Exception;
 

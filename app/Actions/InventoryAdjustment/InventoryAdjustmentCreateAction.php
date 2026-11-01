@@ -3,9 +3,9 @@
 namespace App\Actions\InventoryAdjustment;
 
 use App\DTOs\InventoryAdjustmentDTO;
-use App\Interfaces\InventoryAdjustmentRepositoryInterface;
-use App\Interfaces\KardexRepositoryInterface;
-use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Contracts\InventoryAdjustmentRepositoryInterface;
+use App\Repositories\Contracts\KardexRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use RuntimeException;

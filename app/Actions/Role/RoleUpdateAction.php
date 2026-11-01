@@ -3,7 +3,7 @@
 namespace App\Actions\Role;
 
 use App\DTOs\RoleDTO;
-use App\Interfaces\RoleRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 

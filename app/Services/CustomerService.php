@@ -4,7 +4,7 @@ namespace App\Services;
 use App\Actions\Customer\CreateCustomerAction;
 use App\Actions\Customer\DeleteCustomerAction;
 use App\Actions\Customer\UpdateCustomerAction;
-use App\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\DTOs\CustomerDTO;
 
 class CustomerService
