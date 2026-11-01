@@ -149,6 +149,21 @@
                                             <i class="bi bi-file-earmark-pdf"></i>
                                             Descargar PDF
                                         </a>
+                                        <a href="{{ route('accounts-receivable.payments.edit', [
+                                            'id' => $cuenta->id,
+                                            'paymentId' => $abono->id,
+                                        ]) }}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                            Editar
+                                        </a>
+                                        <a href="{{ route('accounts-receivable.payments.show', [
+                                            'id' => $cuenta->id,
+                                            'paymentId' => $abono->id,
+                                        ]) }}"
+                                            class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-eye"></i>
+                                            Ver detalles
                                     </td>
                                 </tr>
                                 @empty

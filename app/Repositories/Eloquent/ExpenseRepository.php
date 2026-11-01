@@ -63,7 +63,8 @@ class ExpenseRepository implements ExpenseRepositoryInterface
             })
 
             ->latest('date')
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->withQueryString();
     }
     public function findById(int $id): ?Expense
     {

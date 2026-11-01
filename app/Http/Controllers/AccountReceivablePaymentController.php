@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\AccountReceivablePaymentDTO;
+use App\Http\Requests\AccountReceivablePaymentRequest;
 use App\Models\Sale;
 use App\Services\AccountReceivablePaymentService;
 use Illuminate\Http\RedirectResponse;
@@ -15,22 +17,6 @@ class AccountReceivablePaymentController extends Controller
         private AccountReceivablePaymentService $service
     ) {}
 
-    public function create(int $id): View
-    {
-        $cuenta = $this->service->findSale($id);
-
-        abort_if(
-            (float) $cuenta->balance <= 0,
-            422,
-            'Esta cuenta no tiene saldo pendiente.'
-        );
-
-        return view(
-            'accounts-receivable.payments.create',
-            compact('cuenta')
-        );
-    }
-
     public function index(int $id): View
     {
         $cuenta = Sale::with('customer')->findOrFail($id);
@@ -43,47 +29,75 @@ class AccountReceivablePaymentController extends Controller
         );
     }
 
-    public function store(
-        Request $request,
-        int $id
-    ): RedirectResponse {
-        $data = $request->validate([
-            'amount' => [
-                'required',
-                'numeric',
-                'gt:0',
-                'decimal:0,2',
-            ],
-            'payment_date' => [
-                'required',
-                'date',
-                'before_or_equal:today',
-            ],
-            'payment_method' => [
-                'required',
-                'in:cash,transfer,debit_card,credit_card,other',
-            ],
-            'reference' => [
-                'nullable',
-                'string',
-                'max:100',
-            ],
-            'observation' => [
-                'nullable',
-                'string',
-                'max:1000',
-            ],
-        ]);
+    public function show(int $id, int $paymentId): View
+    {
+        $abono = $this->service->findPayment($id, $paymentId);
 
-        $this->service->registerPayment(
-            $id,
-            $data,
-            (int) $request->user()->id
+        return view(
+            'accounts-receivable.payments.show',
+            compact('abono')
         );
+    }
 
-        toastr()->success('Abono registrado correctamente.');
-        return redirect()
-            ->route('accounts-receivable.payments.index', $id);
+    public function create(int $id): View
+    {
+
+        $cuenta = $this->service->findSale($id);
+
+        abort_if((float) $cuenta->balance <= 0, 422, 'Esta cuenta no tiene saldo pendiente.');
+
+        return view(
+            'accounts-receivable.payments.create',
+            compact('cuenta')
+        );
+    }
+
+    public function edit(int $id, int $paymentId): View
+    {
+        $abono = $this->service->findPayment($id, $paymentId);
+        $cuenta = $this->service->findSale($id);
+
+
+        return view(
+            'accounts-receivable.payments.edit',
+            compact('abono', 'cuenta')
+        );
+    }
+
+    public function update(AccountReceivablePaymentRequest $request, int $paymentId): RedirectResponse
+    {
+      
+        try {
+            $data = AccountReceivablePaymentDTO::fromRequest($request);
+
+            $this->service->updatePayment($paymentId, $data);
+
+            toastr()->success('Abono actualizado correctamente.');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            toastr()->error('Error al actualizar el abono: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->withInput();
+        }
+    }
+
+
+    public function store(AccountReceivablePaymentRequest $request, int $id): RedirectResponse
+    {
+        try {
+            $data = AccountReceivablePaymentDTO::fromRequest($request);
+
+            $this->service->registerPayment($id, $data, (int) $request->user()->id);
+
+            toastr()->success('Abono registrado correctamente.');
+            return redirect()->route('accounts-receivable.payments.index', $id);
+        } catch (\Exception $e) {
+            toastr()->error('Error al registrar el abono: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->withInput();
+        }
     }
     public function pdf2(int $id, int $paymentId)
     {

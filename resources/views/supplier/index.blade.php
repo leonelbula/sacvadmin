@@ -420,7 +420,7 @@
                                             <strong>"{{ request('search') }}"</strong>.
                                         </p>
 
-                                        <a href="{{ route('suppliers.index') }}" class="btn btn-outline-primary">
+                                        <a href="{{ route('supplier.index') }}" class="btn btn-outline-primary">
                                             <i class="bi bi-arrow-left me-1"></i>
                                             Ver todos
                                         </a>
@@ -433,7 +433,7 @@
                                             Comienza registrando tu primer proveedor.
                                         </p>
                                         @can('supplier.create')
-                                            <a href="{{ route('suppliers.create') }}" class="btn btn-primary">
+                                            <a href="{{ route('supplier.create') }}" class="btn btn-primary">
                                                 <i class="bi bi-plus-lg me-1"></i>
                                                 Registrar proveedor
                                             </a>

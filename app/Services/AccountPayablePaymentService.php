@@ -15,26 +15,14 @@ class AccountPayablePaymentService
         private AccountPayablePaymentRepositoryInterface $repository
     ) {}
 
-    public function getPayments(
-        int $saleId,
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        return $this->repository->getPayments(
-            $saleId,
-            $perPage
-        );
+    public function getPayments(int $saleId, int $perPage = 10): LengthAwarePaginator
+    {
+        return $this->repository->getPayments($saleId, $perPage);
     }
 
-    public function registerPayment(
-        int $shopping,
-        array $data,
-        int $userId
-    ): AcountPayablePayment {
-        return DB::transaction(function () use (
-            $shopping,
-            $data,
-            $userId
-        ) {
+    public function registerPayment(int $shopping, array $data, int $userId): AcountPayablePayment
+    {
+        return DB::transaction(function () use ($shopping, $data, $userId) {
             $shopping = $this->repository->findShoppingForUpdate($shopping);
 
             $amount = round((float) $data['amount'], 2);

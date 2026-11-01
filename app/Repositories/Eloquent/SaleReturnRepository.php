@@ -48,7 +48,8 @@ class SaleReturnRepository implements SaleReturnRepositoryInterface
             })
 
             ->orderByDesc('created_at')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
     }
 
     public function getReturnById(int $id)

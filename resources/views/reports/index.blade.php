@@ -844,7 +844,7 @@
                             <div>
 
                                 <strong>
-                                   Compras por Clientes
+                                    Compras por Clientes
                                 </strong>
 
                                 <small class="text-muted d-block">
@@ -935,22 +935,9 @@
 
                     <div class="d-flex gap-2 mt-3 mt-md-0">
 
-                        <a href="" class="btn btn-success rounded-3">
-
-                            <i class="bi bi-file-earmark-excel me-2"></i>
-
-                            Excel
-
-                        </a>
 
 
-                        <a href="" class="btn btn-danger rounded-3">
 
-                            <i class="bi bi-file-earmark-pdf me-2"></i>
-
-                            PDF
-
-                        </a>
 
                     </div>
 
