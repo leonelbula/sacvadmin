@@ -7,29 +7,32 @@ btnSubmitSave.addEventListener("click", async function (event) {
     const productsInput = document.getElementById("products");
     const customer = document.getElementById("customer_id");
 
-    // 2. Verificar si está vacío o si es un array JSON vacío "[]"
     if (!productsInput.value.trim() || productsInput.value === "[]") {
         Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "No puedes guardar la ventas sin productos",
+            text: "No puedes guardar la venta sin productos",
         });
-        return; // DETIENE EL ENVÍO por completo aquí
+
+        return;
     }
-    if (!customer.value.trim() || customer.value === "") {
-        //alert("Por favor, agregue al menos un producto a la venta.");
+
+    if (!customer.value.trim()) {
         Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "No puedes guardar la ventas sin cliente",
+            text: "No puedes guardar la venta sin cliente",
         });
-        return; // DETIENE EL ENVÍO por completo aquí
+
+        return;
     }
 
     const token = document.querySelector('input[name="_token"]').value;
     const formData = new FormData(formSale);
 
     try {
+        btnSubmitSave.disabled = true;
+
         const response = await fetch("/sale/store", {
             method: "POST",
             headers: {
@@ -42,20 +45,20 @@ btnSubmitSave.addEventListener("click", async function (event) {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.clear();
-            //
+            sessionStorage.removeItem("datosProducts");
+            sessionStorage.removeItem("saleInformation");
+            sessionStorage.removeItem("datosCustomer");
+
             Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "Venta guardada con éxito:",
+                title: "Venta guardada con éxito",
                 showConfirmButton: false,
                 timer: 1500,
             }).then(() => {
                 location.reload();
             });
         } else {
-            // El servidor respondió con un error (ej. error 422 de validación)
-
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -63,6 +66,7 @@ btnSubmitSave.addEventListener("click", async function (event) {
                     "Error al guardar: " +
                     (data.message || "Error desconocido"),
             });
+
             console.log("Errores de validación:", data.errors);
         }
     } catch (error) {
@@ -73,5 +77,7 @@ btnSubmitSave.addEventListener("click", async function (event) {
             title: "Oops...",
             text: "No se pudo conectar con el servidor.",
         });
+    } finally {
+        btnSubmitSave.disabled = false;
     }
 });

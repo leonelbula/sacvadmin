@@ -22,10 +22,10 @@ class PosUpdateAction
         }
 
         return DB::transaction(function () use ($id, $data) {
-            $consignment = (int)$data['total_sale'] - (int) $data['cash'];
+            $consignment = (int) ($data['total_sale'] ?? 0)- (int) ($data['cash'] ?? 0);
             $data['consignment'] = $consignment;
             $data['closing_date'] = now()->format('Y-m-d');
-            $data['state'] = 1;
+            $data['state'] = 0;
             return $this->pos_repository->update($id, $data);
         });
     }

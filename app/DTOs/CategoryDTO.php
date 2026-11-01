@@ -17,8 +17,6 @@ class CategoryDTO
         return new self(
             name: $request->input('name', ''),
             state: $request->input('state'),
-
-
         );
     }
     public function toArray(): array

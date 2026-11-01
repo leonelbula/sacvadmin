@@ -201,6 +201,9 @@ function renderSearchProducts(products) {
                 </td>
 
                 <td class="text-end">
+                    $ ${Number(product.cost).toLocaleString("es-CO")}
+                </td>
+                 <td class="text-end">
                     $ ${Number(product.price).toLocaleString("es-CO")}
                 </td>
 

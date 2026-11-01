@@ -26,7 +26,7 @@
                 <div>
 
 
-                    <a href="{{route('kardex.index')}}" class="btn btn-secondary">
+                    <a href="{{ route('kardex.index') }}" class="btn btn-secondary">
 
                         <i class="bi bi-arrow-left"></i>
 
@@ -45,92 +45,88 @@
         <div class="row mb-4">
 
 
-                <div class="col-lg-3">
+            <div class="col-lg-3">
 
-                    <div class="card border-primary shadow-sm">
+                <div class="card border-primary shadow-sm">
 
-                        <div class="card-body">
+                    <div class="card-body">
 
-                            <h6 class="text-muted mt-2">Producto</h6>
+                        <h6 class="text-muted mt-2">Producto</h6>
 
-                            <strong>{{ $produc->product->name }}</strong>
-                            @if ($produc->product->state == 1)
-                                <span class="badge bg-success">Activo</span>
-                            @else
-                                <span class="badge bg-secondary">Desactivado</span>
-                            @endif
+                        <strong>{{ $produc->name }}</strong>
 
 
-                        </div>
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-2">
+            </div>
 
-                    <div class="card shadow-sm">
+            <div class="col-lg-2">
 
-                        <div class="card-body text-center">
+                <div class="card shadow-sm">
 
-                            <h6 class="text-muted mt-2">Código</h6>
+                    <div class="card-body text-center">
 
-                            <strong>{{ $produc->product->code }}</strong>
+                        <h6 class="text-muted mt-2">Código</h6>
 
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col-lg-2">
-
-                    <div class="card shadow-sm">
-
-                        <div class="card-body text-center">
-
-                            <h6 class="text-muted mt-2">Categoría</h6>
-
-                            <strong>{{ $produc->product->category->name }}</strong>
-
-                        </div>
+                        <strong>{{ $produc->code }}</strong>
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-2">
+            </div>
 
-                    <div class="card shadow-sm border-success">
+            <div class="col-lg-2">
 
-                        <div class="card-body text-center">
+                <div class="card shadow-sm">
 
-                            <h6 class="text-muted mt-2">Stock</h6>
+                    <div class="card-body text-center">
 
-                            <strong>{{ $produc->product->stock }}</strong>
+                        <h6 class="text-muted mt-2">Categoría</h6>
 
-                        </div>
+                        <strong>{{ $produc->category->name }}</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <div class="card shadow-sm border-success">
+
+                    <div class="card-body text-center">
+
+                        <h6 class="text-muted mt-2">Stock</h6>
+
+                        <strong>{{ $produc->stock }}</strong>
 
                     </div>
 
                 </div>
 
-                <div class="col-lg-3">
+            </div>
 
-                    <div class="card shadow-sm border-warning">
+            <div class="col-lg-3">
 
-                        <div class="card-body text-center">
+                <div class="card shadow-sm border-warning">
+
+                    <div class="card-body text-center">
 
 
-                            <h6 class="text-muted mt-2">Stock Mínimo</h6>
+                        <h6 class="text-muted mt-2">Stock Mínimo</h6>
 
-                            <strong>{{ $produc->product->stock_min }}</strong>
-
-                        </div>
+                        <strong>{{ $produc->stock_min }}</strong>
 
                     </div>
 
                 </div>
+
+            </div>
 
         </div>
 
@@ -252,35 +248,35 @@
                             @foreach ($detail as $reg)
                                 <tr>
 
-                                    <td>{{$reg->date}}</td>
+                                    <td>{{ $reg->date }}</td>
 
                                     <td>
 
                                         <span class="badge  bg-success">
 
-                                            {{$reg->movement_type}}
+                                            {{ $reg->movement_type }}
 
                                         </span>
 
                                     </td>
 
-                                    <td> {{$reg->origin}}</td>
+                                    <td> {{ $reg->origin }}</td>
 
-                                    <td>{{$reg->reference_id}}</td>
+                                    <td>{{ $reg->reference_id }}</td>
 
-                                    <td class="text-success fw-bold">{{$reg->income}}</td>
+                                    <td class="text-success fw-bold">{{ $reg->income }}</td>
 
-                                    <td>{{$reg->output}}</td>
+                                    <td>{{ $reg->output }}</td>
 
-                                    <td>{{$reg->stock_after}}</td>
+                                    <td>{{ $reg->stock_after }}</td>
 
-                                    <td>{{$reg->unit_cost}}</td>
+                                    <td>{{ $reg->unit_cost }}</td>
 
-                                    <td>{{$reg->user_name}}</td>
+                                    <td>{{ $reg->user_name }}</td>
 
                                     <td>
 
-                                        <a href="{{route('kardex.showDetail',$reg->id)}}" class="btn btn-sm btn-primary">
+                                        <a href="{{ route('kardex.showDetail', $reg->id) }}" class="btn btn-sm btn-primary">
 
                                             <i class="bi bi-eye"></i>
 
@@ -303,49 +299,9 @@
 
             <div class="card-footer bg-white d-flex justify-content-between align-items-center">
 
-                <small class="text-muted">
-
-                    Mostrando 1 a 10 de 150 movimientos
-
-                </small>
-
-                <nav>
-
-                    <ul class="pagination pagination-sm mb-0">
-
-                        <li class="page-item disabled">
-
-                            <a class="page-link">Anterior</a>
-
-                        </li>
-
-                        <li class="page-item active">
-
-                            <a class="page-link">1</a>
-
-                        </li>
-
-                        <li class="page-item">
-
-                            <a class="page-link">2</a>
-
-                        </li>
-
-                        <li class="page-item">
-
-                            <a class="page-link">3</a>
-
-                        </li>
-
-                        <li class="page-item">
-
-                            <a class="page-link">Siguiente</a>
-
-                        </li>
-
-                    </ul>
-
-                </nav>
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $detail->links() }}
+                </div>
 
             </div>
 

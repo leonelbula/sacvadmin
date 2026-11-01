@@ -15,17 +15,18 @@ class KardexService
     {
         return $this->kardexRepository->all();
     }
-    public function search($query)
+    public function search(string $query)
     {
         return $this->kardexRepository->search($query);
     }
 
-    public function allId($id)
+    public function allId(int $id)
     {
         return $this->kardexRepository->allId($id);
     }
-    public function getId($id) {
-         return $this->kardexRepository->getId($id);
+    public function getId(int $id)
+    {
+        return $this->kardexRepository->getId($id);
     }
     public function countRegistro()
     {

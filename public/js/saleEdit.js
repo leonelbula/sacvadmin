@@ -14,34 +14,39 @@ const btnClear = document.getElementById("btn-clear-customer");
 const searchCustomer = document.getElementById("searchCustomer");
 const tbody = document.querySelector("#tablaCustomer tbody");
 
-const STORAGE_KEY_EDIT = "datosCustomerEdit";
 const saleData = window.saleData ?? null;
+
+const saleId = saleData?.id ?? "sin-venta";
+
+const STORAGE_CUSTOMER_EDIT = `datosCustomerEdit_${saleId}`;
+const STORAGE_KEY_PRODUCTS_EDIT = `datosProductsEdit_${saleId}`;
+const STORAGE_SALE_EDIT = `saleInformationEdit_${saleId}`;
 
 // =========================
 // CARGAR CLIENTE AL INICIAR
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
-    clearSaleData();
     loadCustomerDataEdit();
 
     const elementmodalCustomer = document.getElementById("customerModal");
     const elementmodalProduct = document.getElementById("productModal");
 
-    // Ahora 'bootstrap' ya estará definido con seguridad
-    const modalCustomer = new bootstrap.Modal(elementmodalCustomer);
-    const modalProduct = new bootstrap.Modal(elementmodalProduct);
+    const modalCustomer = elementmodalCustomer
+        ? bootstrap.Modal.getOrCreateInstance(elementmodalCustomer)
+        : null;
+
+    const modalProduct = elementmodalProduct
+        ? bootstrap.Modal.getOrCreateInstance(elementmodalProduct)
+        : null;
 
     const shortcuts = {
-        F2: () => modalCustomer.show(),
-        F3: () => modalProduct.show(),
-        F4: () => {
-            localStorage.clear();
-            location.reload();
-        },
+        F2: () => modalCustomer?.show(),
+        F3: () => modalProduct?.show(),
+        F4: () => clearSaleData(),
     };
 
     window.addEventListener("keydown", (event) => {
-        if (shortcuts[event.key]) {
+        if (event.key in shortcuts) {
             event.preventDefault();
             shortcuts[event.key]();
         }
@@ -57,7 +62,7 @@ searchCustomer.addEventListener("input", async function () {
     // Limpiar resultados anteriores
     tbody.innerHTML = "";
 
-    if (q.length === 0 && q.length <= 2) return;
+    if (q.length < 3) return;
     //if(q.length <= 2) return;
 
     try {
@@ -142,8 +147,8 @@ window.addCustomer = function (
     name,
     identification,
     phone,
-    email,
     address,
+    email,
     city,
 ) {
     const customer = {
@@ -156,13 +161,10 @@ window.addCustomer = function (
         city,
     };
 
-    //Guardar LocalStorage
-    localStorage.setItem(STORAGE_KEY_EDIT, JSON.stringify(customer));
+    sessionStorage.setItem(STORAGE_CUSTOMER_EDIT, JSON.stringify(customer));
 
-    //Mostrar datos
     customerInput(customer);
 
-    //Cerrar modal
     bootstrap.Modal.getOrCreateInstance(
         document.getElementById("customerModal"),
     ).hide();
@@ -182,17 +184,24 @@ function loadCustomerDataEdit() {
             phone: saleData.customer.phone,
             address: saleData.customer.address,
             email: saleData.customer.email,
-            city: saleData.customer.city.name,
+            city: saleData.customer?.city?.name ?? "",
         };
-        localStorage.setItem(STORAGE_KEY_EDIT, JSON.stringify(oldcustomer));
-        const customerEdit = JSON.parse(localStorage.getItem(STORAGE_KEY_EDIT));
+        sessionStorage.setItem(
+            STORAGE_CUSTOMER_EDIT,
+            JSON.stringify(oldcustomer),
+        );
+        const customerEdit = JSON.parse(
+            sessionStorage.getItem(STORAGE_CUSTOMER_EDIT),
+        );
         //console.log(customer);
         if (!customerEdit) return;
         //localStorage.clear();
 
         customerInput(customerEdit);
     } else {
-        const customerEdit = JSON.parse(localStorage.getItem(STORAGE_KEY_EDIT));
+        const customerEdit = JSON.parse(
+            sessionStorage.getItem(STORAGE_CUSTOMER_EDIT),
+        );
         if (!customerEdit) return;
 
         customerInput(customerEdit);
@@ -215,9 +224,6 @@ function customerInput(customer) {
 /*=========================================================
 =            CONFIGURACIÓN DE PRODUCTO                   =
 =========================================================*/
-
-const STORAGE_KEY_PRODUCTS_EDIT = "datosProductsEdit";
-const STORAGE_SALE_EDIT = "saleInformationEdit";
 
 /*=========================================================
 =            ELEMENTOS DEL DOM                            =
@@ -247,44 +253,34 @@ const btnClearSale = document.getElementById("btnClear");
 let datosProductsEdit = [];
 
 function editSale() {
-    //console.log("Detalles de la venta:", saleData.details);
+    const savedProducts = sessionStorage.getItem(STORAGE_KEY_PRODUCTS_EDIT);
 
-    // IMPORTANTE:
-    // Limpiar primero los productos anteriores
-    datosProductsEdit = [];
+    if (savedProducts) {
+        try {
+            const parsedProducts = JSON.parse(savedProducts);
 
-    saleData.details.forEach((item) => {
-        const product = {
-            id: Number(item.product_id),
+            if (Array.isArray(parsedProducts)) {
+                datosProductsEdit = parsedProducts;
+                saveProducts();
+                return;
+            }
+        } catch (error) {
+            console.error("Error recuperando productos:", error);
+        }
+    }
 
-            code: item.product.code,
+    datosProductsEdit = (saleData?.details ?? []).map((item) => ({
+        id: Number(item.product_id),
+        code: item.product?.code ?? "",
+        name: item.product?.name ?? "",
+        stock: Number(item.product?.stock ?? 0),
+        cost: Number(item.cost ?? 0),
+        price: Number(item.price ?? 0),
+        tax: Number(item.tax?.value?.value ?? item.tax?.value ?? 0),
+        quantity: Number(item.quantity ?? 1),
+    }));
 
-            name: item.product.name,
-
-            stock: Number(item.product.stock),
-
-            // El costo también debe venir del detalle de la venta
-            cost: Number(item.cost),
-
-            // IMPORTANTE:
-            // Usar el precio guardado en sale_details
-            // NO item.product.price
-            price: Number(item.price),
-
-            // Impuesto de la venta
-            tax: Number(item.tax?.value?.value ?? item.tax?.value ?? 0),
-
-            // Cantidad guardada en la factura
-            quantity: Number(item.quantity),
-        };
-
-        datosProductsEdit.push(product);
-    });
-
-    // Guardar TODO el estado actual de la factura
     saveProducts();
-
-    //console.log("Datos de productos cargados para edición:", datosProductsEdit);
 }
 /*=========================================================
 =            INICIALIZACIÓN                              =
@@ -442,7 +438,7 @@ function renderSearchProducts(products) {
                     <button
                         type="button"
                         class="btn btn-primary btn-sm"
-                        onclick='selectProduct(${JSON.stringify(product)})' ${product.stock == 0 ? 'disabled':''}>
+                        onclick='selectProduct(${JSON.stringify(product)})' ${product.stock == 0 ? "disabled" : ""}>
 
                         <i class="bi bi-plus-circle"></i>
 
@@ -470,10 +466,9 @@ function clearSearchTable() {
 function loadProductData() {
     try {
         datosProductsEdit =
-            JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS_EDIT)) || [];
+            JSON.parse(sessionStorage.getItem(STORAGE_KEY_PRODUCTS_EDIT)) || [];
     } catch (error) {
-        console.error("Error leyendo productos:", error);
-
+        console.error("Error cargando productos de edición:", error);
         datosProductsEdit = [];
     }
 
@@ -481,12 +476,14 @@ function loadProductData() {
 }
 
 function saveProducts() {
-    localStorage.setItem(
+    sessionStorage.setItem(
         STORAGE_KEY_PRODUCTS_EDIT,
         JSON.stringify(datosProductsEdit),
     );
 
-    products.value = JSON.stringify(datosProductsEdit);
+    document.getElementById("products").value =
+        JSON.stringify(datosProductsEdit);
+
     renderSaleProducts();
 }
 
@@ -831,7 +828,7 @@ function updateSummary() {
     document.getElementById("iva19Invoice").textContent =
         "$ " + totalTax.toLocaleString("es-CO");
 
-    document.getElementById("total").value = total;
+    document.getElementById("total").value = valtotal;
     document.getElementById("totalInvoice").textContent =
         "$ " + valtotal.toLocaleString("es-CO");
 
@@ -875,69 +872,23 @@ function getInvoiceTotal() {
 
 function loadSaleInformation() {
     try {
-        const sale = JSON.parse(localStorage.getItem(STORAGE_SALE_EDIT));
+        const sale = JSON.parse(sessionStorage.getItem(STORAGE_SALE_EDIT));
 
-        /*
-        |--------------------------------------------------------------------------
-        | Método de pago
-        |--------------------------------------------------------------------------
-        |
-        | Primero usamos el método de la factura.
-        | Si existe en LocalStorage, usamos ese valor.
-        |
-        */
+        paymentMethod.value = String(
+            sale?.paymentMethod ?? saleData?.payment_method_id ?? "1",
+        );
 
-        if (sale?.paymentMethod) {
-            paymentMethod.value = String(sale.paymentMethod);
-        } else if (saleData?.payment_method_id) {
-            paymentMethod.value = String(saleData.payment_method_id);
-        }
+        receivedAmount.value = sale?.receivedAmount ?? saleData?.total ?? 0;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Dinero recibido
-        |--------------------------------------------------------------------------
-        */
-
-        if (sale?.receivedAmount !== undefined) {
-            receivedAmount.value = sale.receivedAmount;
-        } else {
-            receivedAmount.value =
-                saleData?.payment_form === "counted" ? saleData.total : 0;
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Observación
-        |--------------------------------------------------------------------------
-        */
-
-        if (sale?.observation !== undefined) {
-            observation.value = sale.observation;
-        } else {
-            observation.value = saleData?.observation ?? "";
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Actualizar forma de pago
-        |--------------------------------------------------------------------------
-        */
+        observation.value = sale?.observation ?? saleData?.observation ?? "";
 
         updatePayment();
     } catch (error) {
         console.error("Error cargando información de venta:", error);
 
-        /*
-        | Si falla LocalStorage,
-        | usamos directamente la información
-        | de la factura.
-        */
-
         paymentMethod.value = String(saleData?.payment_method_id ?? "1");
 
         receivedAmount.value = saleData?.total ?? 0;
-
         observation.value = saleData?.observation ?? "";
 
         updatePayment();
@@ -947,13 +898,11 @@ function loadSaleInformation() {
 function saveSaleInformation() {
     const sale = {
         paymentMethod: paymentMethod.value,
-
         receivedAmount: Number(receivedAmount.value),
-
         observation: observation.value,
     };
 
-    localStorage.setItem(STORAGE_SALE_EDIT, JSON.stringify(sale));
+    sessionStorage.setItem(STORAGE_SALE_EDIT, JSON.stringify(sale));
 }
 
 /*=========================================================
@@ -1027,40 +976,31 @@ function calculateChange(save = true) {
 =========================================================*/
 
 function clearSaleData() {
-    /*
-     * NO usar localStorage.clear()
-     *
-     * porque eliminaría todos los datos
-     * almacenados por tu aplicación.
-     */
-
-    localStorage.removeItem(STORAGE_KEY_PRODUCTS_EDIT);
-
-    localStorage.removeItem(STORAGE_SALE_EDIT);
-
-    localStorage.removeItem("datosCustomer");
+    sessionStorage.removeItem(STORAGE_KEY_PRODUCTS_EDIT);
+    sessionStorage.removeItem(STORAGE_SALE_EDIT);
+    sessionStorage.removeItem(STORAGE_CUSTOMER_EDIT);
 
     datosProductsEdit = [];
 
-    tbodyProducts.innerHTML = "";
+    if (tbodyProducts) {
+        tbodyProducts.innerHTML = "";
+    }
 
-    tbodySaleProducts.innerHTML = "";
+    if (tbodySaleProducts) {
+        tbodySaleProducts.innerHTML = "";
+    }
 
     searchProduct.value = "";
 
-    paymentMethod.value = "cash";
-
+    paymentMethod.value = "1";
     receivedAmount.value = 0;
-
     receivedAmount.disabled = false;
 
     changeAmount.value = 0;
-
     observation.value = "";
 
-    /*
-     * Actualizar resumen.
-     */
+    document.getElementById("products").value = "[]";
+
     updateSummary();
 }
 
@@ -1228,19 +1168,15 @@ if (btnSubmitSave && formSale) {
             */
 
             if (response.ok) {
-                localStorage.removeItem(STORAGE_KEY_PRODUCTS_EDIT);
-
-                localStorage.removeItem(STORAGE_SALE_EDIT);
+                sessionStorage.removeItem(STORAGE_KEY_PRODUCTS_EDIT);
+                sessionStorage.removeItem(STORAGE_SALE_EDIT);
+                sessionStorage.removeItem(STORAGE_CUSTOMER_EDIT);
 
                 await Swal.fire({
                     position: "top-end",
-
                     icon: "success",
-
                     title: "Venta actualizada con éxito",
-
                     showConfirmButton: false,
-
                     timer: 1500,
                 });
 

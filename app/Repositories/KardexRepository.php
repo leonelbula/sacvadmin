@@ -16,7 +16,7 @@ class KardexRepository implements KardexRepositoryInterface
     {
         return Kardex::with('product')->orderBy('date', 'desc')->paginate(10);
     }
-    public function search($query)
+    public function search(string $query)
     {
         return Kardex::with('product')
             ->whereHas('product', function ($q) use ($query) {
@@ -24,11 +24,12 @@ class KardexRepository implements KardexRepositoryInterface
                     ->orWhere('code', 'like', "%$query%");
             })
             ->orderBy('date', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
     }
-    public function allId($id)
+    public function allId(int $id)
     {
-        return Kardex::where('product_id', $id)->get();
+        return Kardex::where('product_id', $id)->paginate(10);
     }
 
     public function countRegister()
@@ -40,9 +41,8 @@ class KardexRepository implements KardexRepositoryInterface
                             SUM(CASE WHEN output < 0 THEN 1 ELSE 0 END) as total_output
                         ")->first();
     }
-     public function getId($id)
+    public function getId(int $id)
     {
         return Kardex::find($id);
     }
-
 }

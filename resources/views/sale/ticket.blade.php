@@ -21,14 +21,14 @@
 
         html,
         body {
-            margin: 0;
+            margin: 0 0 10;
             padding: 0;
             width: 80mm;
         }
 
         body {
             font-family: DejaVu Sans, Arial, sans-serif;
-            font-size: 8px;
+            font-size: 12px;
             color: #000;
         }
 
@@ -64,13 +64,13 @@
 ========================================= */
 
         .company-name {
-            font-size: 15px;
+            font-size: 12px;
             font-weight: bold;
             margin-bottom: 2px;
         }
 
         .company-info {
-            font-size: 7px;
+            font-size: 10px;
             line-height: 1.3;
         }
 
@@ -93,7 +93,7 @@
 ========================================= */
 
         .invoice-title {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: bold;
             margin-top: 3px;
         }
@@ -105,7 +105,7 @@
         }
 
         .invoice-info {
-            font-size: 7px;
+            font-size: 10px;
             line-height: 1.3;
         }
 
@@ -114,12 +114,12 @@
 ========================================= */
 
         .customer {
-            font-size: 7px;
+            font-size: 10px;
             line-height: 1.3;
         }
 
         .customer-name {
-            font-size: 8px;
+            font-size: 10px;
             font-weight: bold;
         }
 
@@ -128,12 +128,12 @@
 ========================================= */
 
         .products {
-            width: 95%;
+            width: 90%;
             border-collapse: collapse;
         }
 
         .products th {
-            font-size: 7px;
+            font-size: 10px;
 
             padding: 3px 1px;
 
@@ -143,7 +143,7 @@
         }
 
         .products td {
-            font-size: 7px;
+            font-size: 10px;
 
             padding: 3px 1px;
 
@@ -156,7 +156,7 @@
         }
 
         .product-code {
-            font-size: 6px;
+            font-size: 10px;
         }
 
         /* =========================================
@@ -164,14 +164,14 @@
 ========================================= */
 
         .totals {
-            width: 95%;
+            width: 90%;
             border-collapse: collapse;
         }
 
         .totals td {
             padding: 2px 0;
 
-            font-size: 7px;
+            font-size: 10px;
         }
 
         .total-final td {
@@ -193,7 +193,7 @@
 ========================================= */
 
         .payment {
-            font-size: 7px;
+            font-size: 10px;
             line-height: 1.3;
         }
 
@@ -202,7 +202,7 @@
 ========================================= */
 
         .observation {
-            font-size: 7px;
+            font-size: 10px;
             line-height: 1.3;
         }
 
@@ -219,7 +219,7 @@
 
             text-align: center;
 
-            font-size: 6.5px;
+            font-size: 9px;
 
             line-height: 1.3;
         }
@@ -398,7 +398,7 @@
 
                             <div class="product-code">
 
-                                ${{ number_format($detail->price, 0, ',', '.') }}
+                                {{ number_format($detail->price, 0, ',', '.') }}
 
                                 c/u
 
@@ -409,7 +409,7 @@
                         <td class="right">
 
                             <strong>
-                                ${{ number_format($detail->subtotal, 0, ',', '.') }}
+                                {{ number_format($detail->subtotal, 0, ',', '.') }}
                             </strong>
 
                         </td>
@@ -454,24 +454,12 @@
 
                 <td class="right">
 
-                    ${{ number_format($sale->taxes ?? 0, 0, ',', '.') }}
+                    {{ number_format($sale->taxes ?? 0, 0, ',', '.') }}
 
                 </td>
 
             </tr>
 
-
-            <tr>
-
-                <td>
-                    Descuento
-                </td>
-
-                <td class="right">
-                    $0
-                </td>
-
-            </tr>
 
 
             <tr class="total-final">
@@ -482,7 +470,7 @@
 
                 <td class="right">
 
-                    ${{ number_format($sale->total, 0, ',', '.') }}
+                    {{ number_format($sale->total, 0, ',', '.') }}
 
                 </td>
 
@@ -498,7 +486,7 @@
 
                     <td class="right">
 
-                        ${{ number_format($sale->balance, 0, ',', '.') }}
+                        {{ number_format($sale->balance, 0, ',', '.') }}
 
                     </td>
 
@@ -534,12 +522,6 @@
             {{ $sale->paymentMethod?->name ?? 'No especificado' }}
 
             @if (($sale->term ?? 0) > 0)
-                <br>
-
-                Plazo:
-
-                {{ $sale->term }} días
-
                 <br>
 
                 Vencimiento:
@@ -590,9 +572,7 @@
             SACVAdmin
 
             <br>
-
             Factura #{{ $sale->sale_number }}
-
         </div>
 
 

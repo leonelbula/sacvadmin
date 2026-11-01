@@ -38,7 +38,7 @@ class SaleDTO
             term: $request->input('term', ''),
             expiration_date: $request->input('expiration_date', ''),
             payment_form: $request->input('payment_form', ''),
-            payment_method_id: (int)$request->input('payment_method_id', 0), // Casteo explícito
+            payment_method_id: (int)$request->input('payment_method_id', 1), // Casteo explícito
             observation: $request->observation ?? 'Sin Observaciones',
             taxes: (int)$request->input('tax'),
             customer_id: (int)$request->input('customer_id', 1),

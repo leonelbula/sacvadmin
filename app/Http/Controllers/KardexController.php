@@ -8,7 +8,10 @@ use App\Services\ProductService;
 
 class KardexController extends Controller
 {
-    public function __construct(protected KardexService $kardexService, protected ProductService $productService) {}
+    public function __construct(
+        protected KardexService $kardexService,
+        protected ProductService $productService
+    ) {}
     public function index(Request $request)
     {
         $title = "Productos Inventario Kardex";
@@ -41,14 +44,14 @@ class KardexController extends Controller
     public function show($id)
     {
         $title = "Detalle del Movimiento de Inventario";
-        $produc = $this->kardexService->getId($id);
+        $produc = $this->productService->findOrFail($id);
         $detail = $this->kardexService->allId($id);
-        return view('kardex.show', compact('title', 'detail' ,'produc'));
+        return view('kardex.show', compact('title', 'detail', 'produc'));
     }
-     public function showDetail($id)
+    public function showDetail($id)
     {
         $title = "Detalle del Movimiento de Inventario";
         $detail = $this->kardexService->getId($id);
-       return view('kardex.showdetaIl', compact('title','detail'));
+        return view('kardex.showdetaIl', compact('title', 'detail'));
     }
 }

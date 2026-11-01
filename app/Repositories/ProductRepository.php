@@ -27,7 +27,8 @@ class ProductRepository implements ProductRepositoryInterface
                 });
             })
             ->orderBy('id', 'desc')
-            ->paginate($perPage); // Ahora respeta la paginación dinámica configurada
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
 

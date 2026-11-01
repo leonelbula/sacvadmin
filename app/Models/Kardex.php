@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Kardex extends Model
 {
-
-
     protected $fillable = [
         'date',
         'movement_type',
@@ -28,5 +26,5 @@ class Kardex extends Model
     {
         return $this->belongsTo(Product::class);
     }
-    
+
 }

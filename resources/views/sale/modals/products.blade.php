@@ -28,7 +28,7 @@
 
                             <div class="card-body">
 
-                              
+
                                     <div class="row">
 
                                         <div class="col-lg-7">
@@ -43,7 +43,7 @@
 
                                         </div>
 
-                                       
+
                                         <div class="col-lg-3 d-flex align-items-end">
 
                                             <button class="btn btn-success me-2" id="btnSearchProduct">
@@ -54,13 +54,13 @@
 
                                             </button>
 
-                                           
+
 
                                         </div>
 
                                     </div>
 
-                               
+
 
                             </div>
 
@@ -82,6 +82,8 @@
 
                                         <th>Stock</th>
 
+                                        <th>Costo</th>
+
                                         <th>Precio</th>
 
                                         <th>Estado</th>
@@ -98,7 +100,7 @@
 
                                 <tbody id="tbodyProducts">
 
-                                    
+
 
                                 </tbody>
 
@@ -108,7 +110,7 @@
 
                         <!-- Paginación -->
 
-                        
+
 
                     </div>
 
