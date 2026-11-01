@@ -35,46 +35,23 @@ class SaleCreateAction
 
         return DB::transaction(function () use ($dto, $products) {
             $data = $dto->toArray();
-            $parameter = Parameter::first();
+
+            $data['sale_number'] = $this->resolveSaleNumber();
+            $data = array_merge($data, $this->calculatePaymentTerms($data));
 
 
-            $lastSale = $this->saleRepository->lastSale();
-            $saleNumber = $lastSale ? ($lastSale->sale_number + 1) : ($parameter ? ($parameter->sale_code + 1) : 1);
+            $taxesMap = $this->preloadTaxes($products);
 
-
-            $totalCost = collect($products)->sum(fn($prod) => $prod['cost'] * $prod['quantity']);
-            $totalCalculated = collect($products)->sum(fn($prod) => $prod['price'] * $prod['quantity']);
-            $utility = $totalCalculated - $totalCost;
-
-
-            $balance = $data['payment_form'] === 'counted' ? 0 : $totalCalculated;
-
-
-            if ($data['payment_form'] === 'counted') {
-                $data['expiration_date'] = $data['date_sale'];
-                $data['term']            = '0';
-            } else {
-                $data['type_sale']       = 0;
-                $days                    = (int) ($data['term'] ?: 30);
-                $data['expiration_date'] = date('Y-m-d', strtotime($data['date_sale'] . " + $days days"));
-            }
-
-
-            $data['sale_number'] = $saleNumber;
-            $data['cost']        = $totalCost;
-            $data['utility']     = $utility;
-            $data['total']       = $totalCalculated;
-            $data['balance']     = $balance;
+            $data['cost'] = $this->calculateCost($products);
+            $data['utility'] = $this->calculateUtility($products);
+            $data['total'] = $this->calculateTotal($products);
+            $data['balance'] = $data['payment_form'] === 'counted' ? 0 : $data['total'];
             $data['hour']        = date('H:i:s');
-            $data['state']       = 'active'; // Ajustado a string ya que tu migración define 'state' como string
-
-
+            $data['state']       = 'active';
             $sale = $this->saleRepository->create($data);
+
             $detailsData = [];
-
-
             $userName = Auth::user()->name ?? 'Sistema';
-
 
             foreach ($products as $prod) {
                 // lockForUpdate previene condiciones de carrera concurrentes
@@ -89,11 +66,10 @@ class SaleCreateAction
                 $product->save();
                 $stockAfter = $product->stock;
 
-                // Buscar el impuesto en la base de datos
-                $taxRecord = DB::table('taxes')->where('value', $prod['tax'])->first();
-                if (!$taxRecord) {
-                    throw new Exception("El impuesto del {$prod['tax']}% no está registrado.");
+                if (!isset($taxesMap[$prod['tax']])) {
+                    throw new Exception("No se encontró el impuesto con valor: {$prod['tax']}");
                 }
+                $taxRecord = $taxesMap[$prod['tax']];
 
                 $subtotalItem = $prod['price'] * $prod['quantity'];
                 $costTotalItem = $prod['cost'] * $prod['quantity'];
@@ -115,7 +91,7 @@ class SaleCreateAction
                     'product_id'    => $prod['id'],
                     'date'          => now(),
                     'movement_type' => 'SALIDA',
-                    'origin'        => "VENTA NRO: {$saleNumber}",
+                    'origin'        => "VENTA NRO: {$data['sale_number']}",
                     'reference_id'  => $sale->id,
                     'income'        => 0,
                     'output'        => $prod['quantity'],
@@ -131,5 +107,55 @@ class SaleCreateAction
 
             return $sale;
         });
+    }
+
+    private function calculateUtility(array $products): int
+    {
+        return collect($products)->sum(fn($prod) => ($prod['price'] - $prod['cost']) * $prod['quantity']);
+    }
+
+    private function calculateCost(array $products): int
+    {
+        return collect($products)->sum(fn($prod) => $prod['cost'] * $prod['quantity']);
+    }
+
+    private function calculateTotal(array $products): int
+    {
+        return collect($products)->sum(fn($prod) => $prod['price'] * $prod['quantity']);
+    }
+
+    private function resolveSaleNumber(): int
+    {
+        $lastSale = $this->saleRepository->lastSale();
+
+        if ($lastSale) {
+            return $lastSale->sale_number + 1;
+        }
+        $parameter = Parameter::first();
+        return $parameter ? ($parameter->sale_code + 1) : 1;
+    }
+
+    private function calculatePaymentTerms(array $data): array
+    {
+        if ($data['payment_form'] === 'counted') {
+            return [
+                'expiration_date' => $data['date_sale'],
+                'term'            => '0',
+            ];
+        } else {
+            $days = (int) ($data['term'] ?: 30);
+            return [
+                'expiration_date' => date('Y-m-d', strtotime($data['date_sale'] . " + $days days")),
+                'term'            => $days,
+            ];
+        }
+    }
+    private function preloadTaxes(array $products)
+    {
+        $taxValues = collect($products)->pluck('tax')->unique()->toArray();
+        return DB::table('taxes')
+            ->whereIn('value', $taxValues)
+            ->get()
+            ->keyBy('value');
     }
 }

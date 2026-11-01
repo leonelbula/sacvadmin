@@ -29,7 +29,7 @@ class KardexRepository implements KardexRepositoryInterface
     }
     public function allId(int $id)
     {
-        return Kardex::where('product_id', $id)->paginate(10);
+        return Kardex::where('product_id', $id)->orderBy('id', 'desc')->paginate(10);
     }
 
     public function countRegister()

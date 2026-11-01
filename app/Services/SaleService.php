@@ -32,7 +32,6 @@ class SaleService
 
     public function storeSale(SaleDTO $dto, array $products): Sale
     {
-        // El servicio recupera los productos del controlador y los delega a la acción
         return $this->saleCreateAction->execute($dto, $products);
     }
 
