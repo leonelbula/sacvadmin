@@ -470,6 +470,17 @@ class ReportController extends Controller
         );
     }
 
+     public function salesPaymentMethodsDetailsPdf(): Response
+    {
+        $filters = $this->dates();
+        return $this->reportPdfService->salesPaymentMethodsdetails(
+            $paymentMethodId = request()->input('payment_method_id'),
+            $userId = request()->input('user_id'),
+            $filters['fecha_desde'] ?? null,
+            $filters['fecha_hasta'] ?? null
+        );
+    }
+
     public function salesCustomersPdf(): Response
     {
         $filters = $this->dates();

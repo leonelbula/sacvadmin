@@ -70,6 +70,7 @@ Route::prefix('reports')->name('reports.')->controller(ReportController::class)-
     Route::get('/sales/pdf', 'salesPdf')->name('sales.pdf');
     Route::get('/sales/products/pdf', 'salesProductsPdf')->name('sales.products.pdf');
     Route::get('/sales/payment-methods/pdf', 'salesPaymentMethodsPdf')->name('sales.payment-methods.pdf');
+    Route::get('/sales/payment-methods-details/pdf', 'salesPaymentMethodsDetailsPdf')->name('sales.payment-methods-details.pdf');
     Route::get('/sales/customers/pdf', 'salesCustomersPdf')->name('sales.customers.pdf');
     Route::get('/sales/products-by-category/pdf', 'getProductsByCategoryPdf')->name('sales.products-by-category.pdf');
 

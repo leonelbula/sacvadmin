@@ -32,6 +32,8 @@ interface ReportRepositoryInterface
 
     public function getSalesPaymentMethodsReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
+    public function getSalesPaymentMethodsDetailsReport(int $paymentMethodId,  ?int $userId = null, ?string $fechaDesde = null, ?string $fechaHasta = null): array;
+
     public function getSalesCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array;
 
     public function getProductsByCategoryReport( ?string $fechaDesde = null, ?string $fechaHasta = null): array;

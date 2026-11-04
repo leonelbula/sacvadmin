@@ -68,14 +68,23 @@
                         Buscar Venta
 
                     </h5>
+                    <div class="d-flex gap-2">
 
-                    <a href="{{ route('sale.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('sale.index') }}" class="btn btn-outline-secondary">
 
-                        <i class="bi bi-arrow-clockwise"></i>
+                            <i class="bi bi-arrow-clockwise"></i>
 
-                        Mostrar Todas
+                            Mostrar Todas
 
-                    </a>
+                        </a>
+                        <a href="#reportMethodPaymentModal" class="btn btn-outline-success" data-bs-toggle="modal">
+
+                            <i class="bi bi-arrow-right"></i>
+
+                            Medio Pago
+
+                        </a>
+                    </div>
 
                 </div>
 
@@ -319,4 +328,5 @@
         </div>
 
     </div>
+    @include('sale.modals.report')
 @endsection

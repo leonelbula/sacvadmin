@@ -88,6 +88,11 @@ class ReportService
         return $this->reportRepository->getSalesPaymentMethodsReport($fechaDesde, $fechaHasta);
     }
 
+    public function getSalesPaymentMethodsDetailsReport(int $paymentMethodId,  ?int $userId = null, ?string $fechaDesde = null, ?string $fechaHasta = null): array
+    {
+        return $this->reportRepository->getSalesPaymentMethodsDetailsReport($paymentMethodId, $userId, $fechaDesde, $fechaHasta);
+    }
+
 
     public function getSalesCustomersReport(?string $fechaDesde = null, ?string $fechaHasta = null): array
     {

@@ -31,6 +31,7 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         $search = $request->all();
+         $payments = PaymentMethod::all();
 
         $user = Auth::user();
         $posActive = $this->pos_service->posActive($user->id);
@@ -53,7 +54,7 @@ class SaleController extends Controller
         }
 
         $title = "Lista de ventas";
-        return view('sale.index', compact('title', 'dataSales', 'tbnSale'));
+        return view('sale.index', compact('title', 'dataSales', 'tbnSale', 'payments'));
     }
     public function searchSale(int $saleNumber): JsonResponse
     {

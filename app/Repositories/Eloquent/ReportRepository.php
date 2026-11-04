@@ -350,6 +350,47 @@ class ReportRepository implements ReportRepositoryInterface
         ];
     }
 
+   public function getSalesPaymentMethodsDetailsReport(
+    int $paymentMethodId,
+    ?int $userId = null,
+    ?string $fechaDesde = null,
+    ?string $fechaHasta = null
+): array {
+
+    $paymentMethod = PaymentMethod::findOrFail($paymentMethodId);
+
+    $query = Sale::query()
+        ->with([
+            'customer',
+            'user',
+            'paymentMethod',
+        ])
+        ->where('payment_method_id', $paymentMethodId);
+
+    if ($userId !== null) {
+        $query->where('user_id', $userId);
+    }
+
+    $this->applyDateFilter(
+        $query,
+        $fechaDesde,
+        $fechaHasta,
+        'date_sale'
+    );
+
+    $sales = $query
+        ->orderBy('date_sale')
+        ->orderBy('id')
+        ->get();
+
+    return [
+        'sales' => $sales,
+        'paymentMethod' => $paymentMethod->name,
+        'fechaDesde' => $fechaDesde,
+        'fechaHasta' => $fechaHasta,
+        'total' => $sales->sum('total'),
+    ];
+}
 
     /* ventas por categoria */
 

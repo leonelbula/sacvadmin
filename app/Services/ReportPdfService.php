@@ -18,9 +18,9 @@ class ReportPdfService
     |--------------------------------------------------------------------------
     */
 
-    public function sales($date_from = null, $date_until= null,): Response
+    public function sales($date_from = null, $date_until = null,): Response
     {
-        $data = $this->reportService->getSalesReport($date_from, $date_until,0);
+        $data = $this->reportService->getSalesReport($date_from, $date_until, 0);
 
         return $this->pdf(
             'reports.pdf.sales',
@@ -30,7 +30,7 @@ class ReportPdfService
     }
 
 
-    public function salesProducts($date_from = null, $date_until= null): Response
+    public function salesProducts($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
             ->getSalesProductsReport($date_from, $date_until);
@@ -43,7 +43,7 @@ class ReportPdfService
     }
 
 
-    public function salesPaymentMethods($date_from = null, $date_until= null): Response
+    public function salesPaymentMethods($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
             ->getSalesPaymentMethodsReport($date_from, $date_until);
@@ -55,8 +55,25 @@ class ReportPdfService
         );
     }
 
+    public function salesPaymentMethodsdetails($paymentMethodId = null,  ?int $userId = null, $date_from = null, $date_until = null): Response
+    {
+        $data = $this->reportService
+            ->getSalesPaymentMethodsDetailsReport($paymentMethodId, $userId, $date_from, $date_until);
 
-    public function salesCustomers($date_from = null, $date_until= null): Response
+        $view = 'reports.pdf.sale.payment-method-details';
+        $filename = 'ventas-metodos-pago-detalles';
+        return Pdf::loadView(
+            $view,
+            $data
+        )
+            ->setPaper([0, 0, 226.77, 841.89], 'portrait')
+            ->stream(
+                $filename . '.pdf'
+            );
+    }
+
+
+    public function salesCustomers($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
             ->getSalesCustomersReport($date_from, $date_until);
@@ -127,10 +144,10 @@ class ReportPdfService
     }
 
 
-    public function kardex($product_id = null,$date_from = null, $date_until = null): Response
+    public function kardex($product_id = null, $date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getKardexPdfReport( $product_id, $date_from, $date_until);
+            ->getKardexPdfReport($product_id, $date_from, $date_until);
 
         return $this->pdf(
             'reports.pdf.inventory.kardex',
@@ -163,7 +180,7 @@ class ReportPdfService
     public function purchasesProducts($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getPurchasesProductsReport($date_from, $date_until,0);
+            ->getPurchasesProductsReport($date_from, $date_until, 0);
 
         return $this->pdf(
             'reports.pdf.shopping.purchases-products',
@@ -195,7 +212,7 @@ class ReportPdfService
     public function expenses($date_from = null, $date_until = null): Response
     {
         $data = $this->reportService
-            ->getExpensesReport($date_from, $date_until,0 );
+            ->getExpensesReport($date_from, $date_until, 0);
 
         return $this->pdf(
             'reports.pdf.expenses.expenses',
