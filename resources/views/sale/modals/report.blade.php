@@ -27,9 +27,16 @@
 
                       <div class="card-body">
 
-                          <form method="GET" action="{{ route('reports.sales.payment-methods-details.pdf') }}" target="_blank">
+                          <form method="GET" action="{{ route('reports.sales.payment-methods-details.pdf') }}"
+                              target="_blank">
 
-                            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                              @if (auth()->user()->type = 'admin')
+                                  <input type="hidden" name="user_id" value="">
+                              @else
+                                  <input type="hidden" name="user_id" value="{{ auth()->user()->id ?? '' }}">
+                              @endif
+
+
 
                               <div class="row g-3 align-items-end">
 
